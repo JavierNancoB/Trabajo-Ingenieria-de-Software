@@ -20,8 +20,11 @@ MySQL: Descarga e instala [MySQL](mysql.com).
 Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
 # Fork
-Antes de siquiera clonar el repositorio crea un fork del programa esto por si te mandas una embarrada. Para crear un fork aparece arriba del titulo como fork, ahi puedes crearlo.
-
+Un "fork" en GitHub es una copia de un repositorio en el que puedes trabajar de forma independiente. Al hacer un "fork" de un repositorio, se crea una versión separada del mismo en tu propia cuenta de GitHub. Esto te permite modificar el código, realizar experimentos y contribuir al proyecto original a través de solicitudes de extracción ("pull requests") sin afectar el repositorio original.
+**Cómo hacer un fork en GitHub**:
+ * Visita el repositorio: Ve al repositorio que deseas "forkear" en GitHub.
+ * Encuentra el botón de "Fork": En la esquina superior derecha del repositorio, verás un botón llamado "Fork". Haz clic en él.
+   
 # Clonar un Repositorio
 Para clonar un repositorio de Git, ejecuta el siguiente comando en tu terminal (debes estar en la carpeta que te acomode):
 
