@@ -1,30 +1,36 @@
 # Trabajo-Ingenieria-de-Software Eudora Vinos
 
+Integrantes
+  * Constanza Olivos
+  * Nicolas Pozo
+  * Javier Nanco
+  * Leonardo Farias
+  * Ignacio Baeza
+  * Aranza Diaz
+
 # Asegurate de tener estos archivos instalados previamente en tu PC
 Asegúrate de tener instalados los siguientes programas antes de comenzar:
 
-Git: Descarga e instala Git desde git-scm.com.
+Git: Descarga e instala [Git](git-scm.com).
 
-Python: Instala Python desde python.org. recomiendo actualizarlo a la ultima version si ya lo tienen con pip install --upgrade python
+Python: Instala [Python](python.org). Recomiendo actualizarlo a la ultima version si ya lo tienen con **pip install --upgrade python**
 
-MySQL: Descarga e instala MySQL desde mysql.com.
+MySQL: Descarga e instala [MySQL](mysql.com).
 
-Visual Studio Code (VSCode): Descarga e instala VSCode desde code.visualstudio.com.
+Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
 # Fork
-Antes de siquiera clonar el repositorio crea un fork del programa esto por si te mandas una embarrada
-
-Para crear un fork aparece arriba del titulo como fork
+Antes de siquiera clonar el repositorio crea un fork del programa esto por si te mandas una embarrada. Para crear un fork aparece arriba del titulo como fork, ahi puedes crearlo.
 
 # Clonar un Repositorio
 Para clonar un repositorio de Git, ejecuta el siguiente comando en tu terminal (debes estar en la carpeta que te acomode):
 
-git clone <URL_del_repositorio>
+**git clone <URL_del_repositorio>**
 
 Reemplaza <URL_del_repositorio> con la URL del repositorio que deseas clonar.
 
 # Instala Django
-pip install django
+**pip install django**
 
 Configuración de VSCode
 
