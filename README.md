@@ -40,6 +40,8 @@ MySQL: Descarga e instala [MySQL](mysql.com).
 
 Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
+Ademas entrego el link para los diagramas en [Miro](https://miro.com/welcomeonboard/SHppTnZjTTdDWFNZRFBIOHhhR3NCNG1mUDhzRTN6M1Uwd2szRldmYmdxa2NzdmJ1alFDdE9idlo5TUdlQnBObnwzNDU4NzY0NTQwMTAxMjMyMjU4fDI=?share_link_id=529325488959), que representan tanto el diagrama ERP, como el diagrama relacional y el de flujo de la logica
+
 # Fork
 Un "fork" en GitHub es una copia de un repositorio en el que puedes trabajar de forma independiente. Al hacer un "fork" de un repositorio, se crea una versión separada del mismo en tu propia cuenta de GitHub. Esto te permite modificar el código, realizar experimentos y contribuir al proyecto original a través de solicitudes de extracción ("pull requests") sin afectar el repositorio original.
 **Cómo hacer un fork en GitHub**:
@@ -62,4 +64,21 @@ Abre VSCode y asegúrate de tener instalada la extensión "Python" para el sopor
 
 # Configuración de MySQL
 Aun nada
+
+# FAQ
+
+
+**Separar proyectos y aplicaciones**, en Django es una práctica recomendada por varias razones importantes:
+
+para crear una app **django-admin startapp nombre_de_la_app**
+
+
+Organización y mantenimiento: Dividir tu proyecto en aplicaciones te permite organizar tu código de manera más estructurada y mantenible. Cada aplicación puede manejar una parte específica de la funcionalidad, lo que facilita la comprensión y la realización de cambios en el futuro.
+Reutilización de código: Al dividir tu proyecto en aplicaciones más pequeñas y específicas, puedes reutilizar fácilmente el código en otros proyectos si es necesario. Esto promueve la modularidad y evita la duplicación de código.
+Escalabilidad: Separar tu proyecto en aplicaciones te permite escalar verticalmente (agregar más funcionalidades a cada aplicación) y horizontalmente (agregar más aplicaciones a tu proyecto) según sea necesario. Esto facilita el manejo de proyectos más grandes y complejos.
+Pruebas unitarias: Las aplicaciones separadas facilitan la escritura de pruebas unitarias específicas para cada parte de tu proyecto. Esto simplifica la identificación y corrección de errores, ya que puedes aislar y probar cada componente de manera independiente.
+Colaboración: Al dividir tu proyecto en aplicaciones, varias personas pueden trabajar en diferentes partes del proyecto simultáneamente de manera más efectiva. Cada aplicación puede tener su propio equipo de desarrollo responsable de su mantenimiento, lo que promueve la colaboración y la eficiencia.
+En resumen, separar proyectos y aplicaciones en Django promueve la organización, la reutilización de código, la escalabilidad, la facilidad de prueba y la colaboración en el desarrollo de software. Es una práctica recomendada que puede mejorar significativamente la calidad y la eficiencia de tu proyecto.
+Basicamente
+
 
