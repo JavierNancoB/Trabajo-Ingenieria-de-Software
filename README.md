@@ -61,6 +61,23 @@ para guardar tus cambios en la base de datos se deben usar los siguientes comand
 
 **python manage.py migrate**
 
+## como hacer llaves foraneas
+
+en los modelos puedes representar las llaves foraneas como en el siguiente ejemplo.
+
+from django.db import models
+
+class Persona(models.Model):
+    nombre = models.CharField(max_length=100)
+    # Otros campos de Persona
+
+class Profesor(models.Model):
+    persona = models.ForeignKey(Persona, on_delete=models.CASCADE)
+    especialidad = models.CharField(max_length=100)
+    # Otros campos de Profesor
+
+aqui profesor comparte el nombre con la tabla personas
+
 
 # FAQ
 
