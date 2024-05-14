@@ -18,6 +18,12 @@ El objetivo principal del sistema ERP es proporcionar a Eudora Vinos una platafo
 
 - **Facturación:** Generar facturas precisas y detalladas para las transacciones de venta, garantizando la integridad y la legalidad de los documentos financieros.
 
+# Tutoriales
+
+[tutorial django en español](https://youtube.com/playlist?list=PL_wRgp7nihyZsEnudJ-XUAEdnOGUojbnn&si=lmIfMRbt3h9VGOOC)
+
+[Manipular base de datos con django en ingles](https://youtube.com/playlist?list=PLCC34OHNcOtoYVT2654KIzait8_eYO_j5&si=VQfLkIDE1sClg27T)
+
 # Asegurate de tener estos archivos instalados previamente en tu PC
 Asegúrate de tener instalados los siguientes programas antes de comenzar:
 
