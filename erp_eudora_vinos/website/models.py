@@ -13,3 +13,16 @@ class usuario(models.Model):
         return self.nombre
 
 '''
+
+class Cliente(models.Model):
+    rut = models.CharField(max_length=12, unique=True)
+    nombre = models.CharField(max_length=50)
+    apellido = models.CharField(max_length=50)
+    email = models.EmailField()
+    comuna = models.CharField(max_length=50)
+    calle = models.CharField(max_length=50)
+    numero_de_casa = models.IntegerField()
+    telefono = models.IntegerField()
+
+    def __str__(self):
+        return self.nombre + ' ' + self.apellido

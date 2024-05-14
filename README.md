@@ -53,6 +53,14 @@ Abre VSCode y asegúrate de tener instalada la extensión "Python" para el sopor
 
 # Configuración de MariaDB
 
+MariaDB nos permitira modificar la base de datos en el archivo db.sqlite3, hay que tener ojo porque no debemos crear ni eliminar tablas de ahi solo debemos hacer eso a traves de models en la aplicacion website.
+
+para guardar tus cambios en la base de datos se deben usar los siguientes comandos:
+
+**python manage.py makemigrations**
+
+**python manage.py migrate**
+
 
 # FAQ
 
