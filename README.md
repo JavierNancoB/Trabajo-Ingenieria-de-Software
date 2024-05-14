@@ -68,4 +68,9 @@ Pruebas unitarias: Las aplicaciones separadas facilitan la escritura de pruebas 
 Colaboración: Al dividir tu proyecto en aplicaciones, varias personas pueden trabajar en diferentes partes del proyecto simultáneamente de manera más efectiva. Cada aplicación puede tener su propio equipo de desarrollo responsable de su mantenimiento, lo que promueve la colaboración y la eficiencia.
 En resumen, separar proyectos y aplicaciones en Django promueve la organización, la reutilización de código, la escalabilidad, la facilidad de prueba y la colaboración en el desarrollo de software. Es una práctica recomendada que puede mejorar significativamente la calidad y la eficiencia de tu proyecto.
 
+## superuser
+
+nombre admin
+contraseña 123
+
 
