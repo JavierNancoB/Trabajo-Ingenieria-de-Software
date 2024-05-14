@@ -37,6 +37,8 @@ Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
 Ademas entrego el link para los diagramas en [Miro](https://miro.com/welcomeonboard/SHppTnZjTTdDWFNZRFBIOHhhR3NCNG1mUDhzRTN6M1Uwd2szRldmYmdxa2NzdmJ1alFDdE9idlo5TUdlQnBObnwzNDU4NzY0NTQwMTAxMjMyMjU4fDI=?share_link_id=529325488959), que representan tanto el diagrama ERP, como el diagrama relacional y el de flujo de la logica.
 
+link para el diseño de la visuañizacion grafica en [figma](https://www.figma.com/design/SJ8U7sh3zIT8UUOOQfZ1zi/ERP-eudora-vinos?node-id=0%3A1&t=4eMmdY7tV9tEaCjs-1)
+
 # Fork
 Un "fork" en GitHub es una copia de un repositorio en el que puedes trabajar de forma independiente. Al hacer un "fork" de un repositorio, se crea una versión separada del mismo en tu propia cuenta de GitHub. Esto te permite modificar el código, realizar experimentos y contribuir al proyecto original a través de solicitudes de extracción ("pull requests") sin afectar el repositorio original.
 **Cómo hacer un fork en GitHub**:
