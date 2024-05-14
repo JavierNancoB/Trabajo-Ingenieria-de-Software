@@ -36,8 +36,7 @@ Git: Descarga e instala [Git](git-scm.com).
 
 Python: Instala [Python](python.org). Recomiendo actualizarlo a la ultima version si ya lo tienen con **pip install --upgrade python**
 
-MySQL: Descarga e instala [MySQL](mysql.com).
-[Tutorial MySQL](https://youtu.be/KvC7iM6O4ik?si=s_wMu9JXvQmog4wB)
+MariaDB
 
 Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
