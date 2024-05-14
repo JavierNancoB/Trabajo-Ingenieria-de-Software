@@ -8,7 +8,7 @@ Integrantes
   * Ignacio Baeza
   * Aranza Diaz
 
-## Objetivos
+# Objetivos
 
 El objetivo principal del sistema ERP es proporcionar a Eudora Vinos una plataforma centralizada que les permita gestionar eficientemente sus operaciones comerciales. Los objetivos específicos incluyen:
 
@@ -33,7 +33,10 @@ Python: Instala [Python](python.org). Recomiendo actualizarlo a la ultima versio
 ```
 pip install --upgrade python
 ```
-
+El framework django se instala a través del comando:
+```
+pip install django
+```
 MariaDB: Descargar e instalar [MariaDB](https://mariadb.org/), [video tutorial](https://www.youtube.com/watch?v=68TVHdDVUHA) de configuración
 
 Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
@@ -41,6 +44,10 @@ Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 Ademas entrego el link para los diagramas en [Miro](https://miro.com/welcomeonboard/SHppTnZjTTdDWFNZRFBIOHhhR3NCNG1mUDhzRTN6M1Uwd2szRldmYmdxa2NzdmJ1alFDdE9idlo5TUdlQnBObnwzNDU4NzY0NTQwMTAxMjMyMjU4fDI=?share_link_id=529325488959), que representan tanto el diagrama ERP, como el diagrama relacional y el de flujo de la logica.
 
 link para el diseño de la visuañizacion grafica en [figma](https://www.figma.com/design/SJ8U7sh3zIT8UUOOQfZ1zi/ERP-eudora-vinos?node-id=0%3A1&t=4eMmdY7tV9tEaCjs-1)
+
+# Configuración de VSCode
+
+Abre VSCode y asegúrate de tener instalada la extensión "Python" para el soporte de Python. Puedes instalarla desde la pestaña de extensiones en VSCode.
 
 # Fork
 Un "fork" en GitHub es una copia de un repositorio en el que puedes trabajar de forma independiente. Al hacer un "fork" de un repositorio, se crea una versión separada del mismo en tu propia cuenta de GitHub. Esto te permite modificar el código, realizar experimentos y contribuir al proyecto original a través de solicitudes de extracción ("pull requests") sin afectar el repositorio original.
@@ -55,16 +62,6 @@ Para clonar un repositorio de Git, ejecuta el siguiente comando en tu terminal (
 
 Reemplaza <URL_del_repositorio> con la URL del repositorio que deseas clonar.
 
-# Instala Django
-
-```
-pip install django
-```
-
-Configuración de VSCode
-
-Abre VSCode y asegúrate de tener instalada la extensión "Python" para el soporte de Python. Puedes instalarla desde la pestaña de extensiones en VSCode.
-
 # Configuración de MariaDB
 
 MariaDB nos permitira modificar la base de datos en el archivo db.sqlite3, hay que tener ojo porque no debemos crear ni eliminar tablas de ahi solo debemos hacer eso a traves de models en la aplicacion website.
@@ -72,11 +69,9 @@ MariaDB nos permitira modificar la base de datos en el archivo db.sqlite3, hay q
 para guardar tus cambios en la base de datos se deben usar los siguientes comandos:
 
 ```
-
 python manage.py makemigrations
 
 python manage.py migrate
-
 ```
 
 ## como hacer llaves foraneas
