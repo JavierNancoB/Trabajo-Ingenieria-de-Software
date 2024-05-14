@@ -29,7 +29,10 @@ Asegúrate de tener instalados los siguientes programas antes de comenzar:
 
 Git: Descarga e instala [Git](git-scm.com).
 
-Python: Instala [Python](python.org). Recomiendo actualizarlo a la ultima version si ya lo tienen con **pip install --upgrade python**
+Python: Instala [Python](python.org). Recomiendo actualizarlo a la ultima version si ya lo tienen con:
+```
+pip install --upgrade python
+```
 
 MariaDB: Descargar e instalar [MariaDB](https://mariadb.org/), [video tutorial](https://www.youtube.com/watch?v=68TVHdDVUHA) de configuración
 
@@ -53,7 +56,10 @@ Para clonar un repositorio de Git, ejecuta el siguiente comando en tu terminal (
 Reemplaza <URL_del_repositorio> con la URL del repositorio que deseas clonar.
 
 # Instala Django
-**pip install django**
+
+```
+pip install django
+```
 
 Configuración de VSCode
 
@@ -65,9 +71,13 @@ MariaDB nos permitira modificar la base de datos en el archivo db.sqlite3, hay q
 
 para guardar tus cambios en la base de datos se deben usar los siguientes comandos:
 
-**python manage.py makemigrations**
+```
 
-**python manage.py migrate**
+python manage.py makemigrations
+
+python manage.py migrate
+
+```
 
 ## como hacer llaves foraneas
 
@@ -94,8 +104,10 @@ aqui profesor comparte el nombre con la tabla personas
 
 **Separar proyectos y aplicaciones**, en Django es una práctica recomendada por varias razones importantes:
 
-para crear una app **django-admin startapp nombre_de_la_app**
-
+para crear una app
+```
+django-admin startapp nombre_de_la_app
+```
 Organización y mantenimiento: Dividir tu proyecto en aplicaciones te permite organizar tu código de manera más estructurada y mantenible. Cada aplicación puede manejar una parte específica de la funcionalidad, lo que facilita la comprensión y la realización de cambios en el futuro.
 Reutilización de código: Al dividir tu proyecto en aplicaciones más pequeñas y específicas, puedes reutilizar fácilmente el código en otros proyectos si es necesario. Esto promueve la modularidad y evita la duplicación de código.
 Escalabilidad: Separar tu proyecto en aplicaciones te permite escalar verticalmente (agregar más funcionalidades a cada aplicación) y horizontalmente (agregar más aplicaciones a tu proyecto) según sea necesario. Esto facilita el manejo de proyectos más grandes y complejos.
@@ -105,7 +117,8 @@ En resumen, separar proyectos y aplicaciones en Django promueve la organización
 
 ## superuser
 
-nombre admin
-contraseña 123
-
+```
+nombre: admin
+contraseña: 123
+```
 
