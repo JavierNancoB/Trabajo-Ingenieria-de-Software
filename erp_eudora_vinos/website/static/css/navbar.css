@@ -1,0 +1,35 @@
+#puntos_navbar {
+    list-style-type: none;
+    margin: 0;
+    background-color: #1B263B
+    ; /* Cambia el color de fondo según tu preferencia */
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+#puntos_navbar li {
+    float: right;
+    padding-top: 11px;   
+}
+
+#titulo_navbar {
+    font-size: large;
+    color: #E0E1DD;
+    margin-left: 5%;
+    font-weight: 400;
+
+}
+
+#puntos_navbar li a {
+    color: #E0E1DD;
+    text-align: center;
+    padding: 14px 14px;
+    text-decoration: none;
+    font-size: large;
+
+}
+
+#puntos_navbar li a:hover {
+    background-color: #ddd; /* Cambia el color de fondo en el hover según tu preferencia */
+    color: black; /* Cambia el color del texto en el hover según tu preferencia */
+}
