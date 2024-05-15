@@ -37,7 +37,7 @@ El framework django se instala a través del comando:
 ```
 pip install django
 ```
-MariaDB: Descargar e instalar [MariaDB](https://mariadb.org/), [video tutorial](https://www.youtube.com/watch?v=68TVHdDVUHA) de configuración
+MariaDB: Descargar e instalar [MariaDB](https://mariadb.org/), [video tutorial](https://www.youtube.com/watch?v=68TVHdDVUHA) de configuración (opcional, no es necesario)
 
 Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
