@@ -26,3 +26,18 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.nombre + ' ' + self.apellido
+    
+class Ventas(models.Model):
+    # falta la foreign key de sku
+    SKU = models.CharField(max_length=50)
+    fecha_y_hora = models.DateTimeField()
+    numero_boleta = models.IntegerField(unique=True)
+    nombre_producto = models.CharField(max_length=50)
+    precio_unitario = models.IntegerField()
+    cantidad = models.IntegerField()
+    iva = models.IntegerField()
+    medio_de_pago = models.CharField(max_length=50)
+
+
+    def __str__(self):
+        return self.SKU + ' ' + self.numero_boleta
