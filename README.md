@@ -43,7 +43,7 @@ Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
 Ademas entrego el link para los diagramas en [Miro](https://miro.com/welcomeonboard/SHppTnZjTTdDWFNZRFBIOHhhR3NCNG1mUDhzRTN6M1Uwd2szRldmYmdxa2NzdmJ1alFDdE9idlo5TUdlQnBObnwzNDU4NzY0NTQwMTAxMjMyMjU4fDI=?share_link_id=529325488959), que representan tanto el diagrama ERP, como el diagrama relacional y el de flujo de la logica.
 
-link para el diseño de la visuañizacion grafica en [figma](https://www.figma.com/design/SJ8U7sh3zIT8UUOOQfZ1zi/ERP-eudora-vinos?node-id=0%3A1&t=4eMmdY7tV9tEaCjs-1)
+link para el diseño de la visuañizacion grafica en [figma]([https://www.figma.com/design/SJ8U7sh3zIT8UUOOQfZ1zi/ERP-eudora-vinos?node-id=0%3A1&t=4eMmdY7tV9tEaCjs-1](https://www.figma.com/design/cpWvZ6CCEcePlhQqiP0nn0/Untitled?node-id=0%3A1&t=4Ha3JqgXWsuDXeIz-1))
 
 # Configuración de VSCode
 
