@@ -57,3 +57,47 @@ class Ventas(models.Model):
         return self.producto.SKU + ' ' + self.numero_boleta
     
 
+class Inventario_Y_Stock(models.Model):
+    SKU = models.CharField(max_length=50, unique=True)
+    nombre_producto = models.CharField(max_length=50)
+    cantidad = models.IntegerField()
+    precio_unitario = models.IntegerField()
+    fecha_de_ingreso = models.DateTimeField()
+    Venta = models.BooleanField(default=False)
+    def __str__(self):
+        return self.SKU + ' ' + self.numero_boleta
+      
+class Proveedores(models.Model):
+    nombre_prov = models.CharField(max_length=50)
+    rut_empresa = models.CharField(max_length=12, unique=True)
+    email_empresa = models.EmailField()
+    telefono_empresa = models.IntegerField()
+    producto_prov = models.CharField(max_length=50)
+    SKU_prov = models.CharField(max_length=50) # foreign key para compra de proveedor
+    #SKU_prov = models.ForeignKey(Compra_proveedor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre_prov + ' ' + self.rut_empresa
+    
+class Compra_proveedores(models.Model):
+    Numero_casa = models.IntegerField()
+    Calle_casa = models.CharField(max_length=255)
+    producto = models.CharField(max_length=50)
+    numero = models.IntegerField()
+    SKU_prov = models.CharField(max_length=50) # foreign key para compra de proveedor
+    #SKU_prov = models.ForeignKey(Compra_proveedor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.producto + ' ' + self.numero
+
+class Informes(models.Model):
+    fecha_informe =models.DateField()
+    cantidad_ventas = models.IntegerField()
+    transacciones = models.IntegerField()
+    cantidad_miembros = models.IntegerField()
+    ingresos_ventas = models.IntegerField()
+    gastos_ventas = models.IntegerField()
+    gastos_no_ventas = models.IntegerField()
+    def __str__(self):
+        return self.fecha_informe
+
