@@ -3,7 +3,7 @@
 Integrantes
   * Constanza Olivos
   * Nicolas Pozo
-  * Javier Nanco
+  * Javier Nanco :)
   * Leonardo Farias
   * Ignacio Baeza
   * Aranza Diaz
