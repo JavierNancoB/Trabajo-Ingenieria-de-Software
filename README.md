@@ -69,7 +69,7 @@ Reemplaza <URL_del_repositorio> con la URL del repositorio que deseas clonar.
 
 Los cambios a la base de datos se realizan de 2 formas, las tablas se crean en el archivo **models.py** y para agregar informacion uno lo hace manualmente (por el momento) a traves del superusuario.
 
-Para guardar tus cambios en la base de datos (cuando trabajes en **models.oy**) se deben usar los siguientes comandos:
+Para guardar tus cambios en la base de datos (cuando trabajes en **models.py**) se deben usar los siguientes comandos cuando estes en el repositorio **Trabajo-Ingenieria-de-Software/erp_eudora_vinos**:
 
 ```
 python manage.py makemigrations
@@ -100,7 +100,7 @@ Aquí profesor comparte el nombre con la tabla personas.
 
 # Subir repositorio a github**
 
-Para subir un repositorio a tu fork debes:
+Para subir un repositorio a tu fork debes estar en la carpeta **Trabajo-Ingenieria-de-Software**:
 
 ```
 git add .
