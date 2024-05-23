@@ -26,11 +26,25 @@ class Cliente(models.Model):
 
     def __str__(self):
         return self.nombre + ' ' + self.apellido
+
+
+class Producto(models.Model):
+    SKU = models.CharField(max_length=50, unique=True)
+    fecha_fabricacion= models.DateField()
+    tipo_producto = models.CharField(max_length=50)
+    viña= models.CharField(max_length=150)
+    cepa= models.CharField(max_length=50)
+    nombre_producto = models.CharField(max_length=50)
+    cosecha = models.CharField(max_length=50)
     
+    def __str__(self):
+        return self.SKU + ' ' + self.nombre_producto    
+
+
 class Ventas(models.Model):
     # falta la foreign key de sku
-    SKU = models.CharField(max_length=50)
-    fecha_y_hora = models.DateTimeField()
+    #SKU = models.CharField(max_length=50) 
+    producto = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
     numero_boleta = models.IntegerField(unique=True)
     nombre_producto = models.CharField(max_length=50)
     precio_unitario = models.IntegerField()
@@ -40,7 +54,7 @@ class Ventas(models.Model):
 
 
     def __str__(self):
-        return self.SKU + ' ' + self.numero_boleta
+        return self.producto.SKU + ' ' + self.numero_boleta
     
 
 class Inventario_Y_Stock(models.Model):
@@ -86,3 +100,4 @@ class Informes(models.Model):
     gastos_no_ventas = models.IntegerField()
     def __str__(self):
         return self.fecha_informe
+
