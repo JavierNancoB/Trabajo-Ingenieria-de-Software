@@ -75,3 +75,14 @@ class Compra_proveedores(models.Model):
 
     def __str__(self):
         return self.producto + ' ' + self.numero
+
+class Informes(models.Model):
+    fecha_informe =models.DateField()
+    cantidad_ventas = models.IntegerField()
+    transacciones = models.IntegerField()
+    cantidad_miembros = models.IntegerField()
+    ingresos_ventas = models.IntegerField()
+    gastos_ventas = models.IntegerField()
+    gastos_no_ventas = models.IntegerField()
+    def __str__(self):
+        return self.fecha_informe
