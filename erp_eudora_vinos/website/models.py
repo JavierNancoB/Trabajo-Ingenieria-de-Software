@@ -14,6 +14,18 @@ class usuario(models.Model):
 
 '''
 
+class Informes(models.Model):
+    fecha_informe =models.DateField()
+    cantidad_ventas = models.IntegerField()
+    transacciones = models.IntegerField()
+    cantidad_miembros = models.IntegerField()
+    ingresos_ventas = models.IntegerField()
+    gastos_ventas = models.IntegerField()
+    gastos_no_ventas = models.IntegerField()
+    def __str__(self):
+        return self.fecha_informe
+
+
 class Cliente(models.Model):
     rut = models.CharField(max_length=12, unique=True)
     nombre = models.CharField(max_length=50)
