@@ -41,3 +41,13 @@ class Ventas(models.Model):
 
     def __str__(self):
         return self.SKU + ' ' + self.numero_boleta
+    
+class Inventario_Y_Stock(models.Model):
+    SKU = models.CharField(max_length=50, unique=True)
+    nombre_producto = models.CharField(max_length=50)
+    cantidad = models.IntegerField()
+    precio_unitario = models.IntegerField()
+    fecha_de_ingreso = models.DateTimeField()
+    Venta = models.BooleanField(default=False)
+    def __str__(self):
+        return self.SKU + ' ' + self.numero_boleta
