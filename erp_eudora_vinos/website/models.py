@@ -42,6 +42,7 @@ class Ventas(models.Model):
     def __str__(self):
         return self.SKU + ' ' + self.numero_boleta
     
+
 class Inventario_Y_Stock(models.Model):
     SKU = models.CharField(max_length=50, unique=True)
     nombre_producto = models.CharField(max_length=50)
@@ -51,3 +52,16 @@ class Inventario_Y_Stock(models.Model):
     Venta = models.BooleanField(default=False)
     def __str__(self):
         return self.SKU + ' ' + self.numero_boleta
+      
+class Proveedores(models.Model):
+    nombre_prov = models.CharField(max_length=50)
+    rut_empresa = models.CharField(max_length=12, unique=True)
+    email_empresa = models.EmailField()
+    numero_de_casa = models.IntegerField()
+    telefono_empresa = models.IntegerField()
+    producto_prov = models.CharField(max_length=50)
+    SKU_prov = models.CharField(max_length=50) # foreign key para compra de proveedor
+    #SKU_prov = models.ForeignKey(Compra_proveedor, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre_prov + ' ' + self.rut_empresa
