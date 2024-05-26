@@ -40,9 +40,10 @@ El framework django se instala a través del comando:
 ```
 pip install django
 ```
+
 Visual Studio Code (VSCode): Descarga e instala [VSCode](code.visualstudio.com).
 
-Ademas entrego el link para los diagramas en [Miro](https://miro.com/welcomeonboard/SHppTnZjTTdDWFNZRFBIOHhhR3NCNG1mUDhzRTN6M1Uwd2szRldmYmdxa2NzdmJ1alFDdE9idlo5TUdlQnBObnwzNDU4NzY0NTQwMTAxMjMyMjU4fDI=?share_link_id=529325488959), que representan tanto el diagrama ERP, como el diagrama relacional y el de flujo de la logica.
+Ademas entrego el link para los diagramas en [Miro](https://miro.com/welcomeonboard/SHppTnZjTTdDWFNZRFBIOHhhR3NCNG1mUDhzRTN6M1Uwd2szRldmYmdxa2NzdmJ1alFDdE9idlo5TUdlQnBObnwzNDU4NzY0NTQwMTAxMjMyMjU4fDI=?share_link_id=529325488959) y [lucid.app](https://lucid.app/lucidchart/4d45984c-0718-4767-a863-238db76c7586/edit?viewport_loc=-312%2C123%2C3330%2C1509%2C0_0&invitationId=inv_b011c8f9-acce-484b-b04a-d92b47c672a5), que representan tanto el diagrama ERP, como el diagrama relacional y el de flujo de la logica.
 
 Link para el diseño de la visuañizacion grafica en [figma](https://www.figma.com/design/cpWvZ6CCEcePlhQqiP0nn0/Untitled?t=YFmOn6KdnBKQN3vU-1)
 
