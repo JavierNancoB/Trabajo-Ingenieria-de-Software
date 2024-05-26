@@ -2,18 +2,6 @@ from django.db import models
 # aqui se crean los modelos de la base de datos
 # a través de clases que heredan de models.Model
 
-'''
-
-class usuario(models.Model):
-    nombre = models.CharField(max_length=50)
-    apellido = models.CharField(max_length=50)
-    email = models.EmailField()
-    contrasena = models.CharField(max_length=50)
-    def __str__(self):
-        return self.nombre
-
-'''
-
 class Cliente(models.Model):
     rut = models.CharField(max_length=12, unique=True)
     nombre = models.CharField(max_length=50)
@@ -29,7 +17,7 @@ class Cliente(models.Model):
 
 
 class Producto(models.Model):
-    SKU = models.CharField(max_length=50, unique=True)
+    SKU = models.CharField(primary_key=True, max_length=50, unique=True)
     fecha_fabricacion= models.DateField()
     tipo_producto = models.CharField(max_length=50)
     viña= models.CharField(max_length=150)
@@ -44,7 +32,7 @@ class Producto(models.Model):
 class Ventas(models.Model):
     # falta la foreign key de sku
     #SKU = models.CharField(max_length=50) 
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
     numero_boleta = models.IntegerField(unique=True)
     nombre_producto = models.CharField(max_length=50)
     precio_unitario = models.IntegerField()
@@ -101,3 +89,16 @@ class Informes(models.Model):
     def __str__(self):
         return self.fecha_informe
 
+class Alerta_stock(models.Model):
+    SKU = models.CharField(max_length=50)
+    fecha_alerta = models.DateField()
+    cantidad = models.IntegerField()
+    def __str__(self):
+        return self.SKU + ' ' + self.fecha_alerta
+    
+class Alerta_informes(models.Model):
+    numero_boleta = models.IntegerField()
+    fecha_alerta = models.DateField()
+    fecha_vencimiento = models.DateField()
+    def __str__(self):
+        return self.numero_boleta + ' ' + self.fecha_alerta

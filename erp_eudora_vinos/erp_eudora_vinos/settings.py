@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website', # Incluimos la app website que sera la encargada de mostrar la pagina web
+    'authuser', # Incluimos la app authuser que sera la encargada de manejar la autenticacion de usuarios
 ]
+
+AUTH_USER_MODEL = 'authuser.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
