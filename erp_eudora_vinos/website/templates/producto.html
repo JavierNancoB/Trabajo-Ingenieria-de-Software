@@ -1,0 +1,46 @@
+{% load static%}    
+{% include "base.html" %}
+
+
+{% block content %}    
+    <link type="text/css" href='{% static "css/producto.css" %}' rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+    
+    <table summary="tabla producto" class="table table-bordered table-hover dt-responsive">
+        <thead>
+        <h1>Producto</h1>
+        <tr class="listado">   
+            <th> SKU </th>
+            <th> TIPO </th>     
+            <th> VIÑA</th>
+            <th> CEPA </th>
+            <th> NOMBRE PRODUCTO </th>  
+            <th> COSECHA </th>
+        </tr>
+        </thead>
+        <tbody>
+       
+            {% for producto in productos %}
+            <tr class="listado">
+                <th>{{ producto.SKU }}</th>
+                <th>{{ producto.tipo_producto }}</th>
+                <th>{{ producto.viña }}</th>
+                <th>{{ producto.cepa }}</th>
+                <th>{{ producto.nombre_producto }}</th>
+                <th>{{ producto.cosecha }}</th>
+            </tr> 
+            {% endfor %}
+            
+        </tbody>
+        
+    </table>
+    <script type='text/javascript' src='{% static "js/producto.js" %}'></script>
+    {% comment%}
+	$(document).ready(function() {
+            $('.table').DataTable();
+        });
+    {%endcomment%}
+
+    
+{% endblock %}
