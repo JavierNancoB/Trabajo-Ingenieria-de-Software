@@ -1,35 +1,82 @@
 #puntos_navbar {
     list-style-type: none;
     margin: 0;
-    background-color: #1B263B
-    ; /* Cambia el color de fondo según tu preferencia */
-    overflow: hidden;
+    padding: 0;
+    background-color: #911A87;
+    display: flex;
+    align-items: center;
+    height: 80px;
     font-family: 'Inter', sans-serif;
 }
 
 #puntos_navbar li {
-    float: right;
-    padding-top: 11px;   
+    padding: 0 10px;
 }
 
-#titulo_navbar {
-    font-size: large;
-    color: #E0E1DD;
-    margin-left: 5%;
-    font-weight: 400;
-
+.logo {
+    display: flex;
+    align-items: center;
+    margin-left: 70px;
 }
 
-#puntos_navbar li a {
-    color: #E0E1DD;
-    text-align: center;
-    padding: 14px 14px;
-    text-decoration: none;
-    font-size: large;
-
+.site-logo {
+    display: block; 
 }
 
-#puntos_navbar li a:hover {
-    background-color: #ddd; /* Cambia el color de fondo en el hover según tu preferencia */
-    color: black; /* Cambia el color del texto en el hover según tu preferencia */
+#search-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el formulario de búsqueda */
+    margin-left: auto; /* Mueve la barra de búsqueda al lado izquierdo */
+}
+
+#search-form {
+    display: flex;
+}
+
+#search-input {
+    padding: 8px;
+    width: 300px;
+    font-size: 16px;
+    border: 1px solid black;
+    border-radius: 50px;
+    background-color: #D7A1D2;
+    color: #ffffffd0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding-left: 20px;
+}
+
+#search-input::placeholder {
+    color: #ffffffd0;
+}
+
+#search-form button {
+    padding: 8px 16px;
+    background-color: #E0E1DD;
+    color: #000;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+#search-form button:hover {
+    background-color: #ddd;
+}
+
+.logout-button {
+    background-color: #911A87;
+    margin-left: 10px; /* Añade un margen izquierdo para separar del campo de búsqueda */
+}
+
+
+.logout-button img {
+    margin-top: -5px;
+    width: 70px; /* Ajusta este valor según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+    transition: filter 0.3s;
+}
+
+
+.logout-button:hover img {
+    filter: brightness(70%); /* Oscurece la imagen cuando se presiona el botón */
 }
