@@ -30,6 +30,8 @@ Link de drive del informe: [Drive](https://docs.google.com/document/d/137e2b0gxB
 
 [Manipular base de datos con django en ingles](https://youtube.com/playlist?list=PLCC34OHNcOtoYVT2654KIzait8_eYO_j5&si=VQfLkIDE1sClg27T)
 
+[Aprende JQuery(ingles)](https://www.youtube.com/watch?v=hMxGhHNOkCU&list=PLoYCgNOIyGABdI2V8I_SWo22tFpgh2s6_)
+
 # Asegurate de tener estos archivos instalados previamente en tu PC
 Asegúrate de tener instalados los siguientes programas antes de comenzar:
 
