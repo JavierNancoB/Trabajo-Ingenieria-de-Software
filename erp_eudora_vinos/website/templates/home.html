@@ -1,1 +1,21 @@
-{% include "base.html" %}
+{% load static%}  
+{% include "base.html" %}   
+<!DOCTYPE html> 
+<html>
+ <link type="text/css" href='{% static "css/homebutton.css" %}' rel="stylesheet"/>
+    <body>
+        <br>
+        <h4>Accesos Directos</h4>
+        <div class="contenedor-daccess"><!--Contenedor de accesos directos-->
+            <ul>
+                <a id="b001" href="#" class="boton-daccess"><img src="/static/user.png" alt="" width="30" height="30"></a><!--Clientes-->
+                <a id="b002" href="/website/producto.html" class="boton-daccess"><img src="/static/glass.png" alt=""width="30" height="30"></a><!--Productos-->
+                <a id="b003" href="#" class="boton-daccess"><img src="/static/cash.png" alt=""width="30" height="30"></a><!--Ventas-->
+                <a id="b004" href="#" class="boton-daccess"><img src="/static/box.png" alt=""width="30" height="30"></a><!--Inventario-->
+                <a id="b005" href="#" class="boton-daccess"><img src="/static/hand.png" alt=""width="30" height="30"></a><!--Proveedores-->
+                <a id="b006" href="#" class="boton-daccess"><img src="/static/ticket.png" alt=""width="30" height="30"></a><!--Compras-->
+            </ul>
+        </div>
+        
+    </body>
+</html>
