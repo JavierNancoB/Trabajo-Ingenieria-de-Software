@@ -18,13 +18,11 @@ class Cliente(models.Model):
 
 class Producto(models.Model):
     SKU = models.CharField(primary_key=True, max_length=50, unique=True)
-    fecha_fabricacion= models.DateField()
     tipo_producto = models.CharField(max_length=50)
     viña= models.CharField(max_length=150)
     cepa= models.CharField(max_length=50)
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
-    
     def __str__(self):
         return self.SKU + ' ' + self.nombre_producto    
 

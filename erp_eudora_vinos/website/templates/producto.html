@@ -1,21 +1,60 @@
 {% load static%}    
 {% include "base.html" %}
-
-
 {% block content %}
     <div id="productos">
         <link type="text/css" href='{% static "css/producto.css" %}' rel="stylesheet"/>
-        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-        <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
-        
-        <table summary="tabla producto" class="table table-bordered table-hover dt-responsive">
-            <thead>
-            <div id="titulo-modelo">
-                <h1>PRODUCTOS</h1>
-                <a href="/producto/edit">
-                    <img class="edit-icon" src="{% static 'images/edit.svg' %}" alt="Edit-icon">
-                </a>
+        <div id="titulo-modelo">
+            <h1>PRODUCTOS</h1>
+        </div>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewproducto">
+            Añade un producto
+        </button>  
+        <!-- Modal -->
+        <div class="modal fade" id="addnewproducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Producto</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label>SKU</label>
+                               <input type="text" id="SKU" class="form-control"/>
+                        </div>        
+                        <div class="mb-3">
+                            <label>Tipo de producto</label>
+                            <input type="text" id="tipo-producto" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Viña</label>
+                            <input type="text" id="viña" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Cepa</label>
+                            <input type="text" id="cepa" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Nombre Producto</label>
+                            <input type="text" id="nombre-producto" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Cosecha</label>
+                            <input type="text" id="cosecha" class="form-control"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+                </div>
+              </div>
             </div>
+        </div>
+        <table id="table" summary="tabla producto" class="table table-bordered table-hover dt-responsive">
+            <thead >    
             <tr class="listado">   
                 <th> SKU </th>
                 <th> TIPO </th>     
@@ -25,29 +64,19 @@
                 <th> COSECHA </th>
             </tr>
             </thead>
-            <tbody>
-        
+            <tbody>        
                 {% for producto in productos %}
                 <tr class="listado">
-                    <th>{{ producto.SKU }}</th>
-                    <th>{{ producto.tipo_producto }}</th>
-                    <th>{{ producto.viña }}</th>
-                    <th>{{ producto.cepa }}</th>
-                    <th>{{ producto.nombre_producto }}</th>
-                    <th>{{ producto.cosecha }}</th>
+                    <td>{{ producto.SKU }}</td>
+                    <td class="editable" data-sku="{{ producto.SKU }}" data-type="tipo_producto">{{ producto.tipo_producto }}</td>
+                    <td class="editable" data-sku="{{ producto.SKU }}" data-type="viña">{{ producto.viña }}</td>
+                    <td class="editable" data-sku="{{ producto.SKU }}" data-type="cepa">{{ producto.cepa }}</td>
+                    <td class="editable" data-sku="{{ producto.SKU }}" data-type="nombre_producto">{{ producto.nombre_producto }}</td>
+                    <td class="editable" data-sku="{{ producto.SKU }}" data-type="cosecha">{{ producto.cosecha }}</td>
                 </tr> 
-                {% endfor %}
-                
+                {% endfor %}    
             </tbody>
-            
         </table>
         <script type='text/javascript' src='{% static "js/producto.js" %}'></script>
     </div>
-    {% comment%}
-	$(document).ready(function() {
-            $('.table').DataTable();
-        });
-    {%endcomment%}
-
-    
 {% endblock %}
