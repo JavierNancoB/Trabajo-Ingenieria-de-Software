@@ -6,9 +6,24 @@
         <div id="titulo-modelo">
             <h1>PRODUCTOS</h1>
         </div>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewproducto">
-            Añade un producto
-        </button>  
+        <div class="a">
+            <div class="row align-items-end">
+                <div class="col">
+                    <div id="ediciones">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewproducto">
+                        Añade un producto
+                    </button>
+                </div>
+            </div>
+        </div>
+        
         <!-- Modal -->
         <div class="modal fade" id="addnewproducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -42,7 +57,7 @@
                         </div>
                         <div class="mb-3">
                             <label>Cosecha</label>
-                            <input type="text" id="cosecha" class="form-control"/>
+                            <input type="number" id="cosecha" class="form-control"/>
                         </div>
                     </form>
                 </div>
@@ -62,6 +77,7 @@
                 <th> CEPA </th>
                 <th> NOMBRE PRODUCTO </th>  
                 <th> COSECHA </th>
+                <th> ACCIONES </th>
             </tr>
             </thead>
             <tbody>        
@@ -73,6 +89,9 @@
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="cepa">{{ producto.cepa }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="nombre_producto">{{ producto.nombre_producto }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="cosecha">{{ producto.cosecha }}</td>
+                    <td>
+                        <a href="delete/{{ producto.SKU}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
+                    </td>
                 </tr> 
                 {% endfor %}    
             </tbody>

@@ -8,4 +8,5 @@ urlpatterns = [
     path('producto/', views.producto, name='producto'),
     path('producto/insert/', views.insert_producto, name='insert_producto'),
     path('producto/update/', apiViews.guardarproducto, name='update_producto'),
+    path('producto/delete/<str:SKU>', views.delete_producto, name='delete_producto'),
 ]

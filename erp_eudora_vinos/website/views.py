@@ -18,4 +18,9 @@ def insert_producto(request):
     member.save()
     return redirect('/')
 
+def delete_producto(request, SKU):
+    member = Producto.objects.get(SKU=SKU)
+    member.delete()
+    return redirect('/producto')
+
 # se crea la vista edit_producto, editamos desde>
