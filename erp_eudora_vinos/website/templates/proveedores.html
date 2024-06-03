@@ -1,0 +1,89 @@
+{% load static%}    
+{% include "base.html" %}
+{% block content %}
+    <div id="proveedores">
+        <link type="text/css" href='{% static "css/proveedor.css" %}' rel="stylesheet"/>
+        <div id="titulo-modelo">
+            <h1>PROVEEDORES</h1>
+        </div>
+        <div class="a">
+            <div class="row align-items-end">
+                <div class="col">
+                    <div id="ediciones">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewproveedor">
+                        Añade un proveedor
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="addnewproveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Proveedor</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label>Rut empresa</label>
+                               <input type="text" id="rut_empresa" class="form-control"/>
+                        </div>        
+                        <div class="mb-3">
+                            <label>Nombre del proveedor</label>
+                            <input type="text" id="nombre_prov" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Email de empresa</label>
+                            <input type="email" id="email_empresa" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Telefono de la empresa</label>
+                            <input type="number" id="telefono_empresa" class="form-control"/>
+                        </div>                       
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <table id="table" summary="tabla Proveedor" class="table table-bordered table-hover dt-responsive">
+            <thead>    
+            <tr class="listado">   
+                <th> RUT EMPRESA </th>
+                <th> NOMBRE PROVEEDOR </th>     
+                <th> EMAIL</th>
+                <th> TELEFONO </th>
+                <th> ACCIONES </th>
+            </tr>
+            </thead>
+            <tbody>        
+                {% for proveedor in proveedores %}
+                <tr class="listado">
+                    <td>{{ proveedor.rut_empresa }}</td>
+                    <td class="editable" data-rut_empresa="{{ proveedor.rut_empresa }}" data-type="nombre_prov">{{ proveedor.nombre_prov }}</td>
+                    <td class="editable" data-rut_empresa="{{ proveedor.rut_empresa }}" data-type="email_empresa">{{ proveedor.email_empresa }}</td>
+                    <td class="editable" data-rut_empresa="{{ proveedor.rut_empresa }}" data-type="telefono_empresa">{{ proveedor.telefono_empresa }}</td>
+                    <td>
+                        <a href="delete/{{ proveedor.rut_empresa}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
+                    </td>
+                </tr> 
+                {% endfor %}    
+            </tbody>
+        </table>
+        <script type='text/javascript' src='{% static "js/proveedor.js" %}'></script>
+    </div>
+{% endblock %}

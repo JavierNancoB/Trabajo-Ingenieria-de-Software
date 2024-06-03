@@ -1,9 +1,6 @@
 from django.urls import path
 from . import views
-from .models import Producto
 from . import apiViews
-
-from .views import home, producto
 
 urlpatterns = [
     path('', views.home, name='home'),
@@ -11,4 +8,8 @@ urlpatterns = [
     path('producto/insert/', views.insert_producto, name='insert_producto'),
     path('producto/update/', apiViews.guardarproducto, name='update_producto'),
     path('producto/delete/<str:SKU>', views.delete_producto, name='delete_producto'),
+    path('proveedor/', views.proveedor, name='proveedor'),
+    path('proveedor/insert/', views.insert_proveedor, name='insert_proveedor'),
+    path('proveedor/update/', apiViews.guardarproveedor, name='update_proveedor'),
+    path('proveedor/delete/<str:rut_empresa>', views.delete_proveedor, name='delete_proveedor'),    
 ]

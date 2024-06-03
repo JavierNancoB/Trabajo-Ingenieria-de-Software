@@ -54,12 +54,10 @@ class Inventario_Y_Stock(models.Model):
         return self.SKU + ' ' + self.numero_boleta
       
 class Proveedores(models.Model):
+    rut_empresa = models.CharField(primary_key=True, max_length=12, unique=True) # primary key
     nombre_prov = models.CharField(max_length=50)
-    rut_empresa = models.CharField(max_length=12, unique=True)
     email_empresa = models.EmailField()
     telefono_empresa = models.IntegerField()
-    producto_prov = models.CharField(max_length=50)
-    SKU_prov = models.CharField(max_length=50) # foreign key para compra de proveedor
     #SKU_prov = models.ForeignKey(Compra_proveedor, on_delete=models.CASCADE)
 
     def __str__(self):
