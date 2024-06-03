@@ -8,14 +8,14 @@
                 <img class="site-logo" src="{% static 'images/logo.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
             <li id="search-container">
-            <form id="search-form" action="/search" method="GET">
-                <input type="text" name="q" placeholder="Buscar Módulo" id="search-input">
+            <form id="search-form" onsubmit="redirectToPage(event)">
+                <input type="text" placeholder="Buscar Módulo" id="search-input">
             </form>
             <a href="/logout" class="logout-button">
                 <img class="site-logo" src="{% static 'images/Log_Out_Buton.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
         </li>
         </ul>
-        
+        <script type='text/javascript' src='{% static "js/navbar.js" %}'></script>
     </body>
 </html>
