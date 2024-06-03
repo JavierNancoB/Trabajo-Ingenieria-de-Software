@@ -1,0 +1,30 @@
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eudoravinos - Iniciar Sesión</title>
+    <link type="text/css" href="{% static 'css/login.css' %}" rel="stylesheet"/>
+</head>
+<body>
+    <div class="container">
+        <a class="logo" href="/">
+            <img class="site-logo" src="{% static 'images/logo-eucolor.png' %}" alt="Logo" width="160" height="50" role="presentation">
+        </a>
+        <h1>Iniciar sesión</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" id="username" name="username" placeholder="Usuario">
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" placeholder="Contraseña">
+            </div>
+            <input type="submit" value="Entrar" class="btn">
+            <p class="forgot-password">¿Olvidaste tu contraseña?</p>
+        </form>
+    </div>
+</body>
+</html>

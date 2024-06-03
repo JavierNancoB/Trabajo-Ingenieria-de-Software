@@ -21,7 +21,7 @@ class CustomUserManager(UserManager):
     
     # aqui se crea un usuario con el email y la contraseña 
     def create_user(self, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', False)
         # aqui se llama a la funcion _create_user con los parametros email y password
         return self._create_user(email, password, **extra_fields)

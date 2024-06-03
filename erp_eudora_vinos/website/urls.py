@@ -3,6 +3,8 @@ from . import views
 from .models import Producto
 from . import apiViews
 
+from .views import home, producto
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('producto/', views.producto, name='producto'),
