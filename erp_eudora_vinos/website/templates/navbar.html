@@ -8,14 +8,32 @@
                 <img class="site-logo" src="{% static 'images/logo.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
             <li id="search-container">
-            <form id="search-form" action="/search" method="GET">
-                <input type="text" name="q" placeholder="Buscar Módulo" id="search-input">
+            <form id="search-form" onsubmit="redirectToPage(event)">
+                <input type="text" placeholder="Buscar Módulo" id="search-input">
             </form>
             <a href="/logout" class="logout-button">
                 <img class="site-logo" src="{% static 'images/Log_Out_Buton.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
         </li>
         </ul>
-        
+        <script>
+            function redirectToPage(event) {
+                event.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
+                const query = document.getElementById('search-input').value.toLowerCase();
+                let url;
+    
+                if (query === "Home") {
+                    url = "/Home";
+                } else if (query === "producto") {
+                    url = "/producto";
+                } else if (query === "home") {
+                    url = "/";
+                } else {
+                    alert("Página no encontrada");
+                    return;
+                }
+                window.location.href = url;
+            }
+        </script>
     </body>
 </html>
