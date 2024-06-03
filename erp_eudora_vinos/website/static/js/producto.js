@@ -12,14 +12,20 @@ $(document).ready(function(){
         $nombre_producto = $('#nombre-producto').val();
         $cosecha = $('#cosecha').val();
     
-        /*usaremos el codigo base, nos permite saber si uno de los datos que se ingresan es vacio,
-        pero ahora ademas de eso, se validara si el SKU ya existe en la base de datos.
-        utilizaremos un if para verificar si el SKU ya existe y si los datos son validos, si es asi, se mostrara un mensaje de error
-        luego un else que agregara el dato a la base de datos
+        /*
+
+        comprueba que no haya campos vacios, que no se excedan los limites de caracteres
+        y que el año de cosecha sea valido (1800-2050).
+        
         */ 
-       if ($SKU == '' || $tipo_producto == '' || $viña == '' || $cepa == '' || $nombre_producto == '' || $cosecha == '' ){
+        
+        if ($SKU == '' || $tipo_producto == '' || $viña == '' || $cepa == '' || $nombre_producto == '' || $cosecha == '' ){
             validador = 1;
-            alert('Por favor ingrese valores correctos');
+            alert('Por favor no deje campos vacios');
+        }
+        else if ($tipo_producto.length > 50 || $viña.length > 150 || $cepa.length > 50 || $nombre_producto.length > 50 || $cosecha.length > 50) {
+            validador = 1;
+            alert("Uno o más campos exceden el límite de caracteres permitidos.");
         }
         /* comprobamos ahora que no este en la base de datos el sku */
         else if ($cosecha < 1800 || $cosecha > 2050){
@@ -69,7 +75,7 @@ $(document).ready(function(){
 
     /* EDITAR */
 
-    /* comprobar si se puede editar */
+    /* comprobar si la casilla editar esta activada */
 
     function isEditingEnabled() {
         return $('#flexSwitchCheckDefault').prop('checked');
@@ -112,9 +118,47 @@ $(document).ready(function(){
         }
     });
     function sendToServer(SKU, value, type){
+        if (type=="cosecha" && isNaN(value)) {
+            alert("El valor debe ser numérico.");
+            return; // No enviar los datos al servidor si el valor no es numérico
+        }
         if (type === "cosecha" && (value < 1800 || value > 2050)) {
             alert("El valor para 'cosecha' debe estar entre 1800 y 2050");
             return; // No enviar los datos al servidor
+        }
+        switch (type) {
+            case "tipo_producto":
+                if (value.length > 50) {
+                    alert("El valor para 'tipo de producto' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "viña":
+                if (value.length > 150) {
+                    alert("El valor para 'viña' no puede tener más de 150 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "cepa":
+                if (value.length > 50) {
+                    alert("El valor para 'cepa' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "nombre_producto":
+                if (value.length > 50) {
+                    alert("El valor para 'nombre de producto' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "cosecha":
+                if (value.length > 50) {
+                    alert("El valor para 'cosecha' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            default:
+                break;
         }
         console.log("Sending to server:", SKU, value, type);  // Log para ver qué datos se están enviando
         $.ajax({
@@ -150,47 +194,3 @@ $(document).ready(function(){
         }
     });
 });
-
-
-/*
-        console.log(SKU);
-        console.log(value);
-        console.log(type);
-        $.ajax({
-            url: '/producto/update/',
-            type: 'POST',
-            data: {
-                SKU: SKU,
-                value: value,
-                type: type,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            },
-        })  
-        .done(function(response){
-            console.log(response);
-        })
-        .fail(function(){
-            console.log('Error');
-        });
-*/
-/*
-        console.log("Sending to server:", sku, value, type);  // Log para ver qué datos se están enviando
-        $.ajax({
-            url: '/producto/update/',
-            type: 'POST',
-            data: {
-                sku: sku,
-                value: value,
-                type: type,
-                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-            }
-        })
-        .done(function(response) {
-            console.log(response);
-        })
-        .fail(function() {
-            console.log('Error');
-        });
-        }
-        
-*/
