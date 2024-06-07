@@ -4,6 +4,7 @@ from  django.views.decorators.csrf import csrf_exempt
 
 from .models import Producto
 from .models import Proveedores
+from .models import Ventas
 
 # api para obtener todos los productos
 
@@ -55,3 +56,29 @@ def guardarproveedor(request):
         return JsonResponse({'status': 'Updated'})
     except Proveedores.DoesNotExist:
         return JsonResponse({'status': 'Provider not found'}, status=404)
+    
+# VENTAS
+@csrf_exempt
+def guardarventa(request):
+    sku = request.POST.get('SKU', '')
+    type = request.POST.get('type', '')
+    value = request.POST.get('value', '')
+
+    try:
+        venta = venta.objects.get(SKU=sku)
+        if type == 'medio_de_pago':
+            venta.medio_de_pago = value
+        elif type == 'nombre_producto':
+            venta.nombre_producto = value
+        elif type == 'precio_unitario':
+            venta.precio_unitario = value
+        elif type == 'cantidad':
+            venta.cantidad = value
+        elif type == 'iva':
+            venta.iva = value
+
+        venta.save()
+        return JsonResponse({'status': 'Updated'})
+    except venta.DoesNotExist:
+        return JsonResponse({'status': 'Sells not found'}, status=404)
+    

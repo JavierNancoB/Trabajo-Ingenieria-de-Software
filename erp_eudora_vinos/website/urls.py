@@ -11,5 +11,10 @@ urlpatterns = [
     path('proveedor/', views.proveedor, name='proveedor'),
     path('proveedor/insert/', views.insert_proveedor, name='insert_proveedor'),
     path('proveedor/update/', apiViews.guardarproveedor, name='update_proveedor'),
-    path('proveedor/delete/<str:rut_empresa>', views.delete_proveedor, name='delete_proveedor'),    
+    path('proveedor/delete/<str:rut_empresa>', views.delete_proveedor, name='delete_proveedor'),   
+    #Ventas
+    path('venta/', views.ventas, name='venta'),
+    path('venta/insert/', views.insert_ventas, name='insert_venta'),
+    path('venta/update/', apiViews.guardarventa, name='update_venta'),
+    path('venta/delete/<str:SKU>', views.delete_ventas, name='delete_venta'),
 ]

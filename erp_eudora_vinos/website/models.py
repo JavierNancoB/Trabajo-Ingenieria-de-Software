@@ -28,8 +28,6 @@ class Producto(models.Model):
 
 
 class Ventas(models.Model):
-    # falta la foreign key de sku
-    #SKU = models.CharField(max_length=50) 
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
     numero_boleta = models.IntegerField(unique=True)
     nombre_producto = models.CharField(max_length=50)
@@ -40,7 +38,7 @@ class Ventas(models.Model):
 
 
     def __str__(self):
-        return self.producto.SKU + ' ' + self.numero_boleta
+        return self.producto.SKU
     
 
 class Inventario_Y_Stock(models.Model):
