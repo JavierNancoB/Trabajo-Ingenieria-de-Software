@@ -24,13 +24,10 @@ class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU + ' ' + self.nombre_producto    
-
+        return self.SKU  
 
 class Ventas(models.Model):
-    # falta la foreign key de sku
-    #SKU = models.CharField(max_length=50) 
-    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE, default='1')
     numero_boleta = models.IntegerField(unique=True)
     nombre_producto = models.CharField(max_length=50)
     precio_unitario = models.IntegerField()
@@ -38,20 +35,20 @@ class Ventas(models.Model):
     iva = models.IntegerField()
     medio_de_pago = models.CharField(max_length=50)
 
+    def str(self):
+        return f"{self.SKU.SKU} - {self.nombre_producto}"
 
-    def __str__(self):
-        return self.producto.SKU + ' ' + self.numero_boleta
     
 
 class Inventario_Y_Stock(models.Model):
+    id_inventario=models.CharField(primary_key=True, max_length=50, unique=True, default='0')
     SKU = models.CharField(max_length=50, unique=True)
     nombre_producto = models.CharField(max_length=50)
     cantidad = models.IntegerField()
     precio_unitario = models.IntegerField()
     fecha_de_ingreso = models.DateTimeField()
     Venta = models.BooleanField(default=False)
-    def __str__(self):
-        return self.SKU + ' ' + self.numero_boleta
+  
       
 class Proveedores(models.Model):
     rut_empresa = models.CharField(primary_key=True, max_length=12, unique=True) # primary key
@@ -86,15 +83,19 @@ class Informes(models.Model):
         return self.fecha_informe
 
 class Alerta_stock(models.Model):
-    SKU = models.CharField(max_length=50)
+    id_inventario=models.ForeignKey(Inventario_Y_Stock, on_delete=models.CASCADE, default='0')
     fecha_alerta = models.DateField()
-    cantidad = models.IntegerField()
+      # Corregido: No necesitas una relación ForeignKey aquí
+
     def __str__(self):
-        return self.SKU + ' ' + self.fecha_alerta
+        return str(self.id_inventario) + ' ' + str(self.fecha_alerta)
     
-class Alerta_informes(models.Model):
-    numero_boleta = models.IntegerField()
+"""class Alerta_informes(models.Model):
+    # Cambiado el related_name a 'alertas_informes'
+    ventas = models.ForeignKey(Ventas, on_delete=models.CASCADE, related_name='alertas_informes')
     fecha_alerta = models.DateField()
-    fecha_vencimiento = models.DateField()
+
     def __str__(self):
-        return self.numero_boleta + ' ' + self.fecha_alerta
+        return str(self.ventas.numero_boleta) + ' ' + str(self.fecha_alerta)"""
+    
+
