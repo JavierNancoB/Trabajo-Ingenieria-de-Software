@@ -193,4 +193,18 @@ $(document).ready(function(){
                 e.preventDefault();
         }
     });
+    /* ELIMINAR SELECTIVAMENTE */
+    /* Las casillas seleccionadas se podran eliminar despues de presionar el boton eliminar */
+
+    $('#eliminar-seleccion').on('click', function(){
+        var checked = $('.checkbox:checked').length;
+        if (checked > 0) {
+            /* por cada casilla seleccionada llama delete/{{ producto.SKU}} por el sku correspondiente y se queda en / */
+            /* recorremos */
+
+        }
+        else {
+            $('.delete-selected').css('display', 'none');
+        }
+    });
 });

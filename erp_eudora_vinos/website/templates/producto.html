@@ -6,6 +6,9 @@
         <div id="titulo-modelo">
             <h1>PRODUCTOS</h1>
         </div>
+        <div class="col d-grid gap-2 d-md-flex">
+            <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
+        </div>
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -52,7 +55,7 @@
                             <input type="text" id="cepa" class="form-control"/>
                         </div>
                         <div class="mb-3">
-                            <label>Nombre Producto</label>
+                            <label>Nombre vino</label>
                             <input type="text" id="nombre-producto" class="form-control"/>
                         </div>
                         <div class="mb-3">
@@ -70,19 +73,22 @@
         </div>
         <table id="table" summary="tabla producto" class="table table-bordered table-hover dt-responsive">
             <thead>    
-            <tr class="listado">   
+            <tr class="listado"> 
+                <!--<th> SEL</th>-->
                 <th> SKU </th>
                 <th> TIPO </th>     
                 <th> VIÑA</th>
                 <th> CEPA </th>
-                <th> NOMBRE PRODUCTO </th>  
+                <th> NOMBRE VINO </th>  
                 <th> COSECHA </th>
-                <th> ACCIONES </th>
+                <th> ELIMINAR </th>
+                <th> SEL </th>
             </tr>
             </thead>
             <tbody>        
                 {% for producto in productos %}
                 <tr class="listado">
+                    <!--<td><input type="checkbox" name="seleccionar" id="seleccionar"></td>-->
                     <td>{{ producto.SKU }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="tipo_producto">{{ producto.tipo_producto }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="viña">{{ producto.viña }}</td>
@@ -90,7 +96,15 @@
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="nombre_producto">{{ producto.nombre_producto }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="cosecha">{{ producto.cosecha }}</td>
                     <td>
-                        <a href="delete/{{ producto.SKU}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
+                        <div class="text-center">
+                            <a href="delete/{{ producto.SKU}}" id="delete" class="text-center link-delete text-danger delete">
+                                <img src='{% static "images/delete.svg" %}' alt="" class="rounded">
+                            </a>
+                            
+                        </div>   
+                    </td>
+                    <td>
+                        <input type="checkbox" data-sku="{{ producto.SKU }}" name="seleccionar" id="seleccionar">
                     </td>
                 </tr> 
                 {% endfor %}    

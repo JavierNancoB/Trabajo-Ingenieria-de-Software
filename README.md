@@ -139,7 +139,7 @@ En resumen, separar proyectos y aplicaciones en Django promueve la organización
 ## superuser
 
 ```
-nombre: eudoravinos@ejemplo.com
-contraseña: G8#z&9kP
+nombre: nanco@example.com
+contraseña: sopa1234
 ```
 
