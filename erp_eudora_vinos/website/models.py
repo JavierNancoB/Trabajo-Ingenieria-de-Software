@@ -24,7 +24,7 @@ class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU + ' ' + self.nombre_producto    
+        return self.SKU     
 
 
 class Ventas(models.Model):
@@ -44,14 +44,14 @@ class Ventas(models.Model):
     
 
 class Inventario_Y_Stock(models.Model):
-    SKU = models.CharField(max_length=50, unique=True)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
     nombre_producto = models.CharField(max_length=50)
     cantidad = models.IntegerField()
     precio_unitario = models.IntegerField()
     fecha_de_ingreso = models.DateTimeField()
-    Venta = models.BooleanField(default=False)
+    venta = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU + ' ' + self.numero_boleta
+        return self.nombre_producto
       
 class Proveedores(models.Model):
     rut_empresa = models.CharField(primary_key=True, max_length=12, unique=True) # primary key
