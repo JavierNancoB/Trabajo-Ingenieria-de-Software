@@ -71,7 +71,7 @@
 
 .logout-button {
     background-color: #A8739C;
-    margin-left: 10px; /* Añade un margen izquierdo para separar del campo de búsqueda */
+    /*margin-left: 10px; /* Añade un margen izquierdo para separar del campo de búsqueda */
 }
 
 
@@ -85,4 +85,50 @@
 
 .logout-button:hover img {
     filter: brightness(150%); /* Oscurece la imagen cuando se presiona el botón */
+}
+
+
+
+/* boton notificaciones */
+
+.notifications-button {
+    background-color: #A8739C;
+}
+
+.notifications-button img {
+    margin-top: -2px;
+    width: 70px; /* Ajusta este valor según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+    transition: filter 0.3s;
+}
+
+.notifications-button:hover img {
+    filter: brightness(150%); /* Aclara la imagen cuando se presiona el botón */
+}
+
+.notifications-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    width: 250px;
+    border-radius: 5px;
+}
+
+.notifications-dropdown ul {
+    list-style-type: none;
+    padding: 0; /* Añadir padding 0 para eliminar el padding por defecto */
+    margin: 0; /* Añadir margin 0 para eliminar el margin por defecto */
+}
+
+.notifications-dropdown li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+.notifications-dropdown li:hover {
+    background-color: #f1f1f1;
 }

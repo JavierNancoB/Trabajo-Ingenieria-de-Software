@@ -1,4 +1,4 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html>
     <link type="text/css" href='{% static "css/navbar.css" %}' rel="stylesheet"/>
@@ -8,13 +8,27 @@
                 <img class="site-logo" src="{% static 'images/logo.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
             <li id="search-container">
-            <form id="search-form" onsubmit="redirectToPage(event)">
-                <input type="text" placeholder="Buscar Módulo" id="search-input">
-            </form>
-            <a href="/logout" class="logout-button">
-                <img class="site-logo" src="{% static 'images/Log_Out_Buton.png' %}" alt="Logo" width="160" height="50" role="presentation">
-            </a>
-        </li>
+                <form id="search-form" onsubmit="redirectToPage(event)">
+                    <input type="text" placeholder="Buscar Módulo" id="search-input">
+                </form>
+            </li>
+            <li >
+                <a href="" class="notifications-button" id="notifications-button">
+                    <img class="site-logo" src="{% static 'images/notificaciones.svg' %}" alt="Logo" width="160" height="50" role="presentation">
+                </a>
+                <div id="notifications-dropdown" class="notifications-dropdown">
+                    <ul>
+                        <li>Notificación 1</li>
+                        <li>Notificación 2</li>
+                        <li>Notificación 3</li>
+                    </ul>
+                </div>
+            </li>
+            <li>
+                <a href="/logout" class="logout-button">
+                    <img class="site-logo" src="{% static 'images/Log_Out_Buton.png' %}" alt="Logo" width="160" height="50" role="presentation">
+                </a>
+            </li>
         </ul>
         <script type='text/javascript' src='{% static "js/navbar.js" %}'></script>
     </body>
