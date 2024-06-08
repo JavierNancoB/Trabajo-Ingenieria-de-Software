@@ -24,11 +24,11 @@ class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU + ' ' + self.nombre_producto    
+        return self.SKU 
 
 
 class Ventas(models.Model):
-    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE)
     numero_boleta = models.IntegerField(unique=True)
     nombre_producto = models.CharField(max_length=50)
     precio_unitario = models.IntegerField()
@@ -36,9 +36,8 @@ class Ventas(models.Model):
     iva = models.IntegerField()
     medio_de_pago = models.CharField(max_length=50)
 
-
     def __str__(self):
-        return self.producto.SKU
+        return f"{self.SKU.SKU} - {self.nombre_producto}"
     
 
 class Inventario_Y_Stock(models.Model):

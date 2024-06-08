@@ -95,6 +95,6 @@ def insert_ventas(request):
 
 @login_required
 def delete_ventas(request, SKU):
-    member = ventas.objects.get(SKU=SKU)
+    member = Ventas.objects.get(SKU=SKU)
     member.delete()
     return redirect('/venta')
