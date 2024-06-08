@@ -28,7 +28,7 @@ class Producto(models.Model):
 
 
 class Ventas(models.Model):
-    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE, default='1')
     numero_boleta = models.IntegerField(unique=True)
     nombre_producto = models.CharField(max_length=50)
     precio_unitario = models.IntegerField()

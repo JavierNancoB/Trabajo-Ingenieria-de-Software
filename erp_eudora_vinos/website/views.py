@@ -71,9 +71,7 @@ def insert_ventas(request):
         cantidad = request.POST.get('cantidad')
         iva = request.POST.get('iva')
         numero_boleta = request.POST.get('numero_boleta')
-
-        if all([SKU, medio_de_pago, nombre_producto, precio_unitario, cantidad, iva]):
-            try:
+        if SKU and medio_de_pago and nombre_producto and precio_unitario and cantidad and iva and numero_boleta:
                 producto = Producto.objects.get(SKU=SKU)
                 member = Ventas(
                     SKU=producto,
@@ -86,12 +84,6 @@ def insert_ventas(request):
                 )
                 member.save()
                 return redirect('/venta')
-            except Producto.DoesNotExist:
-                return render(request, 'venta.html', {'error': 'Producto no encontrado'})
-        else:
-            return render(request, 'venta.html', {'error': 'Por favor no deje campos vacíos'})
-    else:
-        return render(request, 'venta.html')
 
 @login_required
 def delete_ventas(request, SKU):
