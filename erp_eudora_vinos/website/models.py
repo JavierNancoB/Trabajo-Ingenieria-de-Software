@@ -24,6 +24,8 @@ class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
     def __str__(self):
+        return self.SKU 
+
         return self.SKU  
 
 class Ventas(models.Model):
@@ -35,9 +37,8 @@ class Ventas(models.Model):
     iva = models.IntegerField()
     medio_de_pago = models.CharField(max_length=50)
 
-    def str(self):
+    def __str__(self):
         return f"{self.SKU.SKU} - {self.nombre_producto}"
-
     
 
 class Inventario_Y_Stock(models.Model):
