@@ -1,0 +1,102 @@
+{% load static %}    
+{% include "base.html" %}
+{% block content %}
+    <div id="Inventario_stock">
+        
+        <div id="titulo-modelo">
+            <h1>Inventario Y Stock.</h1>
+        </div>
+        <div class="a">
+            <div class="row align-items-end">
+                <div class="col">
+                    <div id="ediciones">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewproducto">
+                        Añade un producto
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="addnewproducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Inventario y stock</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label>SKU</label>
+                               <input type="text" id="SKU" class="form-control"/>
+                        </div>        
+                        <div class="mb-3">
+                            <label>Nombre de producto</label>
+                            <input type="text" id="nombre-producto" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Cantidad</label>
+                            <input type="text" id="cantidad" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Precio unitario</label>
+                            <input type="text" id="precio-unitario" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Fecha de ingreso</label>
+                            <input type="text" id="fecha-ingreso" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>venta</label>
+                            <input type="number" id="venta" class="form-control"/>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                  <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+                </div>
+              </div>
+            </div>
+        </div>
+        <table id="table" summary="tabla Inventario stock" class="table table-bordered table-hover dt-responsive">
+            <thead>    
+            <tr class="listado">   
+                <th> SKU </th>
+                <th> NOMBRE PRODUCTO</th>     
+                <th> CANTIDAD</th>
+                <th> PRECIO UNITARIO </th>
+                <th> FECHA DE INGRESO </th>  
+                <th> VENTA </th>
+                <th> ACCIONES </th>
+            </tr>
+            </thead>
+            <tbody>        
+                {% for inventario_Y_stock in inventario_Y_stocks %}
+                <tr class="listado">
+                    <td>{{ inventario_Y_stock.SKU }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="nombre_producto">{{ inventario_Y_stock.nombre_producto }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="cantidad">{{ inventario_Y_stock.cantidad }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="precio_unitario">{{ inventario_Y_stock.precio_unitario }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="fecha_de_ingreso">{{ inventario_Y_stock.fecha_de_ingreso }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="venta">{{ inventario_Y_stock.venta }}</td>
+                    <td>
+                        <a href="delete/{{ inventario_Y_stock.SKU}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
+                    </td>
+                </tr> 
+                {% endfor %}  
+
+            </tbody>
+        </table>
+        <script type='text/javascript' src='{% static "js/Inventario_Y_Stock.js" %}'></script>
+    </div>
+{% endblock %}

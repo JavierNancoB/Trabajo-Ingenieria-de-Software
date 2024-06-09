@@ -42,14 +42,14 @@ class Ventas(models.Model):
     
 
 class Inventario_Y_Stock(models.Model):
-    id_inventario=models.CharField(primary_key=True, max_length=50, unique=True, default='0')
     SKU = models.CharField(max_length=50, unique=True)
     nombre_producto = models.CharField(max_length=50)
     cantidad = models.IntegerField()
     precio_unitario = models.IntegerField()
     fecha_de_ingreso = models.DateTimeField()
     Venta = models.BooleanField(default=False)
-  
+    def __str__(self):
+        return self.SKU + ' ' + self.numero_boleta
       
 class Proveedores(models.Model):
     rut_empresa = models.CharField(primary_key=True, max_length=12, unique=True) # primary key

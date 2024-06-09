@@ -23,15 +23,7 @@ $(document).ready(function(){
             validador = 1;
             alert('Por favor no deje campos vacios');
         }
-        else if ($tipo_producto.length > 50 || $viña.length > 150 || $cepa.length > 50 || $nombre_producto.length > 50 || $cosecha.length > 50) {
-            validador = 1;
-            alert("Uno o más campos exceden el límite de caracteres permitidos.");
-        }
-        /* comprobamos ahora que no este en la base de datos el sku */
-        else if ($cosecha < 1800 || $cosecha > 2050){
-            validador = 1;
-            alert('Por favor ingrese una año de cosecha valida');
-        }
+
         else{
             /* Recorremos la tabla para comparar cada SKU */
             var skuExiste = false;
