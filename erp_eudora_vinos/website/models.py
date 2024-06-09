@@ -24,9 +24,7 @@ class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU 
-
-        return self.SKU  
+        return self.SKU + ' ' + self.nombre_producto    
 
 class Ventas(models.Model):
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE, default='1')
