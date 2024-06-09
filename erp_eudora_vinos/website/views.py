@@ -8,9 +8,6 @@ from.models import Ventas
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 
-# Vista para manejar el formulario de login
-#class LoginView(LoginView):
- #   template_name = 'login.html'
 
 @login_required
 def home(request):
@@ -22,6 +19,7 @@ def home(request):
 def producto(request):
     productos = Producto.objects.all()
     return render(request, 'producto.html', {'productos': productos})
+
 
 @login_required
 def insert_producto(request):
@@ -44,7 +42,12 @@ def proveedor(request):
 
 @login_required
 def insert_proveedor(request):
-    member = Proveedores(rut_empresa=request.POST.get('rut_empresa'), nombre_prov=request.POST.get('nombre_prov'), email_empresa=request.POST.get('email_empresa'), telefono_empresa=request.POST.get('telefono_empresa'))
+    member = Proveedores(
+                         rut_empresa=request.POST.get('rut_empresa'), 
+                         nombre_prov=request.POST.get('nombre_prov'), 
+                         email_empresa=request.POST.get('email_empresa'), 
+                         telefono_empresa=request.POST.get('telefono_empresa')
+                         )
     member.save()
     return redirect('/')
 
@@ -54,7 +57,43 @@ def delete_proveedor(request, rut_empresa):
     member.delete()
     return redirect('/proveedor')
 
-# se crea la vista edit_producto, editamos desde>
+# ventas
+
+@login_required
+def ventas(request):
+    ventas = Ventas.objects.all()
+    return render(request, 'ventas.html', {'ventas': ventas})
+
+@login_required
+def insert_ventas(request):
+    if request.method == 'POST':
+        SKU = request.POST.get('SKU')
+        medio_de_pago = request.POST.get('medio_de_pago')
+        nombre_producto = request.POST.get('nombre_producto')
+        precio_unitario = request.POST.get('precio_unitario')
+        cantidad = request.POST.get('cantidad')
+        iva = request.POST.get('iva')
+        numero_boleta = request.POST.get('numero_boleta')
+        if SKU and medio_de_pago and nombre_producto and precio_unitario and cantidad and iva and numero_boleta:
+                producto = Producto.objects.get(SKU=SKU)
+                member = Ventas(
+                    SKU=producto,
+                    medio_de_pago=medio_de_pago,
+                    nombre_producto=nombre_producto,
+                    precio_unitario=precio_unitario,
+                    cantidad=cantidad,
+                    iva=iva,
+                    numero_boleta=numero_boleta
+                )
+                member.save()
+                return redirect('/venta')
+
+@login_required
+def delete_ventas(request, SKU):
+    member = Ventas.objects.get(SKU=SKU)
+    member.delete()
+    return redirect('/venta')
+
 
 # Alertas
 @login_required
@@ -87,11 +126,6 @@ def insert_alerta_stock(request):
                 )
                 member.save()
                 return redirect('/notificaciones')
-        
-
-
-
-
 
 @login_required
 def delete_alerta_stock(request, id_inventario):
