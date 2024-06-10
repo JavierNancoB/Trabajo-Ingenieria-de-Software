@@ -1,0 +1,148 @@
+{% load static%}    
+{% include "base.html" %}
+{% block content %}
+<div id="cliente">
+    <link type="text/css" href='{% static "css/cliente.css" %}' rel="stylesheet"/>
+    <div id="titulo-modelo">
+        <h1>CLIENTE</h1>
+    </div>
+    <div class="a">
+        <div class="row align-items-end">
+            <div class="col">
+                <div id="ediciones">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
+                    </div>
+                </div>
+            </div>
+            <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewcliente">
+                    Añade un Cliente
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="addnewcliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Cliente</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label>RUT</label>
+                           <input type="text" id="rut" class="form-control" placeholder="12345678-K"/>
+                    </div>        
+                    <div class="mb-3">
+                        <label>Nombre</label>
+                        <input type="text" id="nombre" class="form-control" placeholder="Nombre Usuario"/>
+                    </div>
+                    <div class="mb-3">
+                        <label>Apellido</label>
+                        <input type="text" id="apellido" class="form-control" placeholder="Apellido Usuario"/>
+                    </div>
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input type="email" id="email" class="form-control" placeholder="usuario@email.com"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comuna">Comuna</label>
+                        <select id="comuna" class="form-select">
+                            <option value="" selected disabled>Selecciona una comuna</option>
+                            <option value="Cerrillos">Cerrillos</option>
+                            <option value="Cerro Navia">Cerro Navia</option>
+                            <option value="Conchalí">Conchalí</option>
+                            <option value="El Bosque">El Bosque</option>
+                            <option value="Estación Central">Estación Central</option>
+                            <option value="Huechuraba">Huechuraba</option>
+                            <option value="Independencia">Independencia</option>
+                            <option value="La Cisterna">La Cisterna</option>
+                            <option value="La Florida">La Florida</option>
+                            <option value="La Granja">La Granja</option>
+                            <option value="La Pintana">La Pintana</option>
+                            <option value="La Reina">La Reina</option>
+                            <option value="Las Condes">Las Condes</option>
+                            <option value="Lo Barnechea">Lo Barnechea</option>
+                            <option value="Lo Espejo">Lo Espejo</option>
+                            <option value="Lo Prado">Lo Prado</option>
+                            <option value="Macul">Macul</option>
+                            <option value="Maipú">Maipú</option>
+                            <option value="Ñuñoa">Ñuñoa</option>
+                            <option value="Pedro Aguirre Cerda">Pedro Aguirre Cerda</option>
+                            <option value="Peñalolén">Peñalolén</option>
+                            <option value="Providencia">Providencia</option>
+                            <option value="Pudahuel">Pudahuel</option>
+                            <option value="Quilicura">Quilicura</option>
+                            <option value="Quinta Normal">Quinta Normal</option>
+                            <option value="Recoleta">Recoleta</option>
+                            <option value="Renca">Renca</option>
+                            <option value="San Joaquín">San Joaquín</option>
+                            <option value="San Miguel">San Miguel</option>
+                            <option value="San Ramón">San Ramón</option>
+                            <option value="Santiago">Santiago</option>
+                            <option value="Vitacura">Vitacura</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label>Calle</label>
+                        <input type="text" id="calle" class="form-control" placeholder="Ejemplo calle 123"/>
+                    </div>
+                    <div class="mb-3">
+                        <label>Numero de Casa</label>
+                        <input type="number" id="numero_de_casa" class="form-control" placeholder="1111"/>
+                    </div>
+                    <div class="mb-3">
+                        <label>Telefono (+56)</label>
+                        <input type="number" id="telefono" class="form-control" maxlength="9" placeholder="123456789"/>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+            </div>
+          </div>
+        </div>
+    </div>
+    <table id="table" summary="tabla cliente" class="table table-bordered table-hover dt-responsive">
+        <thead>    
+        <tr class="listado">   
+            <th> RUT </th>
+            <th> NOMBRE </th>     
+            <th> APELLIDO</th>
+            <th> EMAIL</th>
+            <th> COMUNA </th>
+            <th> CALLE </th>  
+            <th> NUMERO DE CASA </th>
+            <th> TELEFONO </th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>        
+            {% for cliente in clientes %}
+            <tr class="listado">
+                <td>{{ cliente.rut }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="nombre">{{ cliente.nombre }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="apellido">{{ cliente.apellido }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="email">{{ cliente.email }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="comuna">{{ cliente.comuna }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="calle">{{ cliente.calle }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="numero_de_casa">{{ cliente.numero_de_casa }}</td>
+                <td class="editable" data-rut="{{ cliente.rut }}" data-type="telefono">{{ cliente.telefono }}</td>
+                <td>
+                    <a href="delete/{{ cliente.rut}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
+                </td>
+            </tr> 
+            {% endfor %}    
+        </tbody>
+    </table>
+    <script type='text/javascript' src='{% static "js/cliente.js" %}'></script>
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from.models import Producto
 from.models import Proveedores
+from.models import Cliente
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 
@@ -51,3 +52,20 @@ def delete_proveedor(request, rut_empresa):
     return redirect('/proveedor')
 
 # se crea la vista edit_producto, editamos desde>
+
+@login_required
+def cliente(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'cliente.html', {'clientes': clientes})
+
+@login_required
+def insert_cliente(request):
+    member = Cliente(rut=request.POST.get('rut'), nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'), email=request.POST.get('email'), comuna=request.POST.get('comuna'), calle=request.POST.get('calle'), numero_de_casa=request.POST.get('numero_de_casa'), telefono=request.POST.get('telefono'))
+    member.save()
+    return redirect('/')
+
+@login_required
+def delete_cliente(request, rut):
+    member = Cliente.objects.get(rut=rut)
+    member.delete()
+    return redirect('/cliente')

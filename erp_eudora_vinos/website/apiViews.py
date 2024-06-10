@@ -4,6 +4,7 @@ from  django.views.decorators.csrf import csrf_exempt
 
 from .models import Producto
 from .models import Proveedores
+from .models import Cliente
 
 # api para obtener todos los productos
 
@@ -55,3 +56,30 @@ def guardarproveedor(request):
         return JsonResponse({'status': 'Updated'})
     except Proveedores.DoesNotExist:
         return JsonResponse({'status': 'Provider not found'}, status=404)
+    
+def guardarcliente(request):
+    rut=request.POST.get('rut','')
+    type = request.POST.get('type', '')
+    value = request.POST.get('value', '')
+
+    try:
+        cliente = Cliente.objects.get(rut=rut)
+        if type == 'nombre':
+            cliente.nombre = value
+        elif type == 'apellido':
+            cliente.apellido = value
+        elif type == 'email':
+            cliente.email = value
+        elif type == 'comuna':
+            cliente.comuna = value
+        elif type == 'calle':
+            cliente.calle = value
+        elif type == 'numero_de_casa':
+            cliente.numero_de_casa = value
+        elif type == 'telefono':
+            cliente.telefono = value
+
+        cliente.save()
+        return JsonResponse({'status': 'Updated'})
+    except Cliente.DoesNotExist:
+        return JsonResponse({'status': 'Client not found'}, status=404)
