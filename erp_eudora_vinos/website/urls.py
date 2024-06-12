@@ -20,7 +20,8 @@ urlpatterns = [
     path('Inventario_Y_Stock/', views.inventario_Y_Stock, name='Inventario_Y_Stock'),
     path('Inventario_Y_Stock/insert/', views.insert_Inventario_Y_Stock, name='insert_Inventario_Y_Stock'),
     path('Inventario_Y_Stock/update/', apiViews.guardar_Inventario_Y_Stock, name='update_Inventario_Y_Stock'),
-    path('Inventario_Y_Stock/delete/<str:SKU>', views.delete_Inventario_Y_Stock, name='delete_Inventario_Y_Stock'),  
+    path('Inventario_Y_Stock/delete/<str:SKU>', views.delete_Inventario_Y_Stock, name='delete_Inventario_Y_Stock'),
+
 
 ]
 

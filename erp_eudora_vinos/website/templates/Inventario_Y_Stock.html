@@ -1,10 +1,10 @@
 {% load static %}    
 {% include "base.html" %}
 {% block content %}
-    <div id="Inventario_stock">
+    <div id="Inventario_stock" class="table-responsive">
         
         <div id="titulo-modelo">
-            <h1>Inventario Y Stock.</h1>
+            <h1>INVENTARIO Y STOCK</h1>
         </div>
         <div class="a">
             <div class="row align-items-end">
@@ -35,30 +35,65 @@
                 <div class="modal-body">
                     <form method="POST">
                         {% csrf_token %}
+                        
                         <div class="mb-3">
                             <label>SKU</label>
                                <input type="text" id="SKU" class="form-control"/>
-                        </div>        
+                        </div>      
+                        <div class="mb-3">
+                            <label>Nombre proveedor</label>
+                               <input type="text" id="nombre-prov" class="form-control"/>
+                        </div>     
+                        <div class="mb-3">
+                            <label>Cepa</label>
+                            <input type="text" id="cepa" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Cosecha</label>
+                            <input type="text" id="cosecha" class="form-control"/>
+                        </div>
                         <div class="mb-3">
                             <label>Nombre de producto</label>
                             <input type="text" id="nombre-producto" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Viña</label>
+                            <input type="text" id="viña" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Bodega</label>
+                            <input type="text" id="bodega" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Fecha de ingreso YYYY-MM-DD</label>
+                            <input type="text" id="fecha-ingreso" class="form-control"/>
                         </div>
                         <div class="mb-3">
                             <label>Cantidad</label>
                             <input type="text" id="cantidad" class="form-control"/>
                         </div>
                         <div class="mb-3">
+                            <label>Salidas</label>
+                            <input type="text" id="salidas" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Movimiento de bodegas</label>
+                            <input type="text" id="mov-bodegas" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Stock</label>
+                            <input type="text" id="stock" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
                             <label>Precio unitario</label>
                             <input type="text" id="precio-unitario" class="form-control"/>
                         </div>
                         <div class="mb-3">
-                            <label>Fecha de ingreso</label>
-                            <input type="text" id="fecha-ingreso" class="form-control"/>
+                            <label>Precio total</label>
+                            <input type="text" id="precio-total" class="form-control"/>
                         </div>
-                        <div class="mb-3">
-                            <label>venta</label>
-                            <input type="number" id="venta" class="form-control"/>
-                        </div>
+                        
+                        
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -70,13 +105,22 @@
         </div>
         <table id="table" summary="tabla Inventario stock" class="table table-bordered table-hover dt-responsive">
             <thead>    
-            <tr class="listado">   
+            <tr class="listado"> 
+                  
                 <th> SKU </th>
-                <th> NOMBRE PRODUCTO</th>     
+                <th> NOMBRE PROVEEDOR </th>
+                <th> CEPA </th>
+                <th> COSECHA </th>
+                <th> NOMBRE PRODUCTO</th>
+                <th> VIÑA </th>
+                <th> BODEGA </th>  
+                <th> FECHA DE INGRESO</th> 
                 <th> CANTIDAD</th>
+                <th> SALIDAS </th>
+                <th> MOVIMIENTO DE BODEGAS </th>
+                <th> STOCK </th>
                 <th> PRECIO UNITARIO </th>
-                <th> FECHA DE INGRESO </th>  
-                <th> VENTA </th>
+                <th> PRECIO TOTAL </th>
                 <th> ACCIONES </th>
             </tr>
             </thead>
@@ -84,11 +128,22 @@
                 {% for inventario_Y_stock in inventario_Y_stocks %}
                 <tr class="listado">
                     <td>{{ inventario_Y_stock.SKU }}</td>
+                    
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="nombre_prov">{{ inventario_Y_stock.nombre_prov }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="cepa">{{ inventario_Y_stock.cepa }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="cosecha">{{ inventario_Y_stock.cosecha }}</td>
                     <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="nombre_producto">{{ inventario_Y_stock.nombre_producto }}</td>
-                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="cantidad">{{ inventario_Y_stock.cantidad }}</td>
-                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="precio_unitario">{{ inventario_Y_stock.precio_unitario }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="viña">{{ inventario_Y_stock.viña }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="bodega">{{ inventario_Y_stock.bodega }}</td>
                     <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="fecha_de_ingreso">{{ inventario_Y_stock.fecha_de_ingreso }}</td>
-                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="venta">{{ inventario_Y_stock.venta }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="cantidad">{{ inventario_Y_stock.cantidad }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="salidas">{{ inventario_Y_stock.salidas }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="mov_bodegas">{{ inventario_Y_stock.mov_bodegas }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="stock">{{ inventario_Y_stock.stock }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="precio_unitario">{{ inventario_Y_stock.precio_unitario }}</td>
+                    <td class="editable" data-sku="{{ inventario_Y_stock.SKU }}" data-type="precio_total">{{ inventario_Y_stock.precio_total }}</td>
+
+                    
                     <td>
                         <a href="delete/{{ inventario_Y_stock.SKU}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
                     </td>

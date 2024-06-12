@@ -5,6 +5,8 @@ from. models import Inventario_Y_Stock
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 
+from django.http import JsonResponse
+
 # Vista para manejar el formulario de login
 #class LoginView(LoginView):
  #   template_name = 'login.html'
@@ -58,33 +60,51 @@ def inventario_Y_Stock(request):
     inventario_Y_stocks = Inventario_Y_Stock.objects.all()
     return render(request, 'Inventario_Y_Stock.html', {'inventario_Y_stocks': inventario_Y_stocks})
 """
-@login_required
-def insert_Inventario_Y_Stock(request):
-    member = Inventario_Y_Stock(SKU=request.POST.get('SKU'), nombre_producto=request.POST.get('nombre_producto'), cantidad=request.POST.get('cantidad'), precio_unitario=request.POST.get('precio_unitario'), fecha_de_ingreso=request.POST.get('fecha_de_ingreso'), venta=request.POST.get('venta'))
-    member.save()
-    return redirect('/')
+
 """
+
+
 @login_required
 def insert_Inventario_Y_Stock(request):
     if request.method == 'POST':
         SKU = request.POST.get('SKU')
+        nombre_prov = request.POST.get('nombre_prov')
+        cepa = request.POST.get('cepa')
+        cosecha = request.POST.get('cosecha')
         nombre_producto = request.POST.get('nombre_producto')
-        cantidad = request.POST.get('cantidad')
-        precio_unitario = request.POST.get('precio_unitario')
+        viña = request.POST.get('viña')
+        bodega = request.POST.get('bodega')
         fecha_de_ingreso = request.POST.get('fecha_de_ingreso')
-        venta = request.POST.get('venta')
+        cantidad = request.POST.get('cantidad')
+        salidas = request.POST.get('salidas')
+        mov_bodegas = request.POST.get('mov_bodegas')
+        stock = request.POST.get('stock')
+        precio_unitario = request.POST.get('precio_unitario')
+        precio_total = request.POST.get('precio_total')
+        
+        
 
 
-        if all([SKU, nombre_producto, cantidad, precio_unitario, fecha_de_ingreso, venta]):
+        if all([SKU, nombre_prov, cepa, cosecha, nombre_producto, viña, bodega, fecha_de_ingreso, cantidad, salidas, mov_bodegas, stock, precio_unitario, precio_total]):
             try:
                 producto = Producto.objects.get(SKU=SKU)
                 member = Inventario_Y_Stock(
+                    
                     SKU=producto,
-                    cantidad=cantidad,
+                    nombre_prov=nombre_prov,
+                    cepa=cepa,
+                    cosecha=cosecha,
                     nombre_producto=nombre_producto,
-                    precio_unitario=precio_unitario,
+                    viña=viña,
+                    bodega=bodega,
                     fecha_de_ingreso=fecha_de_ingreso,
-                    venta=venta
+                    cantidad=cantidad,
+                    salidas=salidas,
+                    mov_bodegas=mov_bodegas,
+                    stock=stock,
+                    precio_unitario=precio_unitario,
+                    precio_total=precio_total
+                    
                 )
                 member.save()
                 return redirect('/Inventario_Y_Stock')

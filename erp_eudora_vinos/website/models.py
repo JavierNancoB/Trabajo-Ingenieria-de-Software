@@ -44,12 +44,25 @@ class Ventas(models.Model):
     
 
 class Inventario_Y_Stock(models.Model):
+    
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
+    #producto
+    nombre_prov = models.CharField(max_length=150)
+    cepa = models.CharField(max_length=50)
+    cosecha = models.CharField(max_length=50)
     nombre_producto = models.CharField(max_length=50)
-    cantidad = models.IntegerField()
-    precio_unitario = models.IntegerField()
+    viña = models.CharField(max_length=150)
+    #producto
+    bodega = models.CharField(max_length=150)
     fecha_de_ingreso = models.DateTimeField()
-    venta = models.CharField(max_length=50)
+    cantidad = models.IntegerField()#es el ingreso
+    salidas = models.IntegerField()
+    mov_bodegas = models.CharField(max_length=50)
+    stock = models.IntegerField() #stock total
+    precio_unitario = models.IntegerField()
+    precio_total = models.IntegerField()
+    
+    
     def __str__(self):
         return self.nombre_producto
       

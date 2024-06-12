@@ -66,19 +66,38 @@ def guardar_Inventario_Y_Stock(request):
     value = request.POST.get('value', '')
 
     try:
-        Inventario_Y_Stock= Inventario_Y_Stock.objects.get(SKU=sku)
-        if type == 'nombre_producto':
-            Inventario_Y_Stock.nombre_producto = value
-        elif type == 'cantidad':
-            Inventario_Y_Stock.cantidad = value
-        elif type == 'precio_unitario':
-            Inventario_Y_Stock.precio_unitario = value
+        inventario = Inventario_Y_Stock.objects.get(SKU=sku)  # Cambiar el nombre de la variable a `inventario`
+        if type == 'nombre_prov':
+            inventario.nombre_prov = value
+        elif type == 'cepa':
+            inventario.cepa = value
+        elif type == 'cosecha':
+            inventario.cosecha = value
+        elif type == 'nombre_producto':
+            inventario.nombre_producto = value
+        elif type == 'viña':
+            inventario.viña = value
+        
+        elif type == 'bodega':
+            inventario.bodega = value
         elif type == 'fecha_de_ingreso':
-            Inventario_Y_Stock.fecha_de_ingreso = value
-        elif type == 'venta':
-            Inventario_Y_Stock.venta = value
+            inventario.fecha_de_ingreso = value
+        elif type == 'cantidad': #ingreso
+            inventario.cantidad = value
+        elif type == 'salidas': 
+            inventario.salidas = value
+        elif type == 'mov_bodegas':
+            inventario.mov_bodega = value
+        elif type == 'stock':
+            inventario.stock = value
+        elif type == 'precio_unitario':
+            inventario.precio_unitario = value
+        elif type == 'precio_total':
+            inventario.precio_total = value
+        
+        
 
-        Inventario_Y_Stock.save()
+        inventario.save()
         return JsonResponse({'status': 'Updated'})
     except Inventario_Y_Stock.DoesNotExist:
         return JsonResponse({'status': 'Stock not found'}, status=404)
