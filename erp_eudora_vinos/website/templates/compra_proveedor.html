@@ -1,0 +1,153 @@
+{% load static%}    
+{% include "base.html" %}
+{% block content %}
+
+    <div id="tablas-css" >
+        <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
+        <div id="titulo-modelo">
+            <h1>COMPRAS A PROVEEDORES</h1>
+        </div>
+        <div class="col d-grid gap-2 d-md-flex">
+            <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
+        </div>
+        <div class="a">
+            <div class="row align-items-end">
+                <div class="col">
+                    <div id="ediciones">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                            <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewcompra_proveedor">
+                        Añade una compra (proveedor)
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Modal -->
+        <div class="modal fade" id="addnewcompra_proveedor" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir compra (proveedor)</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label>Orden de compra</label>
+                                <input type="number" id="OC" class="form-control"/>
+                        </div>        
+                        <div class="mb-3">
+                            <label>Fecha del orden de compra</label>
+                            <input type="date" id="fecha_oc" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label for="SKU">SKU</label>
+                            <div class="d-flex align-items-center">
+                                <select class="form-control" id="SKU" style="flex-grow: 1;">
+                                    <!-- Las opciones se llenarán con JavaScript -->
+                                </select>
+                                <a href="/producto?openModal=true" id="link-svg">
+                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Nombre del proveedor</label>
+                            <div class="d-flex align-items-center">
+                                <select class="form-control" id="nombre_prov" style="flex-grow: 1;">
+                                    <!-- Las opciones se llenarán con JavaScript -->
+                                </select>
+                                <a href="/proveedor?openModal=true">
+                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Cantidad</label>
+                            <input type="number" id="cantidad" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>N° Factura</label>
+                            <input type="number" id="numero_factura" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Fecha Factura</label>
+                            <input type="date" id="fecha_factura" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Status</label>
+                            <input type="number" id="status" class="form-control"/>
+                        </div>  
+                        <div class="mb-3">
+                            <label>Fecha vencimiento</label>
+                            <input type="date" id="fecha_vencimiento" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Fecha del pago</label>
+                            <input type="date" id="fecha_pago" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Costo unitario</label>
+                            <input type="number" id="costo_unitario" class="form-control"/>
+                        </div>        
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <table id="table" summary="tabla compra_proveedor" class=" table table-bordered table-hover dt-responsive" >
+                <thead>    
+                <tr class="listado"> 
+
+                    <th> OC </th> <!-- 1 -->
+                    <th> FECHA OC </th>     
+                    <th> SKU</th>
+                    <th> PROVEEDOR </th>
+                    <th> CANTIDAD </th>  
+                    <th> NUMERO FACTURA </th>
+                    <th> FECHA FACTURA </th>  
+                    <th> STATUS </th>
+                    <th> FECHA VENCIMIENTO </th>  
+                    <th> FECHA PAGO </th>
+                    <th> COSTO UNITARIO </th>  
+                    <th> SEL </th> <!-- 13 -->
+                </tr>
+                </thead>
+                <tbody>        
+                    {% for compra_proveedor in compra_proveedores %}
+                    <tr class="listado">
+                        <td>{{ compra_proveedor.OC }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="fecha_oc">{{ compra_proveedor.fecha_oc }}</td>
+                        <td>{{ compra_proveedor.SKU }}</td>
+                        <td>{{ compra_proveedor.nombre_prov }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="cantidad">{{ compra_proveedor.cantidad }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="numero_factura">{{ compra_proveedor.numero_factura }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="fecha_factura">{{ compra_proveedor.fecha_factura }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="status">{{ compra_proveedor.status }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="fecha_vencimiento">{{ compra_proveedor.fecha_vencimiento }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="fecha_pago">{{ compra_proveedor.fecha_pago }}</td>
+                        <td class="editable" data-oc="{{ compra_proveedor.OC }}" data-type="costo_unitario">{{ compra_proveedor.costo_unitario }}</td>
+                        <td>
+                            <input type="checkbox" data-OC="{{ compra_proveedor.OC }}" name="seleccionar" id="seleccionar">
+                        </td>
+                    </tr> 
+                    {% endfor %}    
+                </tbody>
+            </table>
+            <script type='text/javascript' src='{% static "js/compra_proveedor.js" %}'></script>
+        </div>
+    </div>
+    
+{% endblock %}

@@ -18,78 +18,102 @@ $(document).ready(function(){
                 console.error('Error cargando los SKU');
             }
         });
+        $.ajax({
+            url: '/api/proveedores/',
+            type: 'GET',
+            success: function(data) {
+                var selectProveedor = $('#nombre_prov');
+                selectProveedor.empty();
+                data.nombres.forEach(function(nombre) {
+                    selectProveedor.append($('<option>', { value: nombre, text: nombre }));
+                });
+            },
+            error: function() {
+                console.error('Error cargando los nombres de los proveedores');
+            }
+        });
     });
-
-    $('#submit').on('click', function(){
-        var validador = 0;
-        $SKU = $('#SKU').val();
-        $medio_de_pago = $('#medio_de_pago').val();
-        $nombre_producto = $('#nombre_producto').val();
-        $precio_unitario = $('#precio_unitario').val();
-        $cantidad = $('#cantidad').val();
-        $iva = $('#iva').val();
-        $numero_boleta = $('#numero_boleta').val();
     
-        /*
-
-        comprueba que no haya campos vacios, que no se excedan los limites de caracteres
-        y que el año de iva sea valido (1800-2050).
+    
+    $('#submit').on('click', function(){
+        $OC = $('#OC').val();
+        $fecha_oc = $('#fecha_oc').val();
+        $SKU = $('#SKU').val();
+        $nombre_prov = $('#nombre_prov').val();
+        $cantidad = $('#cantidad').val();
+        $numero_factura = $('#numero_factura').val();
+        $fecha_factura = $('#fecha_factura').val();
+        $status = $('#status').val();
+        $fecha_vencimiento = $('#fecha_vencimiento').val();
+        $fecha_pago = $('#fecha_pago').val();
+        $costo_unitario = $('#costo_unitario').val();
+    
+        console.log($OC, $fecha_oc, $SKU, $nombre_prov, $cantidad, $numero_factura, $fecha_factura, $status, $fecha_vencimiento, $fecha_pago, $costo_unitario);
         
-        */ 
-        
-        if ($SKU == '' || $medio_de_pago == '' || $nombre_producto == '' || $precio_unitario == '' || $cantidad == '' || $iva == '' || $numero_boleta == ''){
-            validador = 1;
+        if ($OC == '' || $fecha_oc == '' || $SKU == '' || $nombre_prov == '' || $cantidad == '' || $numero_factura == ''|| $fecha_factura == '' || $status == '' || $fecha_vencimiento == '' || $fecha_pago == '' || $costo_unitario == ''){
             alert('Por favor no deje campos vacios');
         }
+
         else{
             /* Recorremos la tabla para comparar cada SKU */
-            var skuExiste = false;
+            var OCexiste = false;
             // debemos asegurarnos que el SKU no exista en la tabla
             $('#table tbody tr').each(function() {
-                var sku = $(this).find('td').eq(0).text();
-                if(sku == $SKU) {
-                    skuExiste = true;
+                var oc = $(this).find('td').eq(0).text();
+                if(oc == $OC) {
+                    OCexiste = true;
                 }
             });
-            if(skuExiste) {
-                alert('El SKU ya existe en la tabla');
+            if(OCexiste) {
+                alert('El OC ya existe en la tabla');
             }else{
                 /* Si el SKU no existe en la tabla, procedemos a la inserción */
                 $.ajax({
                     type: 'POST',
                     url: 'insert/',
                     data: {
+                        OC: $OC,
+                        fecha_oc: $fecha_oc,
                         SKU: $SKU,
-                        medio_de_pago: $medio_de_pago,
-                        nombre_producto: $nombre_producto,
-                        precio_unitario: $precio_unitario,
+                        nombre_prov: $nombre_prov,
                         cantidad: $cantidad,
-                        iva: $iva,
-                        numero_boleta: $numero_boleta,
+                        numero_factura: $numero_factura,
+                        fecha_factura: $fecha_factura,
+                        status: $status,
+                        fecha_vencimiento: $fecha_vencimiento,
+                        fecha_pago: $fecha_pago,
+                        costo_unitario: $costo_unitario,
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+
                     },
                     success: function(){
-                        alert('Se guardó correctamente la venta');
+                        alert('Se guardó correctamente el producto');
+                        $('#OC').val('');
+                        $('#fecha_oc').val('');
                         $('#SKU').val('');
-                        $('#medio_de_pago').val('');
-                        $('#nombre_producto').val('');
-                        $('#precio_unitario').val('');
+                        $('#nombre_prov').val('');
                         $('#cantidad').val('');
-                        $('#iva').val('');
-                        $('#numero_boleta').val('');
-                        window.location='/venta';
+                        $('#numero_factura').val('');
+                        $('#fecha_factura').val('');
+                        $('#status').val('');
+                        $('#fecha_vencimiento').val('');
+                        $('#fecha_pago').val('');
+                        $('#costo_unitario').val('');
+                        
+                        window.location='/compra_proveedor';
                     }
                 });
             }
         }
     });
-    /* EDITAR */
 
-    /* comprobar si la casilla editar esta activada */
+    // COMPROBAR SI LA EDICIÓN ESTÁ HABILITADA
 
     function isEditingEnabled() {
         return $('#flexSwitchCheckDefault').prop('checked');
     }
+
+    // EDITAR
  
     $(document).on('dblclick', '.editable', function(){
         if (isEditingEnabled()) { // Comprueba si la edición está habilitada
@@ -99,17 +123,19 @@ $(document).ready(function(){
             $(this).removeClass('editable');
         }
     });
+
     $(document).on('blur', '.input-data', function(){
         var value=$(this).val();
         var td=$(this).parent('td');
-        var SKU=td.data('sku');
-        console.log(SKU);
+        var oc=td.data('oc');
+        console.log(oc);
         $(this).remove();
         td.html(value);
         td.addClass('editable');
         var type=td.data('type');
-        sendToServer(td.data("sku"), value, type);
-    }); 
+        sendToServer(td.data("oc"), value, type);
+    });
+
     $(document).on('keypress', '.input-data', function(e){
         var key = e.which;
         if(key == 13){
@@ -119,77 +145,43 @@ $(document).ready(function(){
             console.log(td);
             var type = td.data("type");
             console.log(type);
-            var SKU = td.data("sku");
-            console.log(SKU);
+
+            // td.data("OC"); sirve para obtener el valor de la columna OC
+            // si Oc es un numero entero, se debe cambiar por el valor de la columna OC
+            var oc = td.data("oc");
+
             $(this).remove();
             td.html(value);
             td.addClass("editable");
-            sendToServer(td.data("sku"), value, type);
+            console.log(td.data("oc"));
+            sendToServer(td.data("oc"), value, type);
         }
     });
-    function sendToServer(SKU, value, type){
-        if (type=="cosecha" && isNaN(value)) {
-            alert("El valor debe ser numérico.");
-            return; // No enviar los datos al servidor si el valor no es numérico
-        }
-        if (type === "cosecha" && (value < 1800 || value > 2050)) {
-            alert("El valor para 'cosecha' debe estar entre 1800 y 2050");
-            return; // No enviar los datos al servidor
-        }
-        switch (type) {
-            case "tipo_producto":
-                if (value.length > 50) {
-                    alert("El valor para 'tipo de producto' no puede tener más de 50 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
-            case "viña":
-                if (value.length > 150) {
-                    alert("El valor para 'viña' no puede tener más de 150 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
-            case "cepa":
-                if (value.length > 50) {
-                    alert("El valor para 'cepa' no puede tener más de 50 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
-            case "nombre_producto":
-                if (value.length > 50) {
-                    alert("El valor para 'nombre de producto' no puede tener más de 50 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
-            case "cosecha":
-                if (value.length > 50) {
-                    alert("El valor para 'cosecha' no puede tener más de 50 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
-            default:
-                break;
-        }
-        console.log("Sending to server:", SKU, value, type);  // Log para ver qué datos se están enviando
+    
+    function sendToServer(oc, value, type){
+        
+        console.log("Sending to server:", oc, value, type);  // Log para ver qué datos se están enviando
         $.ajax({
             url: 'update/',
             type: 'POST',
             data: {
-                SKU: SKU,
+                OC: oc,
                 value: value,
                 type: type,
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             }
         })
         .done(function(response) {
-            alert('Se guardó correctamente el producto');
+            alert('Se guardó correctamente el proveedor');
             console.log(response);
         })
         .fail(function() {
             console.log('Error');
         });
     }
+
     /* ELIMINAR */
+
     $('#eliminar-seleccion').on('click', function(e){
         if (!isEditingEnabled()) {
             e.preventDefault();
@@ -198,18 +190,18 @@ $(document).ready(function(){
             var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
             if (confirmation) {
                 $('input[name="seleccionar"]:checked').each(function() {
-                    var sku = $(this).data('sku');
+                    var oc = $(this).data('oc');
     
                     $.ajax({
-                        url: '/venta/delete/' + sku, // Usando la ruta existente
+                        url: '/compra_proveedor/delete/' + oc, // Usando la ruta existente
                         type: 'POST',
                         headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
                         success: function(response) {
-                            console.log('Producto con OC ' + sku + ' eliminado');
+                            console.log('Producto con OC ' + oc + ' eliminado');
                         },
                         error: function(xhr) {
-                            console.log('Error al eliminar el producto con OC ' + sku);
-                        },                        
+                            console.log('Error al eliminar el producto con OC ' + oc);
+                        },
                         complete: function() {
                             location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
                         }

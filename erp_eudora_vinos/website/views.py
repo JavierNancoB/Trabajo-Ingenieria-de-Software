@@ -4,8 +4,11 @@ from.models import Proveedores
 from.models import Alerta_stock
 from.models import Inventario_Y_Stock
 from.models import Ventas
+from.models import Compra_proveedores
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
 
 
 @login_required
@@ -27,10 +30,15 @@ def insert_producto(request):
     return redirect('/')
 
 @login_required
+@require_POST
 def delete_producto(request, SKU):
-    member = Producto.objects.get(SKU=SKU)
-    member.delete()
-    return redirect('/producto')
+    try:
+        member = Producto.objects.get(SKU=SKU)
+        member.delete()
+        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+    except Compra_proveedores.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
+
 
 # PROVEEDORES
 
@@ -42,7 +50,6 @@ def proveedor(request):
 @login_required
 def insert_proveedor(request):
     member = Proveedores(
-                         rut_empresa=request.POST.get('rut_empresa'), 
                          nombre_prov=request.POST.get('nombre_prov'), 
                          email_empresa=request.POST.get('email_empresa'), 
                          telefono_empresa=request.POST.get('telefono_empresa')
@@ -51,11 +58,20 @@ def insert_proveedor(request):
     return redirect('/')
 
 @login_required
-def delete_proveedor(request, rut_empresa):
-    member = Proveedores.objects.get(rut_empresa=rut_empresa)
-    member.delete()
-    return redirect('/proveedor')
-    
+@require_POST
+def delete_proveedor(request, nombre_prov):
+    try:
+        member = Proveedores.objects.get(nombre_prov=nombre_prov)
+        member.delete()
+        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+    except Proveedores.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
+
+
+'''
+
+'''
+
 
 # VENTAS
 
@@ -89,11 +105,14 @@ def insert_ventas(request):
                 return redirect('/venta')
 
 @login_required
-def delete_ventas(request, SKU):
-    member = Ventas.objects.get(SKU=SKU)
-    member.delete()
-    return redirect('/venta')
-
+@require_POST
+def delete_ventas(request, sku):
+    try:
+        member = Ventas.objects.get(SKU=sku)
+        member.delete()
+        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+    except Ventas.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # ALERTAS
 
@@ -200,3 +219,87 @@ def delete_Inventario_Y_Stock(request, SKU):
     member = Inventario_Y_Stock.objects.get(SKU=SKU)
     member.delete()
     return redirect('/Inventario_Y_Stock')
+
+
+# COMPRA PROVEEDORES
+
+@login_required
+def compra_proveedor(request):
+    compra_proveedores = Compra_proveedores.objects.all()
+    return render(request, 'compra_proveedor.html', {'compra_proveedores': compra_proveedores})
+
+
+@login_required
+def insert_compra_proveedor(request):
+    if request.method == 'POST':
+        OC = request.POST.get('OC')
+        fecha_oc = request.POST.get('fecha_oc')
+        SKU_id = request.POST.get('SKU')
+        nombre_prov_id = request.POST.get('nombre_prov')
+        cantidad = request.POST.get('cantidad')
+        numero_factura = request.POST.get('numero_factura')
+        fecha_factura = request.POST.get('fecha_factura')
+        status = request.POST.get('status')
+        fecha_vencimiento = request.POST.get('fecha_vencimiento')
+        fecha_pago = request.POST.get('fecha_pago')
+        costo_unitario = request.POST.get('costo_unitario')
+
+        # Validar que todos los campos están presentes
+        if not all([OC, fecha_oc, SKU_id, nombre_prov_id, cantidad, numero_factura, fecha_factura, status, fecha_vencimiento, fecha_pago, costo_unitario]):
+            return render(request, 'compra_proveedor.html', {'error': 'Por favor, complete todos los campos'})
+
+        try:
+            # Obtener los objetos relacionados usando get_object_or_404 para manejar posibles errores
+            SKU = get_object_or_404(Producto, SKU=SKU_id)
+            nombre_prov = get_object_or_404(Proveedores, nombre_prov=nombre_prov_id)
+
+            # Buscar si existe un registro con el OC proporcionado
+            compra_proveedor, created = Compra_proveedores.objects.get_or_create(
+                OC=OC,
+                defaults={
+                    'fecha_oc': fecha_oc,
+                    'SKU': SKU,
+                    'nombre_prov': nombre_prov,
+                    'cantidad': cantidad,
+                    'numero_factura': numero_factura,
+                    'fecha_factura': fecha_factura,
+                    'status': status,
+                    'fecha_vencimiento': fecha_vencimiento,
+                    'fecha_pago': fecha_pago,
+                    'costo_unitario': costo_unitario
+                }
+            )
+
+            if not created:
+                # Si el registro ya existe, actualizar los campos
+                compra_proveedor.fecha_oc = fecha_oc
+                compra_proveedor.SKU = SKU
+                compra_proveedor.nombre_prov = nombre_prov
+                compra_proveedor.cantidad = cantidad
+                compra_proveedor.numero_factura = numero_factura
+                compra_proveedor.fecha_factura = fecha_factura
+                compra_proveedor.status = status
+                compra_proveedor.fecha_vencimiento = fecha_vencimiento
+                compra_proveedor.fecha_pago = fecha_pago
+                compra_proveedor.costo_unitario = costo_unitario
+                compra_proveedor.save()
+
+            return redirect('/compra_proveedor')
+        except Producto.DoesNotExist:
+            return render(request, 'compra_proveedor.html', {'error': 'Producto no encontrado'})
+        except Proveedores.DoesNotExist:
+            return render(request, 'compra_proveedor.html', {'error': 'Proveedor no encontrado'})
+    else:
+        return render(request, 'compra_proveedor.html')
+    
+
+
+@login_required
+@require_POST
+def delete_compra_proveedor(request, OC):
+    try:
+        member = Compra_proveedores.objects.get(OC=OC)
+        member.delete()
+        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+    except Compra_proveedores.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)

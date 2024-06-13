@@ -2,6 +2,12 @@ $(document).ready(function(){
     $('#table').DataTable();
     
     /* AÑADIR */
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('openModal') === 'true') {
+            new bootstrap.Modal(document.getElementById('addnewproducto')).show();
+        }
+    });
 
     $('#submit').on('click', function(){
         var validador = 0;
@@ -188,15 +194,32 @@ $(document).ready(function(){
     /* ELIMINAR SELECTIVAMENTE */
     /* Las casillas seleccionadas se podran eliminar despues de presionar el boton eliminar */
 
-    $('#eliminar-seleccion').on('click', function(){
-        var checked = $('.checkbox:checked').length;
-        if (checked > 0) {
-            /* por cada casilla seleccionada llama delete/{{ producto.SKU}} por el sku correspondiente y se queda en / */
-            /* recorremos */
-
-        }
-        else {
-            $('.delete-selected').css('display', 'none');
+    $('#eliminar-seleccion').on('click', function(e){
+        if (!isEditingEnabled()) {
+            e.preventDefault();
+            alert('Debe habilitar la edición para eliminar productos.');
+        } else {
+            var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
+            if (confirmation) {
+                $('input[name="seleccionar"]:checked').each(function() {
+                    var sku = $(this).data('sku');
+    
+                    $.ajax({
+                        url: '/producto/delete/' + sku, // Usando la ruta existente
+                        type: 'POST',
+                        headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+                        success: function(response) {
+                            console.log('Producto con SKU ' + sku + ' eliminado');
+                        },
+                        error: function(xhr) {
+                            console.log('Error al eliminar el producto con SKU ' + sku);
+                        },
+                        complete: function() {
+                            location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
+                        }
+                    });
+                });
+            }
         }
     });
 });

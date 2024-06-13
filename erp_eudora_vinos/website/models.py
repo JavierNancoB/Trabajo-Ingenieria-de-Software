@@ -24,7 +24,7 @@ class Producto(models.Model):
     nombre_producto = models.CharField(max_length=50)
     cosecha = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU + ' ' + self.nombre_producto    
+        return self.SKU    
 
 class Ventas(models.Model):
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE, default='1')
@@ -40,35 +40,38 @@ class Ventas(models.Model):
     
 
 class Inventario_Y_Stock(models.Model):
-    SKU = models.CharField(max_length=50, unique=True)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
     nombre_producto = models.CharField(max_length=50)
     cantidad = models.IntegerField()
     precio_unitario = models.IntegerField()
     fecha_de_ingreso = models.DateTimeField()
-    Venta = models.BooleanField(default=False)
+    venta = models.CharField(max_length=50)
     def __str__(self):
-        return self.SKU + ' ' + self.numero_boleta
+        return self.nombre_producto
       
 class Proveedores(models.Model):
-    rut_empresa = models.CharField(primary_key=True, max_length=12, unique=True) # primary key
-    nombre_prov = models.CharField(max_length=50)
-    email_empresa = models.EmailField()
-    telefono_empresa = models.IntegerField()
-    #SKU_prov = models.ForeignKey(Compra_proveedor, on_delete=models.CASCADE)
+    nombre_prov = models.CharField(primary_key=True, unique=True, max_length=50)
+    email_empresa = models.EmailField(null=True)
+    telefono_empresa = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.nombre_prov + ' ' + self.rut_empresa
+        return self.nombre_prov
     
 class Compra_proveedores(models.Model):
-    Numero_casa = models.IntegerField()
-    Calle_casa = models.CharField(max_length=255)
-    producto = models.CharField(max_length=50)
-    numero = models.IntegerField()
-    SKU_prov = models.CharField(max_length=50) # foreign key para compra de proveedor
-    #SKU_prov = models.ForeignKey(Compra_proveedor, on_delete=models.CASCADE)
+    OC = models.IntegerField(primary_key=True, unique=True)
+    nombre_prov = models.ForeignKey(Proveedores, on_delete=models.CASCADE) #foreign 
+    fecha_oc = models.DateField()
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
+    cantidad = models.IntegerField()
+    numero_factura = models.IntegerField()
+    fecha_factura = models.DateField(null=True)
+    status = models.CharField(max_length=50)
+    fecha_vencimiento = models.DateField()
+    fecha_pago = models.DateField(null=True)
+    costo_unitario = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.producto + ' ' + self.numero
+        return self.nombre_prov
 
 class Informes(models.Model):
     fecha_informe =models.DateField()
@@ -78,6 +81,7 @@ class Informes(models.Model):
     ingresos_ventas = models.IntegerField()
     gastos_ventas = models.IntegerField()
     gastos_no_ventas = models.IntegerField()
+    
     def __str__(self):
         return self.fecha_informe
 

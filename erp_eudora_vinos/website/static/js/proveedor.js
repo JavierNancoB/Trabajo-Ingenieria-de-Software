@@ -9,7 +9,6 @@ $(document).ready(function(){
 
     $('#submit').on('click', function(){
         var validador = 0;
-        $rut_empresa = $('#rut_empresa').val();
         $nombre_prov = $('#nombre_prov').val();
         $email_empresa = $('#email_empresa').val();
         $telefono_empresa = $('#telefono_empresa').val();
@@ -20,11 +19,11 @@ $(document).ready(function(){
         
         */ 
         
-        if ($rut_empresa == '' || $nombre_prov == '' || $email_empresa == '' || $telefono_empresa == '' ){
+        if ($nombre_prov == '' || $email_empresa == '' || $telefono_empresa == '' ){
             validador = 1;
             alert('Por favor no deje campos vacios');
         }
-        else if ($rut_empresa.length > 12 || $nombre_prov.length > 50 || $email_empresa.length > 150 ||$telefono_empresa.length > 15) {
+        else if ($nombre_prov.length > 50 || $email_empresa.length > 150 || $telefono_empresa.length > 15) {
             validador = 1;
             alert("Uno o más campos exceden el límite de caracteres permitidos.");
         }
@@ -40,19 +39,18 @@ $(document).ready(function(){
         }
         else{
             /* Recorremos la tabla para comparar cada rut */
-            var rut_empresa_existe = false;
+            var nombre_prov_existe = false;
             // debemos asegurarnos que el rut no exista en la tabla
             $('#table tbody tr').each(function() {
-                var rut_empresa = $(this).find('td').eq(0).text();
-                if(rut_empresa == $rut_empresa) {
-                    rut_empresa_existe = true;
+                var nombre_prov = $(this).find('td').eq(0).text();
+                if(nombre_prov == $nombre_prov) {
+                    nombre_prov_existe = true;
                 }
             });
-            if(rut_empresa_existe) {
+            if(nombre_prov_existe) {
                 alert('El Rut de la empresa ya existe en la tabla');
             }else{
                 /* Si el rut empresa no existe en la tabla, procedemos a la inserción */
-                console.log($rut_empresa);
                 console.log($nombre_prov);
                 /* email_empresa no se puede */
                 console.log($email_empresa);
@@ -62,7 +60,6 @@ $(document).ready(function(){
                     type: 'POST',
                     url: 'insert/',
                     data: {
-                        rut_empresa: $rut_empresa,
                         nombre_prov: $nombre_prov,
                         email_empresa: $email_empresa,
                         telefono_empresa: $telefono_empresa,
@@ -71,7 +68,6 @@ $(document).ready(function(){
                     success: function(){
                         console.log("entro"),
                         alert('Se guardó correctamente al proveedor');
-                        $('#rut_empresa').val('');
                         $('#nombre_prov').val('');
                         $('#email_empresa').val('');
                         $('#telefono_empresa').val('');
@@ -98,13 +94,13 @@ $(document).ready(function(){
     $(document).on('blur', '.input-data', function(){
         var value=$(this).val();
         var td=$(this).parent('td');
-        var rut_empresa=td.data('rut_empresa');
-        console.log(rut_empresa);
+        var nombre_prov=td.data('nombre_prov');
+        console.log(nombre_prov);
         $(this).remove();
         td.html(value);
         td.addClass('editable');
         var type=td.data('type');
-        sendToServer(td.data("rut_empresa"), value, type);
+        sendToServer(td.data("nombre_prov"), value, type);
     }); 
     $(document).on('keypress', '.input-data', function(e){
         var key = e.which;
@@ -115,26 +111,20 @@ $(document).ready(function(){
             console.log(td);
             var type = td.data("type");
             console.log(type);
-            var rut_empresa = td.data("rut_empresa");
-            console.log(rut_empresa);
+            var nombre_prov = td.data("nombre_prov");
+            console.log(nombre_prov);
             $(this).remove();
             td.html(value);
             td.addClass("editable");
-            sendToServer(td.data("rut_empresa"), value, type);
+            sendToServer(td.data("nombre_prov"), value, type);
         }
     });
-    function sendToServer(rut_empresa, value, type){
+    function sendToServer(nombre_prov, value, type){
         if (type=="telefono_empresa" && isNaN(value)) {
             alert("El valor debe ser numérico.");
             return; // No enviar los datos al servidor si el valor no es numérico
         }
         switch (type) {
-            case "nombre_prov":
-                if (value.length > 50) {
-                    alert("El valor para el nombre de los proveedores no puede tener más de 50 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
             case "email_empresa":
                 if (value.length > 150) {
                     alert("El valor para el email no puede tener más de 150 caracteres.");
@@ -155,12 +145,12 @@ $(document).ready(function(){
             default:
                 break;
         }
-        console.log("Sending to server:", rut_empresa, value, type);  // Log para ver qué datos se están enviando
+        console.log("Sending to server:", nombre_prov, value, type);  // Log para ver qué datos se están enviando
         $.ajax({
             url: 'update/',
             type: 'POST',
             data: {
-                rut_empresa: rut_empresa,
+                nombre_prov: nombre_prov,
                 value: value,
                 type: type,
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
@@ -177,15 +167,32 @@ $(document).ready(function(){
 
     /* ELIMINAR */
 
-    $(document).on('click', '.delete', function(e){
-        if (!isEditingEnabled()) { // Si la edición no está habilitada, prevenir la acción de eliminación
+    $('#eliminar-seleccion').on('click', function(e){
+        if (!isEditingEnabled()) {
             e.preventDefault();
             alert('Debe habilitar la edición para eliminar productos.');
-        }
-        else {
-            var confirmation = confirm('¿Está seguro de que desea eliminar este producto?');
-            if (confirmation==false)
-                e.preventDefault();
+        } else {
+            var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
+            if (confirmation) {
+                $('input[name="seleccionar"]:checked').each(function() {
+                    var nombre_prov = $(this).data('nombre_prov');
+                    console.log('Eliminando proveedor ' + nombre_prov);
+                    $.ajax({
+                        url: '/proveedor/delete/' + nombre_prov, // Usando la ruta existente
+                        type: 'POST',
+                        headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+                        success: function(response) {
+                            console.log('Proveedor ' + nombre_prov + ' eliminado');
+                        },
+                        error: function(xhr) {
+                            console.log('Error al eliminar el proveedor ' + nombre_prov);
+                        },
+                        complete: function() {
+                            location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
+                        }
+                    });
+                });
+            }
         }
     });
 

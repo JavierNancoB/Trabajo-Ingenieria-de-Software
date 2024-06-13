@@ -6,6 +6,9 @@
         <div id="titulo-modelo">
             <h1>PROVEEDORES</h1>
         </div>
+        <div class="col d-grid gap-2 d-md-flex">
+            <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
+        </div>
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -36,10 +39,6 @@
                     <form method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label>Rut empresa</label>
-                               <input type="text" id="rut_empresa" class="form-control"/>
-                        </div>        
-                        <div class="mb-3">
                             <label>Nombre del proveedor</label>
                             <input type="text" id="nombre_prov" class="form-control"/>
                         </div>
@@ -63,7 +62,6 @@
         <table id="table" summary="tabla Proveedor" class="table table-bordered table-hover dt-responsive">
             <thead>    
             <tr class="listado">   
-                <th> RUT EMPRESA </th>
                 <th> NOMBRE PROVEEDOR </th>     
                 <th> EMAIL</th>
                 <th> TELEFONO </th>
@@ -73,12 +71,11 @@
             <tbody>        
                 {% for proveedor in proveedores %}
                 <tr class="listado">
-                    <td>{{ proveedor.rut_empresa }}</td>
-                    <td class="editable" data-rut_empresa="{{ proveedor.rut_empresa }}" data-type="nombre_prov">{{ proveedor.nombre_prov }}</td>
-                    <td class="editable" data-rut_empresa="{{ proveedor.rut_empresa }}" data-type="email_empresa">{{ proveedor.email_empresa }}</td>
-                    <td class="editable" data-rut_empresa="{{ proveedor.rut_empresa }}" data-type="telefono_empresa">{{ proveedor.telefono_empresa }}</td>
+                    <td >{{ proveedor.nombre_prov }}</td>
+                    <td class="editable" data-nombre_prov="{{ proveedor.nombre_prov }}" data-type="email_empresa">{{ proveedor.email_empresa }}</td>
+                    <td class="editable" data-nombre_prov="{{ proveedor.nombre_prov }}" data-type="telefono_empresa">{{ proveedor.telefono_empresa }}</td>
                     <td>
-                        <a href="delete/{{ proveedor.rut_empresa}}" id="delete" class="link-delete text-danger delete">Eliminar</a>
+                        <input type="checkbox" data-nombre_prov="{{ proveedor.nombre_prov }}" name="seleccionar" id="seleccionar">
                     </td>
                 </tr> 
                 {% endfor %}    

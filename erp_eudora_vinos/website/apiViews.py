@@ -2,7 +2,7 @@ from django.core import serializers
 from django.http import JsonResponse
 from  django.views.decorators.csrf import csrf_exempt
 #from .models import Alerta_informes
-from .models import Alerta_stock
+from .models import Alerta_stock, Compra_proveedores
 from .models import Producto
 from .models import Proveedores
 from .models import Ventas
@@ -11,6 +11,13 @@ from .models import Inventario_Y_Stock
 # api para obtener todos los productos
 
 # PRODUCTOS
+def get_product_skus(request):
+    skus = list(Producto.objects.values_list('SKU', flat=True))
+    return JsonResponse({'skus': skus})
+
+def get_proveedor_nombre(request):
+    nombres = list(Proveedores.objects.values_list('nombre_prov', flat=True))
+    return JsonResponse({'nombres': nombres})
 
 @csrf_exempt
 def guardarproducto(request):
@@ -41,15 +48,13 @@ def guardarproducto(request):
 
 @csrf_exempt
 def guardarproveedor(request):
-    rut_empresa = request.POST.get('rut_empresa', '')
+    nombre_prov = request.POST.get('nombre_prov', '')
     type = request.POST.get('type', '')
     value = request.POST.get('value', '')
 
     try:
-        proveedor = Proveedores.objects.get(rut_empresa=rut_empresa)
-        if type == 'nombre_prov':
-            proveedor.nombre_prov = value
-        elif type == 'email_empresa':
+        proveedor = Proveedores.objects.get(nombre_prov=nombre_prov)
+        if type == 'email_empresa':
             proveedor.email_empresa = value
         elif type == 'telefono_empresa':
             proveedor.telefono_empresa = value
@@ -108,7 +113,7 @@ def guardarventa(request):
     value = request.POST.get('value', '')
 
     try:
-        venta = venta.objects.get(SKU=sku)
+        venta = Ventas.objects.get(SKU=sku)
         if type == 'medio_de_pago':
             venta.medio_de_pago = value
         elif type == 'nombre_producto':
@@ -136,19 +141,62 @@ def guardar_Inventario_Y_Stock(request):
     value = request.POST.get('value', '')
 
     try:
-        Inventario_Y_Stock= Inventario_Y_Stock.objects.get(SKU=sku)
+        inventario_Y_Stock= Inventario_Y_Stock.objects.get(SKU=sku)
         if type == 'nombre_producto':
-            Inventario_Y_Stock.nombre_producto = value
+            inventario_Y_Stock.nombre_producto = value
         elif type == 'cantidad':
-            Inventario_Y_Stock.cantidad = value
+            inventario_Y_Stock.cantidad = value
         elif type == 'precio_unitario':
-            Inventario_Y_Stock.precio_unitario = value
+            inventario_Y_Stock.precio_unitario = value
         elif type == 'fecha_de_ingreso':
-            Inventario_Y_Stock.fecha_de_ingreso = value
+            inventario_Y_Stock.fecha_de_ingreso = value
         elif type == 'venta':
-            Inventario_Y_Stock.venta = value
+            inventario_Y_Stock.venta = value
 
         Inventario_Y_Stock.save()
         return JsonResponse({'status': 'Updated'})
     except Inventario_Y_Stock.DoesNotExist:
         return JsonResponse({'status': 'Stock not found'}, status=404)
+    
+# COMPRA A PROVEEDORES
+
+@csrf_exempt
+def guardar_compra_proveedor(request):
+    oc = request.POST.get('OC', '')
+    type = request.POST.get('type', '')
+    value = request.POST.get('value', '')
+
+    try:
+        compra_proveedor = Compra_proveedores.objects.get(OC=oc)
+        if type == 'fecha_oc':
+            compra_proveedor.fecha_oc = value
+        elif type == 'nombre_prov':
+            compra_proveedor.nombre_prov = value
+        elif type == 'cantidad':
+            compra_proveedor.cantidad = value
+        elif type == 'numero_factura':
+            compra_proveedor.numero_factura = value
+        elif type == 'fecha_factura':
+            compra_proveedor.fecha_factura = value
+        elif type == 'status':
+            compra_proveedor.fecha_vencimiento = value
+        elif type == 'fecha_vencimiento':
+            compra_proveedor.fecha_vencimiento = value
+        elif type == 'fecha_pago':
+            compra_proveedor.fecha_pago = value
+        elif type == 'costo_unitario':
+            compra_proveedor.costo_unitario = value
+
+        if not oc:
+            return JsonResponse({'status': 'OC no puede estar vacío.'}, status=400)
+    
+        try:
+            oc = int(oc)
+        except ValueError:
+            return JsonResponse({'status': 'OC debe ser un número entero válido.'}, status=400)
+
+
+        compra_proveedor.save()
+        return JsonResponse({'status': 'Updated'})
+    except Compra_proveedores.DoesNotExist:
+        return JsonResponse({'status': 'Product not found'}, status=404)
