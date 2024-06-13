@@ -35,7 +35,7 @@ urlpatterns = [
     path('Inventario_Y_Stock/', views.inventario_Y_Stock, name='Inventario_Y_Stock'),
     path('Inventario_Y_Stock/insert/', views.insert_Inventario_Y_Stock, name='insert_Inventario_Y_Stock'),
     path('Inventario_Y_Stock/update/', apiViews.guardar_Inventario_Y_Stock, name='update_Inventario_Y_Stock'),
-    path('Inventario_Y_Stock/delete/<str:SKU>', views.delete_Inventario_Y_Stock, name='delete_Inventario_Y_Stock'),  
+    path('Inventario_Y_Stock/delete/<int:id_inventario>', views.delete_Inventario_Y_Stock, name='delete_Inventario_Y_Stock'),  
 
     # COMPRAS PROVEEDORES
     path('compra_proveedor/', views.compra_proveedor, name='Compra_proveedores'),
@@ -46,5 +46,11 @@ urlpatterns = [
     # API
     path('api/skus/', apiViews.get_product_skus, name='api_skus'),
     path('api/proveedores/', apiViews.get_proveedor_nombre, name='api_proveedores'),
+
+    # CLIENTE  
+    path('cliente/', views.cliente, name='cliente'),
+    path('cliente/insert/', views.insert_cliente, name='insert_cliente'),
+    path('cliente/update/', apiViews.guardar_cliente, name='update_cliente'),
+    path('cliente/delete/<str:rut>', views.delete_cliente, name='delete_cliente'), 
 ]
 

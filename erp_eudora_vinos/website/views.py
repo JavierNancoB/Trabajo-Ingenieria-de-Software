@@ -5,6 +5,7 @@ from.models import Alerta_stock
 from.models import Inventario_Y_Stock
 from.models import Ventas
 from.models import Compra_proveedores
+from.models import Cliente
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.decorators.http import require_POST
@@ -22,7 +23,6 @@ def producto(request):
     productos = Producto.objects.all()
     return render(request, 'producto.html', {'productos': productos})
 
-
 @login_required
 def insert_producto(request):
     member = Producto(SKU=request.POST.get('SKU'), tipo_producto=request.POST.get('tipo_producto'), viña=request.POST.get('viña'), cepa=request.POST.get('cepa'), nombre_producto=request.POST.get('nombre_producto'), cosecha=request.POST.get('cosecha'))
@@ -38,7 +38,6 @@ def delete_producto(request, SKU):
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
     except Compra_proveedores.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-
 
 # PROVEEDORES
 
@@ -66,12 +65,6 @@ def delete_proveedor(request, nombre_prov):
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
     except Proveedores.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-
-
-'''
-
-'''
-
 
 # VENTAS
 
@@ -122,6 +115,7 @@ def notificaciones(request):
     return render(request, 'notificaciones.html', {'alertas_stock': alertas_stock})
 
 """@login_required
+
 def insert_alerta_stock(request):
     if request.method == 'POST':
         id_inventario_id = request.POST.get('id_inventario')  # Cambiado a id_inventario
@@ -133,6 +127,7 @@ def insert_alerta_stock(request):
     return redirect('/notificaciones')
     
     """
+
 @login_required
 def insert_alerta_stock(request):
     if request.method == 'POST':
@@ -176,50 +171,61 @@ def delete_alerta_informes(request, numero_boleta):
 def inventario_Y_Stock(request):
     inventario_Y_stocks = Inventario_Y_Stock.objects.all()
     return render(request, 'Inventario_Y_Stock.html', {'inventario_Y_stocks': inventario_Y_stocks})
-"""
-@login_required
-def insert_Inventario_Y_Stock(request):
-    member = Inventario_Y_Stock(SKU=request.POST.get('SKU'), nombre_producto=request.POST.get('nombre_producto'), cantidad=request.POST.get('cantidad'), precio_unitario=request.POST.get('precio_unitario'), fecha_de_ingreso=request.POST.get('fecha_de_ingreso'), venta=request.POST.get('venta'))
-    member.save()
-    return redirect('/')
-"""
+
 @login_required
 def insert_Inventario_Y_Stock(request):
     if request.method == 'POST':
-        SKU = request.POST.get('SKU')
-        nombre_producto = request.POST.get('nombre_producto')
-        cantidad = request.POST.get('cantidad')
-        precio_unitario = request.POST.get('precio_unitario')
+        SKU_id = request.POST.get('SKU')
+        nombre_prov_id = request.POST.get('nombre_prov')
+        bodega = request.POST.get('bodega')
         fecha_de_ingreso = request.POST.get('fecha_de_ingreso')
-        venta = request.POST.get('venta')
+        cantidad = request.POST.get('cantidad')
+        salidas = request.POST.get('salidas')
+        mov_bodegas = request.POST.get('mov_bodegas')
+        stock = request.POST.get('stock')
+        precio_unitario = request.POST.get('precio_unitario')
+        precio_total = request.POST.get('precio_total')
 
+        # Validar que todos los campos necesarios estén presentes
+        if not all([SKU_id, nombre_prov_id, bodega, fecha_de_ingreso, cantidad, salidas, mov_bodegas, stock, precio_unitario, precio_total]):
+            return render(request, 'inventario_form.html', {'error': 'Por favor, complete todos los campos'})
 
-        if all([SKU, nombre_producto, cantidad, precio_unitario, fecha_de_ingreso, venta]):
-            try:
-                producto = Producto.objects.get(SKU=SKU)
-                member = Inventario_Y_Stock(
-                    SKU=producto,
-                    cantidad=cantidad,
-                    nombre_producto=nombre_producto,
-                    precio_unitario=precio_unitario,
-                    fecha_de_ingreso=fecha_de_ingreso,
-                    venta=venta
-                )
-                member.save()
-                return redirect('/Inventario_Y_Stock')
-            except Producto.DoesNotExist:
-                return render(request, 'Inventario_Y_Stock.html', {'error': 'Producto no encontrado'})
-        else:
-            return render(request, 'Inventario_Y_Stock.html', {'error': 'Por favor no deje campos vacíos'})
+        try:
+            # Obtener los objetos relacionados
+            SKU = get_object_or_404(Producto, SKU=SKU_id)
+            nombre_prov = get_object_or_404(Proveedores, nombre_prov=nombre_prov_id)
+
+            # Crear el registro de inventario
+            inventario = Inventario_Y_Stock.objects.create(
+                SKU=SKU,
+                nombre_prov=nombre_prov,
+                bodega=bodega,
+                fecha_de_ingreso=fecha_de_ingreso,
+                cantidad=cantidad,
+                salidas=salidas,
+                mov_bodegas=mov_bodegas,
+                stock=stock,
+                precio_unitario=precio_unitario,
+                precio_total=precio_total
+            )
+
+            return redirect('/Inventario_Y_Stock')
+        except Producto.DoesNotExist:
+            return render(request, 'inventario_form.html', {'error': 'Producto no encontrado'})
+        except Proveedores.DoesNotExist:
+            return render(request, 'inventario_form.html', {'error': 'Proveedor no encontrado'})
     else:
-        return render(request, 'Inventario_Y_Stock.html')
-
+        return render(request, 'inventario_form.html')   
+    
 @login_required
-def delete_Inventario_Y_Stock(request, SKU):
-    member = Inventario_Y_Stock.objects.get(SKU=SKU)
-    member.delete()
-    return redirect('/Inventario_Y_Stock')
-
+@require_POST
+def delete_Inventario_Y_Stock(request, id_inventario):
+    try:
+        member = Inventario_Y_Stock.objects.get(id_inventario=id_inventario)
+        member.delete()
+        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+    except Inventario_Y_Stock.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # COMPRA PROVEEDORES
 
@@ -227,7 +233,6 @@ def delete_Inventario_Y_Stock(request, SKU):
 def compra_proveedor(request):
     compra_proveedores = Compra_proveedores.objects.all()
     return render(request, 'compra_proveedor.html', {'compra_proveedores': compra_proveedores})
-
 
 @login_required
 def insert_compra_proveedor(request):
@@ -292,8 +297,6 @@ def insert_compra_proveedor(request):
     else:
         return render(request, 'compra_proveedor.html')
     
-
-
 @login_required
 @require_POST
 def delete_compra_proveedor(request, OC):
@@ -302,4 +305,27 @@ def delete_compra_proveedor(request, OC):
         member.delete()
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
     except Compra_proveedores.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
+
+# CLIENTE
+
+@login_required
+def cliente(request):
+    clientes = Cliente.objects.all()
+    return render(request, 'cliente.html', {'clientes': clientes})
+
+@login_required
+def insert_cliente(request):
+    member = Cliente(rut=request.POST.get('rut'), nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'), email=request.POST.get('email'), comuna=request.POST.get('comuna'), calle=request.POST.get('calle'), numero_de_casa=request.POST.get('numero_de_casa'), telefono=request.POST.get('telefono'))
+    member.save()
+    return redirect('/')
+
+@login_required
+@require_POST
+def delete_cliente(request, rut):
+    try:
+        member = Cliente.objects.get(rut=rut)
+        member.delete()
+        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+    except Cliente.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
