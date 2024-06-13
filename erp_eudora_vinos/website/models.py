@@ -38,16 +38,6 @@ class Ventas(models.Model):
     def __str__(self):
         return f"{self.SKU.SKU} - {self.nombre_producto}"
     
-
-class Inventario_Y_Stock(models.Model):
-    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign
-    nombre_producto = models.CharField(max_length=50)
-    cantidad = models.IntegerField()
-    precio_unitario = models.IntegerField()
-    fecha_de_ingreso = models.DateTimeField()
-    venta = models.CharField(max_length=50)
-    def __str__(self):
-        return self.nombre_producto
       
 class Proveedores(models.Model):
     nombre_prov = models.CharField(primary_key=True, unique=True, max_length=50)
@@ -56,6 +46,24 @@ class Proveedores(models.Model):
 
     def __str__(self):
         return self.nombre_prov
+
+class Inventario_Y_Stock(models.Model):
+
+    id_inventario = models.AutoField(primary_key=True)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) # foreign key
+    nombre_prov = models.ForeignKey(Proveedores, on_delete=models.CASCADE) # foreign key
+    bodega = models.CharField(max_length=150)
+    fecha_de_ingreso = models.DateField()
+    cantidad = models.IntegerField() # es el ingreso
+    salidas = models.IntegerField()
+    mov_bodegas = models.CharField(max_length=50)
+    stock = models.IntegerField() # stock total
+    precio_unitario = models.IntegerField()
+    precio_total = models.IntegerField()
+
+
+    def str(self):
+        return self.id_inventario
     
 class Compra_proveedores(models.Model):
     OC = models.IntegerField(primary_key=True, unique=True)
@@ -92,13 +100,5 @@ class Alerta_stock(models.Model):
 
     def __str__(self):
         return str(self.id_inventario) + ' ' + str(self.fecha_alerta)
-    
-"""class Alerta_informes(models.Model):
-    # Cambiado el related_name a 'alertas_informes'
-    ventas = models.ForeignKey(Ventas, on_delete=models.CASCADE, related_name='alertas_informes')
-    fecha_alerta = models.DateField()
-
-    def __str__(self):
-        return str(self.ventas.numero_boleta) + ' ' + str(self.fecha_alerta)"""
     
 

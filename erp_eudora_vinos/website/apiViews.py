@@ -5,6 +5,7 @@ from  django.views.decorators.csrf import csrf_exempt
 from .models import Alerta_stock, Compra_proveedores
 from .models import Producto
 from .models import Proveedores
+from .models import Cliente
 from .models import Ventas
 from .models import Inventario_Y_Stock
 
@@ -200,3 +201,61 @@ def guardar_compra_proveedor(request):
         return JsonResponse({'status': 'Updated'})
     except Compra_proveedores.DoesNotExist:
         return JsonResponse({'status': 'Product not found'}, status=404)
+    
+def guardar_cliente(request):
+    rut = request.POST.get('rut','')
+    type = request.POST.get('type', '')
+    value = request.POST.get('value', '')
+
+    try:
+        cliente = Cliente.objects.get(rut=rut)
+        if type == 'nombre':
+            cliente.nombre = value
+        elif type == 'apellido':
+            cliente.apellido = value
+        elif type == 'email':
+            cliente.email = value
+        elif type == 'comuna':
+            cliente.comuna = value
+        elif type == 'calle':
+            cliente.calle = value
+        elif type == 'numero_de_casa':
+            cliente.numero_de_casa = value
+        elif type == 'telefono':
+            cliente.telefono = value
+
+        cliente.save()
+        return JsonResponse({'status': 'Updated'})
+    except Cliente.DoesNotExist:
+        return JsonResponse({'status': 'Client not found'}, status=404)
+
+@csrf_exempt
+def guardar_Inventario_Y_Stock(request):
+    id_inventario = request.POST.get('id_inventario', '')
+    type = request.POST.get('type', '')
+    value = request.POST.get('value', '')
+
+    try:
+        inventario = Inventario_Y_Stock.objects.get(id_inventario=id_inventario)  # Cambiar el nombre de la variable a `inventario`
+        if type == 'bodega':
+            inventario.bodega = value
+        elif type == 'fecha_de_ingreso':
+            inventario.fecha_de_ingreso = value
+        elif type == 'cantidad': #ingreso
+            inventario.cantidad = value
+        elif type == 'salidas': 
+            inventario.salidas = value
+        elif type == 'mov_bodegas':
+            inventario.mov_bodega = value
+        elif type == 'stock':
+            inventario.stock = value
+        elif type == 'precio_unitario':
+            inventario.precio_unitario = value
+        elif type == 'precio_total':
+            inventario.precio_total = value
+        
+
+        inventario.save()
+        return JsonResponse({'status': 'Updated'})
+    except Inventario_Y_Stock.DoesNotExist:
+        return JsonResponse({'status': 'Stock not found'}, status=404)
