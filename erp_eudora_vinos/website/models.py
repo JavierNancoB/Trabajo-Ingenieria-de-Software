@@ -96,9 +96,11 @@ class Informes(models.Model):
 class Alerta_stock(models.Model):
     id_inventario=models.ForeignKey(Inventario_Y_Stock, on_delete=models.CASCADE, default='0')
     fecha_alerta = models.DateField()
+    cantidad = models.IntegerField(default='0')
       # Corregido: No necesitas una relación ForeignKey aquí
 
     def __str__(self):
-        return str(self.id_inventario) + ' ' + str(self.fecha_alerta)
-    
+        return str(self.id_inventario) + ' ' + str(self.fecha_alerta) + ' ' + str(self.cantidad)
+
+
 
