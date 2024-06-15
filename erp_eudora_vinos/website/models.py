@@ -40,17 +40,6 @@ class Ventas(models.Model):
     def __str__(self):
         return f"{self.SKU.SKU} - {self.nombre_producto}"
     
-
-class Inventario_Y_Stock(models.Model):
-    id_inventario=models.CharField(primary_key=True, max_length=50, unique=True, default='0')
-    SKU = models.CharField(max_length=50, unique=True)
-    nombre_producto = models.CharField(max_length=50)
-    cantidad = models.IntegerField()
-    precio_unitario = models.IntegerField()
-    fecha_de_ingreso = models.DateTimeField()
-    Venta = models.BooleanField(default=False)
-  
-      
 class Proveedores(models.Model):
     rut_empresa = models.CharField(primary_key=True, max_length=12, unique=True) # primary key
     nombre_prov = models.CharField(max_length=50)
@@ -61,6 +50,22 @@ class Proveedores(models.Model):
     def __str__(self):
         return self.nombre_prov + ' ' + self.rut_empresa
     
+class Inventario_Y_Stock(models.Model):
+    id_inventario = models.IntegerField(primary_key=True, unique=True, auto_created=True)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) #foreign key
+    #producto
+    nombre_prov = models.ForeignKey(Proveedores, on_delete=models.CASCADE) #foreign key
+    bodega = models.CharField(max_length=150)
+    fecha_de_ingreso = models.DateTimeField()
+    cantidad = models.IntegerField()#es el ingreso
+    salidas = models.IntegerField()
+    mov_bodegas = models.CharField(max_length=50)
+    stock = models.IntegerField() #stock total
+    precio_unitario = models.IntegerField()
+    precio_total = models.IntegerField()
+  
+      
+
 class Compra_proveedores(models.Model):
     Numero_casa = models.IntegerField()
     Calle_casa = models.CharField(max_length=255)
@@ -86,17 +91,11 @@ class Informes(models.Model):
 class Alerta_stock(models.Model):
     id_inventario=models.ForeignKey(Inventario_Y_Stock, on_delete=models.CASCADE, default='0')
     fecha_alerta = models.DateField()
+    cantidad = models.IntegerField(default='0')
       # Corregido: No necesitas una relación ForeignKey aquí
 
     def __str__(self):
-        return str(self.id_inventario) + ' ' + str(self.fecha_alerta)
-    
-"""class Alerta_informes(models.Model):
-    # Cambiado el related_name a 'alertas_informes'
-    ventas = models.ForeignKey(Ventas, on_delete=models.CASCADE, related_name='alertas_informes')
-    fecha_alerta = models.DateField()
+        return str(self.id_inventario) + ' ' + str(self.fecha_alerta) + ' ' + str(self.cantidad)
 
-    def __str__(self):
-        return str(self.ventas.numero_boleta) + ' ' + str(self.fecha_alerta)"""
-    
+
 
