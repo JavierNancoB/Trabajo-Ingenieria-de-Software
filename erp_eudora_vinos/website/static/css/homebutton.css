@@ -17,7 +17,7 @@ margin:10px;
 
 .boton-daccess {
     display: inline-block;
-    padding: 10px 10px;
+    padding: 10px;
     width:50px;
     height: 50px;
     border-radius: 50%;
@@ -27,7 +27,15 @@ margin:10px;
     text-decoration: none;
     font-weight: bold;
     margin: 10px;
-    margin-top: 10px;
+}
+
+.contenedor-ul{
+    align-items: center;
+    width: 100%;
+    height: auto;
+    background-color:#d4c4dd;
+    border-radius:25px;
+    margin:5px;
 }
 
 

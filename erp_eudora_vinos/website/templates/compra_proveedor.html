@@ -146,8 +146,11 @@
                     {% endfor %}    
                 </tbody>
             </table>
-            <script type='text/javascript' src='{% static "js/compra_proveedor.js" %}'></script>
+            
+            
         </div>
+        <script type="module" src="{% static 'js/tablas.js' %}"></script>
+        <script type="module" src="{% static 'js/compra_proveedor.js' %}"></script>
     </div>
     
 {% endblock %}

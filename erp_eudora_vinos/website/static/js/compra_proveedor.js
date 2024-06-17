@@ -1,3 +1,5 @@
+import { transformarFecha } from './tablas.js';
+
 $(document).ready(function(){
     $('#table').DataTable();
     
@@ -133,6 +135,9 @@ $(document).ready(function(){
         td.html(value);
         td.addClass('editable');
         var type=td.data('type');
+        if (type === 'fecha_oc' || type === 'fecha_factura' || type === 'fecha_vencimiento' || type === 'fecha_pago') {
+            value = transformarFecha(value);
+        }
         sendToServer(td.data("oc"), value, type);
     });
 
@@ -144,7 +149,10 @@ $(document).ready(function(){
             var td = $(this).parent("td");
             console.log(td);
             var type = td.data("type");
-            console.log(type);
+            if (type === 'fecha_oc' || type === 'fecha_factura' || type === 'fecha_vencimiento' || type === 'fecha_pago') {
+                value = transformarFecha(value);
+            }
+            console.log(type, "AWA", value);
 
             // td.data("OC"); sirve para obtener el valor de la columna OC
             // si Oc es un numero entero, se debe cambiar por el valor de la columna OC

@@ -1,3 +1,5 @@
+import { transformarFecha } from './tablas.js';
+
 $(document).ready(function() {
     $('#table').DataTable();
 
@@ -123,29 +125,10 @@ $(document).ready(function() {
     // Evento que se activa al hacer doble clic en un elemento con clase 'editable'
     $(document).on('dblclick', '.editable', function() {
         if (isEditingEnabled()) {
-            var type = $(this).data('type');
-            var value = $(this).text();
-            var input;
-            if (type === 'fecha_de_ingreso') { // Asegúrate de que el tipo coincide con cómo lo has definido en el data-type
-                input = "<input type='text' class='input-data datepicker' value='" + value + "' />";
-            } else {
-                input = "<input type='text' class='input-data' value='" + value + "' />";
-            }
+            var value=$(this).text();
+            var input="<input type='text' class='input-data' value='"+value+"' class='form-control' /> ";
             $(this).html(input);
             $(this).removeClass('editable');
-    
-            if (type === 'fecha_de_ingreso') {
-                $('.datepicker').datepicker({
-                    format: 'yyyy-mm-dd',
-                    language: 'es',
-                    autoclose: true,
-                    todayHighlight: true,
-                    endDate: '0d'
-                });
-            }
-    
-            // Focus al input creado para facilitar la edición
-            $('.input-data').focus();
         }
     });
     /*
@@ -174,57 +157,45 @@ $(document).ready(function() {
         var td = $(this).parent('td');
         var value = $(this).val();
         finishEditing(td, value);
-    });
-    
-    $(document).on('keypress', '.input-data', function(e) {
-        if (e.which === 13) {
-            var td = $(this).parent('td');
-            var value = $(this).val();
-            finishEditing(td, value);
-        }
-    });
-    
-    function finishEditing(td, value) {
-        var id_inventario = td.data('id_inventario');
-        var type = td.data('type');
-    
-        // Actualizar HTML
+
+        var value=$(this).val();
+        var td=$(this).parent('td');
+        var id_inventario=td.data('id_inventario');
+        $(this).remove();
         td.html(value);
         td.addClass('editable');
-    
-        // Enviar al servidor
-        sendToServer(id_inventario, value, type);
-    }
-    // Evento que se activa al presionar una tecla en un input con clase 'input-data'
-    $(document).on('keypress', '.input-data', function(e) {
-        // Obtiene el código de la tecla presionada
-        var key = e.which;
-        // Si la tecla presionada es Enter (código 13)
-        if (key == 13) {
-            // Obtiene el valor del input
-            var value = $(this).val();
-            console.log(value);
-            // Obtiene el elemento padre (td) del input
-            var td = $(this).parent("td");
-            console.log(td);
-            // Obtiene el tipo del atributo 'data-type' del td
-            var type = td.data("type");
-            console.log(type);
-            // Obtiene el SKU del atributo 'data-sku' del td
-            var id_inventario = td.data("id_inventario");
-            console.log(id_inventario);
-            // Elimina el input
-            $(this).remove();
-            // Inserta el valor en el td
-            td.html(value);
-            // Añade de nuevo la clase 'editable' al td
-            td.addClass("editable");
-            // Envía los datos al servidor
-            sendToServer(td.data("id_inventario"), value, type);
+        var type=td.data('type');
+        if (type === 'fecha_de_ingreso' ) {
+            value = transformarFecha(value);
         }
+        sendToServer(td.data("id_inventario"), value, type);
+    });
     });
     
-    // Función que envía los datos al servidor
+    $(document).on('keypress', '.input-data', function(e) {
+        var key = e.which;
+        if(key == 13){
+            var value = $(this).val();
+            console.log(value);
+            var td = $(this).parent("td");
+            console.log(td);
+            var type = td.data("type");
+            if (type === 'fecha_de_ingreso') {
+                value = transformarFecha(value);
+            }
+            console.log(type, "AWA", value);
+            // td.data("OC"); sirve para obtener el valor de la columna OC
+            // si Oc es un numero entero, se debe cambiar por el valor de la columna OC
+            var id_inventario = td.data("id_inventario");
+            $(this).remove();
+            td.html(value);
+            td.addClass("editable");
+            console.log(td.data("id_inventario"));
+            sendToServer(td.data("id_inventario"), value, type);
+        }
+        
+    });
+    
     function sendToServer(id_inventario, value, type) {
         
         if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
@@ -247,33 +218,6 @@ $(document).ready(function() {
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        /*
-        // Validar fecha actual
-        var fechaActual = new Date().toISOString().split('T')[0];
-        var partesFecha = fechaActual.split('-');
-        var año = partesFecha[0];
-        var mes = partesFecha[1];
-        var dia = partesFecha[2];
-
-        //guardar fecha ingresada
-        
-        // Fecha ingresada
-        var partesFechaIngreso = value.split('-');
-        var yyyy = partesFechaIngreso[0];
-        var mm = partesFechaIngreso[1];
-        var dd = partesFechaIngreso[2];
-
-        if (partesFechaIngreso.includes('-')) {//lo puse ya que si uno apretaba editar fecha y no la editaba le salia que la fecha ingresada no podia ser mayor a la actual
-               
-            if ((yyyy > año) || (yyyy == año && mm > mes) || (yyyy == año && mm == mes && dd > dia)) {
-                alert('La fecha de ingreso no puede ser mayor a la fecha actual, intente nuevamente.');
-                alert("partesFechaIngreso: " + partesFechaIngreso);
-                alert("partesFechaIngresooooo: " + yyyy + mm + dd);
-                return;
-            }
-        }
-        
-        */
         // Validaciones para diferentes tipos de datos
         switch (type) {
             case "bodega":
@@ -358,5 +302,4 @@ $(document).ready(function() {
             }
         }
     });
-    
-});
+

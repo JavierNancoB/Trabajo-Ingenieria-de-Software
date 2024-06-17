@@ -1,3 +1,5 @@
+import { transformarFecha } from './tablas.js';
+
 $(document).ready(function(){
     $('#table').DataTable();
     
