@@ -8,6 +8,7 @@ from .models import Proveedores
 from .models import Cliente
 from .models import Ventas
 from .models import Inventario_Y_Stock
+from django.shortcuts import get_object_or_404
 
 # api para obtener todos los productos
 
@@ -65,7 +66,7 @@ def guardarproveedor(request):
     except Proveedores.DoesNotExist:
         return JsonResponse({'status': 'Provider not found'}, status=404)
     
-#ALERTAS 
+#ALERTAS STOCK
 @csrf_exempt
 def guardar_alerta_stock(request):
     if request.method == 'POST':
@@ -86,26 +87,9 @@ def guardar_alerta_stock(request):
     else:
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
-"""@csrf_exempt
-def guardar_alerta_informes(request):
-    if request.method == 'POST':
-        numero_boleta = request.POST.get('numero_boleta', '')
-        fecha_alerta = request.POST.get('fecha_alerta', '')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento', '')
 
-        try:
-            alerta_informes = Alerta_informes.objects.get(numero_boleta=numero_boleta)
-            alerta_informes.fecha_alerta = fecha_alerta
-            alerta_informes.fecha_vencimiento = fecha_vencimiento
-            alerta_informes.save()
-            return JsonResponse({'status': 'Alerta de informes actualizada'})
-        except Alerta_informes.DoesNotExist:
-            alerta_informes = Alerta_informes(numero_boleta=numero_boleta, fecha_alerta=fecha_alerta, fecha_vencimiento=fecha_vencimiento)
-            alerta_informes.save()
-            return JsonResponse({'status': 'Alerta de informes creada'}, status=201)
-    else:
-        return JsonResponse({'error': 'Método no permitido'}, status=405)
-"""
+
+
 # VENTAS
 @csrf_exempt
 def guardarventa(request):

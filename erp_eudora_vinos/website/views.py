@@ -10,6 +10,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
+import datetime
+from django.utils import timezone
 
 
 @login_required
@@ -112,22 +114,9 @@ def delete_ventas(request, sku):
 @login_required
 def notificaciones(request):
     alertas_stock = Alerta_stock.objects.all()  # Obtén todas las alertas
-    return render(request, 'notificaciones.html', {'alertas_stock': alertas_stock})
-
-"""@login_required
-
-def insert_alerta_stock(request):
-    if request.method == 'POST':
-        id_inventario_id = request.POST.get('id_inventario')  # Cambiado a id_inventario
-        fecha_alerta = request.POST.get('fecha_alerta')
-        if id_inventario_id and fecha_alerta:  # Validación básica
-            id_inventario = get_object_or_404(Inventario_Y_Stock, id_inventario=id_inventario_id)
-            Alerta_stock.objects.create(id_inventario=id_inventario, fecha_alerta=fecha_alerta)
-    member.save()        
-    return redirect('/notificaciones')
-    
-    """
-
+    #alertas_informe= Alerta_informes.objects.all() # Obtén todas las alertas
+    return render(request, 'notificaciones.html', {'alertas_stock': alertas_stock}) 
+# Alertas de stock
 @login_required
 def insert_alerta_stock(request):
     if request.method == 'POST':
@@ -148,22 +137,14 @@ def delete_alerta_stock(request, id_inventario):
     alerta_stock.delete()
     return redirect('notificaciones')
 
-"""@login_required
-def insert_alerta_informes(request):
-    if request.method == 'POST':
-        numero_boleta = request.POST.get('numero_boleta')
-        fecha_alerta = request.POST.get('fecha_alerta')
-        fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        if numero_boleta and fecha_alerta and fecha_vencimiento:  # Validación básica
-            Alerta_informes.objects.create(numero_boleta=numero_boleta, fecha_alerta=fecha_alerta, fecha_vencimiento=fecha_vencimiento)
-    return redirect('notificaciones')
-
+#extra 
+'''
 @login_required
 def delete_alerta_informes(request, numero_boleta):
     alerta_informes = get_object_or_404(Alerta_informes, numero_boleta=numero_boleta)
     alerta_informes.delete()
-    return redirect('notificaciones')"""
-
+    return redirect('notificaciones')
+'''
 
 # INVENTARIO Y STOCK
 
@@ -329,3 +310,7 @@ def delete_cliente(request, rut):
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
     except Cliente.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
+def navbar_view(request):
+    fecha_limite = timezone.now().date() - datetime.timedelta(days=7)
+    notificaciones_activas = Alerta_stock.objects.filter(fecha_alerta__gte=fecha_limite)
+    return render(request, 'navbar.html', {'notificaciones_activas': notificaciones_activas})

@@ -16,11 +16,19 @@
                 <a href="" class="notifications-button" id="notifications-button">
                     <img class="site-logo" src="{% static 'images/notificaciones.svg' %}" alt="Logo" width="160" height="50" role="presentation">
                 </a>
-                <div id="notifications-dropdown" class="notifications-dropdown">
+                <div id="notifications-dropdown" class="notifications-dropdown" style="display:none;">
                     <ul>
-                        <li>Notificación 1</li>
-                        <li>Notificación 2</li>
-                        <li>Notificación 3</li>
+                        {% if notificaciones_activas %}
+                            {% for notificacion in notificaciones_activas %}
+                                <li>Alerta para {{ notificacion.id_inventario.SKU }} el {{ notificacion.fecha_alerta }}</li>
+                            {% endfor %}
+                        {% else %}
+                            <li>No tienes notificaciones activas</li>
+                        {% endif %}
+                        <!-- Botón para ver todas las notificaciones, fuera del bloque if -->
+                        <li class="view-all-notifications">
+                            <a href="/notificaciones">Ver todas las notificaciones</a>
+                        </li>
                     </ul>
                 </div>
             </li>

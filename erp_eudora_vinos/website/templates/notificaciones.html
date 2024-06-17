@@ -1,36 +1,39 @@
 {% load static %}
 {% include "base.html" %}
 {% block content %}
-    <div id="notificaciones">
-        <link type="text/css" href='{% static "css/notificaciones.css" %}' rel="stylesheet"/>
-        <div id="titulo-notificaciones">
-            <h1>NOTIFICACIONES</h1>
-        </div>
-        <div class="a">
-            <div class="row align-items-end">
-                <div class="col">
-                    <div id="ediciones">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
-                        </div>
+<div id="notificaciones">
+    <link type="text/css" href='{% static "css/notificaciones.css" %}' rel="stylesheet"/>
+    <div id="titulo-modelo">
+        <h1>NOTIFICACIONES</h1>
+    </div>
+    <div class="col d-grid gap-2 d-md-flex">
+        <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
+    </div>
+    <div class="a">
+        <div class="row align-items-end">
+            <div class="col">
+                <div id="ediciones">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Editar</label>
                     </div>
                 </div>
-                <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewalerta">
-                        Añadir Alerta
-                    </button>
-                </div>
+            </div>
+            <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewalerta">
+                    Añadir Alerta
+                </button>
             </div>
         </div>
+    </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="addnewalerta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
+    <!-- Modal para Añadir Alerta -->
+    <div class="modal fade" id="addnewalerta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Alerta de Stock</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir Alerta de Stock</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form method="POST">
@@ -46,38 +49,40 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
                 </div>
-              </div>
             </div>
         </div>
-
-        <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive">
-            <thead>    
-            <tr class="listado">   
-                <th>ID Inventario</th>
-                <th>Fecha Alerta</th>
-                <th>Acciones</th>
-                <th>Eliminar</th>
-            </tr>
-            </thead>
-            <tbody>        
-                {% for alerta in alerta_stock %}
-                <tr class="listado">
-                    <td>{{ alerta.id_inventario.SKU }}</td>
-                    <td>{{ alerta.fecha_alerta }}</td>
-                    <td>
-                        <form method="post" action="{% url 'delete_alerta_stock' alerta.id_inventario.id_inventario %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Eliminar</button>
-                        </form>
-                    </td>
-                </tr> 
-                {% endfor %}    
-            </tbody>
-        </table>
-        <script type='text/javascript' src='{% static "js/notificaciones.js" %}'></script>
-        
     </div>
+
+    <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive">
+        <thead>    
+        <tr class="listado">   
+            <th>ID Inventario</th>
+            <th>SKU</th>
+            <th>Fecha Alerta</th>
+            <th>Cantidad</th>
+            <th>Eliminar</th>
+        </tr>
+        </thead>
+        <tbody>        
+            {% for alerta in alertas_stock %}
+            <tr class="listado">
+                <td>{{ alerta.id_inventario.id_inventario }}</td>
+                <td>{{ alerta.id_inventario.SKU.SKU }}</td>
+                <td>{{ alerta.fecha_alerta }}</td>
+                <td>{{ alerta.cantidad }}</td>
+                <td>
+                    <form method="post" action="{% url 'delete_alerta_stock' alerta.id_inventario.id_inventario %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr> 
+            {% endfor %}    
+        </tbody>
+    </table>
+    <script type='text/javascript' src='{% static "js/notificaciones.js" %}'></script>
+</div>
 {% endblock %}

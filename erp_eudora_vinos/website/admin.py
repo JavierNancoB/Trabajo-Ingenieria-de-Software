@@ -16,5 +16,3 @@ admin.site.register(Alerta_stock)
 admin.site.register(Proveedores)
 admin.site.register(Compra_proveedores)
 
-
-
