@@ -4,7 +4,7 @@
 <div id="notificaciones">
     <link type="text/css" href='{% static "css/notificaciones.css" %}' rel="stylesheet"/>
     <div id="titulo-modelo">
-        <h1>NOTIFICACIONES</h1>
+        <h1>VENICIMIENTO ORDEN DE COMPRA</h1>
     </div>
     <div class="col d-grid gap-2 d-md-flex">
         <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
@@ -12,30 +12,25 @@
     <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive">
         <thead>    
         <tr class="listado">   
-            <th>ID Inventario</th>
-            <th>SKU</th>
-            <th>Fecha Alerta</th>
-            <th>Cantidad</th>
-            <th>Eliminar</th>
+            <th>OC</th>
+            <th>FECHA VENCIMIENTO</th>
+            <th>FECHA ALERTA</th>
+            <th>SEL</th>
         </tr>
         </thead>
         <tbody>        
-            {% for alerta in alertas_stock %}
+            {% for alerta in alertas_de_fecha_vencimiento %}
             <tr class="listado">
-                <td>{{ alerta.id_inventario.id_inventario }}</td>
-                <td>{{ alerta.id_inventario.SKU.SKU }}</td>
+                <td>{{ alerta.OC }}</td>
+                <td>{{ alerta.fecha_vencimiento }}</td>
                 <td>{{ alerta.fecha_alerta }}</td>
-                <td>{{ alerta.cantidad }}</td>
                 <td>
-                    <form method="post" action="{% url 'delete_alerta_stock' alerta.id_inventario.id_inventario %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
+                    <input type="checkbox" data-OC="{{ alerta.OC }}" name="seleccionar" id="seleccionar">
                 </td>
             </tr> 
             {% endfor %}    
         </tbody>
     </table>
-    <script type='text/javascript' src='{% static "js/notificaciones.js" %}'></script>
+    <script type='text/javascript' src='{% static "js/notificaciones_fecha_vencimiento.js" %}'></script>
 </div>
 {% endblock %}

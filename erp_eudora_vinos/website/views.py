@@ -1,17 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from.models import Producto
-from.models import Proveedores
-from.models import Alerta_stock
-from.models import Inventario_Y_Stock
-from.models import Ventas
-from.models import Compra_proveedores
-from.models import Cliente
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
 import datetime
 from django.utils import timezone
+from.models import *
 
 
 @login_required
@@ -38,7 +32,7 @@ def delete_producto(request, SKU):
         member = Producto.objects.get(SKU=SKU)
         member.delete()
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
-    except Compra_proveedores.DoesNotExist:
+    except Producto.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # PROVEEDORES
@@ -111,12 +105,16 @@ def delete_ventas(request, sku):
 
 # ALERTAS
 
+# Notificaciones de stock
+
 @login_required
 def notificaciones(request):
     alertas_stock = Alerta_stock.objects.all()  # Obtén todas las alertas
     #alertas_informe= Alerta_informes.objects.all() # Obtén todas las alertas
     return render(request, 'notificaciones.html', {'alertas_stock': alertas_stock}) 
+
 # Alertas de stock
+
 @login_required
 def insert_alerta_stock(request):
     if request.method == 'POST':
@@ -135,6 +133,21 @@ def insert_alerta_stock(request):
 def delete_alerta_stock(request, id_inventario):
     alerta_stock = get_object_or_404(Alerta_stock, id_inventario=id_inventario)
     alerta_stock.delete()
+    return redirect('notificaciones')
+
+# Notificaciones de fechas de vencimiento
+
+@login_required
+def notificaciones_fecha_vencimiento(request):
+    alertas_de_fecha_vencimiento = Alerta_vencimiento.objects.all()  # Obtén todas las alertas
+    #alertas_informe= Alerta_informes.objects.all() # Obtén todas las alertas
+    return render(request, 'notificaciones_fecha_prov.html', {'alertas_de_fecha_vencimiento': alertas_de_fecha_vencimiento}) 
+
+
+@login_required
+def delete_alerta_fecha_vencimiento(request, OC):
+    alerta_de_fecha_vencimiento = get_object_or_404(Alerta_vencimiento, OC=OC)
+    alerta_de_fecha_vencimiento.delete()
     return redirect('notificaciones')
 
 #extra 
@@ -310,6 +323,7 @@ def delete_cliente(request, rut):
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
     except Cliente.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
+    
 def navbar_view(request):
     fecha_limite = timezone.now().date() - datetime.timedelta(days=7)
     notificaciones_activas = Alerta_stock.objects.filter(fecha_alerta__gte=fecha_limite)

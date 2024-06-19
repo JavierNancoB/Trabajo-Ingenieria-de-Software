@@ -79,7 +79,7 @@ class Compra_proveedores(models.Model):
     costo_unitario = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.nombre_prov
+        return self.OC
 
 class Informes(models.Model):
     fecha_informe =models.DateField()
@@ -102,5 +102,14 @@ class Alerta_stock(models.Model):
     def __str__(self):
         return str(self.id_inventario) + ' ' + str(self.fecha_alerta) + ' ' + str(self.cantidad)
 
+class Alerta_vencimiento(models.Model):
+    OC = models.ForeignKey(Compra_proveedores, on_delete=models.CASCADE, default='0')
+    fecha_alerta = models.DateField()
+    status = models.CharField(max_length=50)
+    fecha_vencimiento = models.DateField()
+      # Corregido: No necesitas una relación ForeignKey aquí
+
+    def __str__(self):
+        return str(self.OC) + ' ' + str(self.fecha_alerta) + ' ' + str(self.fecha_vencimiento) + ' ' + str(self.status)
 
 

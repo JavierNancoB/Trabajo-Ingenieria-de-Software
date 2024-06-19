@@ -1,9 +1,35 @@
-import { transformarFecha } from './tablas.js';
+//import { transformarFecha } from './tablas.js';
 
 $(document).ready(function(){
     $('#table').DataTable();
     
     /* AÑADIR */
+    function transformarFecha(fecha) {
+        // Dividimos el string de fecha en partes
+        const partes = fecha.split(" de ");
+    
+        // Asignamos cada parte a una variable
+        const dia = partes[0];
+        const mes = partes[1];
+        const año = partes[2];
+    
+        // Convertimos el mes de texto a número
+        const meses = {
+            enero: '01', febrero: '02', marzo: '03', abril: '04',
+            mayo: '05', junio: '06', julio: '07', agosto: '08',
+            septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
+        };
+        const mesNumero = meses[mes.toLowerCase()]; // aseguramos que sea minúscula para coincidir con las claves
+    
+        // Aseguramos que el día tenga dos dígitos
+        const diaFormateado = dia.padStart(2, '0');
+    
+        // Creamos la nueva fecha en formato aaaa-mm-dd
+        const fechaFormateada = `${año}-${mesNumero}-${diaFormateado}`;
+    
+        return fechaFormateada;
+    }
+    
     $(document).ready(function() {
         $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
 
@@ -38,7 +64,9 @@ $(document).ready(function(){
     
     
     $('#submit').on('click', function(){
+        console.log('click');
         $OC = $('#OC').val();
+        console.log($OC);
         $fecha_oc = $('#fecha_oc').val();
         $SKU = $('#SKU').val();
         $nombre_prov = $('#nombre_prov').val();
@@ -121,6 +149,10 @@ $(document).ready(function(){
         if (isEditingEnabled()) { // Comprueba si la edición está habilitada
             var value=$(this).text();
             var input="<input type='text' class='input-data' value='"+value+"' class='form-control' /> ";
+            // Status solo se podra modificar de pagado o pendiente
+            if ($(this).data('type') === 'status') {
+                input = "<select class='input-data form-select' class='form-control'><option value='pendiente'>Pendiente</option><option value='pagado'>Pagado</option></select>";
+            }
             $(this).html(input);
             $(this).removeClass('editable');
         }

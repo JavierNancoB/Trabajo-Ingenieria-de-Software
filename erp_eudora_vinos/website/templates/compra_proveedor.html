@@ -81,10 +81,11 @@
                             <label>Fecha Factura</label>
                             <input type="date" id="fecha_factura" class="form-control"/>
                         </div>
-                        <div class="mb-3">
-                            <label>Status</label>
-                            <input type="number" id="status" class="form-control"/>
-                        </div>  
+                        <label>Status</label>
+                            <select id="status" class="form-control">
+                                <option value="Pendiente">Pendiente</option>
+                                <option value="Pagado">Pagado</option>
+                            </select>
                         <div class="mb-3">
                             <label>Fecha vencimiento</label>
                             <input type="date" id="fecha_vencimiento" class="form-control"/>
@@ -146,11 +147,8 @@
                     {% endfor %}    
                 </tbody>
             </table>
-            
-            
+            <script type='text/javascript' src='{% static "js/compra_proveedor.js" %}'></script>
         </div>
-        <script type="module" src="{% static 'js/tablas.js' %}"></script>
-        <script type="module" src="{% static 'js/compra_proveedor.js' %}"></script>
     </div>
     
 {% endblock %}

@@ -164,7 +164,7 @@ def guardar_compra_proveedor(request):
         elif type == 'fecha_factura':
             compra_proveedor.fecha_factura = value
         elif type == 'status':
-            compra_proveedor.fecha_vencimiento = value
+            compra_proveedor.status= value
         elif type == 'fecha_vencimiento':
             compra_proveedor.fecha_vencimiento = value
         elif type == 'fecha_pago':
