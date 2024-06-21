@@ -49,5 +49,6 @@ urlpatterns = [
     path('cliente/insert/', views.insert_cliente, name='insert_cliente'),
     path('cliente/update/', apiViews.guardar_cliente, name='update_cliente'),
     path('cliente/delete/<str:rut>', views.delete_cliente, name='delete_cliente'), 
+
 ]
 
