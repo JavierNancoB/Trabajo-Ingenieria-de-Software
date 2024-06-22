@@ -39,9 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
-    'django_apscheduler', # Incluimos la app django_apscheduler que sera la encargada de manejar las tareas programadas
     'authuser', # Incluimos la app authuser que sera la encargada de manejar la autenticacion de usuarios
-    
 ]
 
 AUTH_USER_MODEL = 'authuser.User'

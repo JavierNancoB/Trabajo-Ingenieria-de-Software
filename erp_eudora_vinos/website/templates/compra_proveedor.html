@@ -3,10 +3,32 @@
 {% block content %}
 
     <div id="tablas-css" >
-        <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
+        <link type="text/css" href='{% static "css/tablas2.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
             <h1>COMPRAS A PROVEEDORES</h1>
         </div>
+        <!-- Aqui se crea la nueva tabla con los totales -->
+        <div>
+            <table id="totals-table" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>CANTIDAD TOTAL</th>
+                        <th>COSTO TOTAL PAGADO</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="total-cantidad">{{ total_cantidad }}</td>
+                        <td id="total-pagado">{{ total_pagado }}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Aqui se crea la nueva tabla con los totales -->
+
+
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
@@ -107,6 +129,7 @@
                 </div>
             </div>
         </div>
+
         <div>
             <table id="table" summary="tabla compra_proveedor" class=" table table-bordered table-hover dt-responsive" >
                 <thead>    
