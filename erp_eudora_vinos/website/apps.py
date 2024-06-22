@@ -8,7 +8,3 @@ class WebsiteConfig(AppConfig):
     def ready(self):
         # Importar signals aquí asegura que estén listos para ser usados cuando la app esté lista
         import website.signals  # Asegúrate de que el nombre del módulo sea correcto
-        
-        # Importar y iniciar el scheduler
-        from website.scheduler import scheduler
-        scheduler.start()

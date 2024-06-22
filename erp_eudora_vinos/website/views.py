@@ -7,10 +7,14 @@ import datetime
 from django.utils import timezone
 from.models import *
 
+# HOME
 
 @login_required
 def home(request):
+    verificar_vencimientos()
     return render(request, 'home.html')
+
+
 
 # PRODUCTOS
 
@@ -130,6 +134,24 @@ def delete_alerta_stock(id_inventario):
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # Notificaciones de fechas de vencimiento
+
+# FUNCION QUE VERIFICA LOS VENCIMIENTOS DE LAS COMPRAS A PROVEEDORES CUANDO SE REINICIA LA PAGINA
+
+def verificar_vencimientos():
+    hoy = timezone.now().date()
+    compras = Compra_proveedores.objects.filter(status='Pendiente')
+    for compra in compras:
+        fecha_vencimiento = compra.fecha_vencimiento
+        diferencia = (fecha_vencimiento - hoy).days
+        if diferencia <= 14:
+            Alerta_vencimiento.objects.get_or_create(
+                OC=compra,
+                defaults={
+                    'status': 'Pendiente',
+                    'fecha_vencimiento': compra.fecha_vencimiento,
+                    'fecha_alerta': hoy
+                }
+            )
 
 @login_required
 def notificaciones_fecha_vencimiento(request):
