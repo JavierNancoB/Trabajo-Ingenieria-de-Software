@@ -85,6 +85,10 @@ Luego
 ```
 python manage.py migrate
 ```
+OJO solo si no tienes las tablas cargadas
+```
+python manage.py migrate --run-syncdb
+```
 
 ## como hacer llaves foraneas
 
