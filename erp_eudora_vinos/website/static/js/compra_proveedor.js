@@ -250,4 +250,83 @@ $(document).ready(function(){
             }
         }
     });
+
+    //$('#table').DataTable();
+ //---------------------------------Funcion de totales---------------------------------
+    function actualizarTotales() {
+        let totalCantidad = 0;
+        let totalPagado = 0;
+        $('#table tbody tr').each(function() {
+            const cantidad = parseInt($(this).find('td').eq(4).text()); // Cambiar el indice en eq(4) por el de la columna cantidad
+            const costoUnitario = parseFloat($(this).find('td').eq(10).text()); // Cambiar el indice en eq(10) por el de la columna costo unitario
+            if (!isNaN(cantidad)) {
+                totalCantidad += cantidad;
+            }
+            if (!isNaN(costoUnitario)) {
+                totalPagado += cantidad * costoUnitario; // Multiplica la cantidad por el costo unitario para obtener el total pagado por la fila
+            }
+        });
+        $('#total-cantidad').text(totalCantidad);
+        $('#total-pagado').text(totalPagado); 
+    }
+
+    // Esta función ahora actualiza tanto el total de cantidades como el total pagado
+    function sendToServer(oc, value, type) {
+        $.ajax({
+            url: 'update/',
+            type: 'POST',
+            data: {
+                OC: oc,
+                value: value,
+                type: type,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function() {
+                actualizarTotales();  // Actualizar después de cualquier cambio
+            },
+            error: function() {
+                console.log('Error');
+            }
+        });
+    }
+
+    $('.editable').on('blur', '.input-data', function() {
+        var value = $(this).val();
+        var td = $(this).parent('td');
+        var oc = td.data('oc');
+        var type = td.data('type');
+        if (type === 'fecha_oc' || type === 'fecha_factura' || type === 'fecha_vencimiento' || type === 'fecha_pago') {
+            value = transformarFecha(value);
+        }
+        sendToServer(oc, value, type);
+    });
+
+    $('#submit').on('click', function() {
+        actualizarTotales();  // Llamar después de añadir un nuevo proveedor
+    });
+
+    $('#eliminar-seleccion').on('click', function() {
+        if (confirm('¿Está seguro de que desea eliminar los productos seleccionados?')) {
+            $('input[name="seleccionar"]:checked').each(function() {
+                var oc = $(this).data('oc');
+                $.ajax({
+                    url: '/compra_proveedor/delete/' + oc,
+                    type: 'POST',
+                    headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+                    success: function() {
+                        console.log('Producto con OC ' + oc + ' eliminado');
+                        actualizarTotales();  // Llamar después de eliminar un proveedor
+                    },
+                    error: function(xhr) {
+                        console.log('Error al eliminar el producto con OC ' + oc);
+                    }
+                });
+            });
+        }
+    });
+
+    actualizarTotales();  // Inicializar al cargar la página
+    
+ //---------------------------------Funcion de totales---------------------------------
+
 });
