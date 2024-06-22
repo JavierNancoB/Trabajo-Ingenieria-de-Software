@@ -1,32 +1,8 @@
+import { transformarFecha } from './tablas.js';
+
 $(document).ready(function() {
     $('#table').DataTable();
-
-    function transformarFecha(fecha) {
-        // Dividimos el string de fecha en partes
-        const partes = fecha.split(" de ");
-    
-        // Asignamos cada parte a una variable
-        const dia = partes[0];
-        const mes = partes[1];
-        const año = partes[2];
-    
-        // Convertimos el mes de texto a número
-        const meses = {
-            enero: '01', febrero: '02', marzo: '03', abril: '04',
-            mayo: '05', junio: '06', julio: '07', agosto: '08',
-            septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
-        };
-        const mesNumero = meses[mes.toLowerCase()]; // aseguramos que sea minúscula para coincidir con las claves
-    
-        // Aseguramos que el día tenga dos dígitos
-        const diaFormateado = dia.padStart(2, '0');
-    
-        // Creamos la nueva fecha en formato aaaa-mm-dd
-        const fechaFormateada = `${año}-${mesNumero}-${diaFormateado}`;
-    
-        return fechaFormateada;
-    }
-    
+    calcularTotales();
 
     $(document).ready(function() {
         $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
@@ -131,6 +107,7 @@ $(document).ready(function() {
                 $('#precio-unitario').val('');
                 $('#precio-total').val('');
                 window.location='/Inventario_Y_Stock';
+                calcularTotales();
             }
         });
     }
@@ -223,23 +200,23 @@ $(document).ready(function() {
     
     function sendToServer(id_inventario, value, type) {
         
-        if (type == "cantidad" && isNaN(value) || value < 0) { // no se el limite de cantidad
+        if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "precio_unitario" && isNaN(value) || value < 0) {
+        if (type == "precio_unitario" && isNaN(value) || value <= 0) {
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "precio_total" && isNaN(value) || value < 0) {
+        if (type == "precio_total" && isNaN(value) || value <= 0) {
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "salidas" && isNaN(value) || value < 0) {
+        if (type == "salidas" && isNaN(value) || value <= 0) {
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "stock" && isNaN(value) || value < 0) {
+        if (type == "stock" && isNaN(value) || value <= 0) {
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
@@ -285,6 +262,7 @@ $(document).ready(function() {
             //alert('La fecha actual es: ' + año + mes + dia);
             //alert('La fecha de ingreso es: ' + yyyy + mm + dd);
             console.log(response);
+            calcularTotales();
         })
         .fail(function() {
             // Log en caso de error
@@ -313,6 +291,7 @@ $(document).ready(function() {
                         headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
                         success: function(response) {
                             console.log('Inventario_Y_Stock ' + id_inventario + ' eliminado');
+                            calcularTotales();
                         },
                         error: function(xhr) {
                             console.log('Error al eliminar el proveedor ' + id_inventario);
@@ -328,3 +307,64 @@ $(document).ready(function() {
         }
     });
 
+
+    function calcularTotales() {
+        let totalIngresos = 0, totalSalidas = 0, totalMovBodegas = 0, totalStock = 0, totalCosto = 0;
+    
+        document.querySelectorAll("#table tbody tr").forEach(fila => {
+            // Convertir los valores a enteros, manejar el caso de NaN estableciendo a 0
+            const cantidad = parseInt(fila.cells[5].textContent) || 0;
+            const salidas = parseInt(fila.cells[6].textContent) || 0;
+            const movBodegas = parseInt(fila.cells[7].textContent) || 0;
+            const stock = parseInt(fila.cells[8].textContent) || 0;
+            const precioUnitario = parseFloat(fila.cells[9].textContent) || 0;
+    
+            // Acumular los totales
+            totalIngresos += cantidad;
+            totalSalidas += salidas;
+            totalMovBodegas += movBodegas;
+            totalStock += stock;
+    
+            // Calcular el costo total y redondearlo a entero
+            totalCosto += Math.round(stock * precioUnitario);
+        });
+    
+        // Mostrar los totales como enteros y asegurar que sean 0 si no hay datos
+        document.querySelector(".ingresos-totales").textContent = totalIngresos || 0;
+        document.querySelector(".salidas-totales").textContent = totalSalidas || 0;
+        document.querySelector(".movimiento-entre-bodegas").textContent = totalMovBodegas || 0;
+        document.querySelector(".stock-total").textContent = totalStock || 0;
+        document.querySelector(".costo-total").textContent = totalCosto || 0;
+    }
+    
+    
+    
+    
+
+document.addEventListener('DOMContentLoaded', function () {
+    function actualizarStockYCosto() {
+        const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
+        const salidas = parseFloat(document.getElementById('salidas').value) || 0;
+        const precioUnitario = parseFloat(document.getElementById('precio-unitario').value) || 0;
+
+        // Cálculo de stock
+        const stock = Math.round(cantidad - salidas);
+
+        // Cálculo de costo total
+        const costoTotal = Math.round(stock * precioUnitario);
+
+        // Actualizar los campos con valores enteros
+        document.getElementById('stock').value = stock;
+        document.getElementById('precio-total').value = costoTotal;
+    }
+
+    // Agrega eventos de cambio a los campos relevantes
+    document.getElementById('cantidad').addEventListener('input', actualizarStockYCosto);
+    document.getElementById('salidas').addEventListener('input', actualizarStockYCosto);
+    document.getElementById('precio-unitario').addEventListener('input', actualizarStockYCosto);
+
+    // Aquí asumes que ya existe la funcionalidad para enviar datos en tu archivo JS, se llama en este lugar
+    document.getElementById('submit').addEventListener('click', function () {
+        // Aquí puedes agregar o llamar tu funcionalidad existente de envío de datos
+    });
+});

@@ -6,6 +6,32 @@
         <div id="titulo-modelo">
             <h1>INVENTARIO Y STOCK</h1>
         </div>
+        <!-- Aqui se crea la nueva tabla con el resumen -->
+        <div>
+            <table id="totals-table" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>INGRESOS TOTALES</th>
+                        <th>SALIDAS TOTALES</th>
+                        <th>MOVIMIENTO ENTRE BODEGAS</th>
+                        <th>STOCK TOTAL</th>
+                        <th>COSTO TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ingresos-totales" data-value="{{ ingresos_totales }}">{{ ingresos_totales }}</td>
+                        <td class="salidas-totales" data-value="{{ total_salidas }}">{{ total_salidas }}</td>
+                        <td class="movimiento-entre-bodegas" data-value="{{ movimiento_entre_bodegas }}">{{ movimiento_entre_bodegas }}</td>
+                        <td class="stock-total" data-value="{{ stock_total }}">{{ stock_total }}</td>
+                        <td class="costo-total" data-value="{{ costo_total }}">{{ costo_total }}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Aqui se crea la nueva tabla con el resumen -->
+
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
@@ -53,9 +79,10 @@
                         <div class="mb-3">
                             <label>Nombre del proveedor</label>
                             <div class="d-flex align-items-center">
-                                <select class="form-control" id="nombre_prov" style="flex-grow: 1;">
+                                <input class="form-control" id="nombre_prov_input" list="proveedores-list" style="flex-grow: 1;">
+                                <datalist id="proveedores-list">
                                     <!-- Las opciones se llenarán con JavaScript -->
-                                </select>
+                                </datalist>
                                 <a href="/proveedor?openModal=true">
                                     <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
                                 </a>
@@ -143,6 +170,8 @@
 
             </tbody>
         </table>
-        <script type='text/javascript' src='{% static "js/Inventario_Y_Stock.js" %}'></script>      
+        <script type='module' src='{% static "js/tablas.js" %}'></script>
+        <script type='module' src='{% static "js/Inventario_Y_Stock.js" %}'></script>
+        
     </div>
 {% endblock %}
