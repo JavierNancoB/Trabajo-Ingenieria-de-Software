@@ -19,8 +19,6 @@ El objetivo principal del sistema ERP es proporcionar a Eudora Vinos una platafo
 
 - **Gestión de ventas:** Facilitar el proceso de ventas, desde la generación de cotizaciones y pedidos hasta la facturación y el seguimiento de pagos.
 
-- **Facturación:** Generar facturas precisas y detalladas para las transacciones de venta, garantizando la integridad y la legalidad de los documentos financieros.
-
 # Informe
 
 Link de drive del informe: [Drive](https://docs.google.com/document/d/137e2b0gxBhvrPRsoXeRnSfCmz_jwkFPa/edit?usp=sharing&ouid=108234290173319771276&rtpof=true&sd=true)
