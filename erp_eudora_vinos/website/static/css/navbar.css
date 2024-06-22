@@ -108,13 +108,16 @@
 
 /* Estilos para el dropdown de notificaciones */
 .notifications-dropdown {
-    background-color: #D7A1D2; /* Fondo blanco para el dropdown */
+    background-color: #ffffff; /* Fondo blanco para el dropdown */
     border: 1px solid #D7A1D2; /* Borde sutil */
     box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra suave para el dropdown */
-    width: 300px; /* Ancho del dropdown */
+    width: 350px; /* Ancho del dropdown */
     position: absolute; /* Posicionamiento absoluto */
     right: 0; /* Alineado a la derecha */
     z-index: 1000; /* Asegurarse de que se muestre sobre otros elementos */
+    font-size: medium;
+    border-radius: 20px;
+    
 }
 
 .notifications-dropdown ul {
@@ -126,6 +129,7 @@
 .notifications-dropdown li {
     padding: 10px; /* Espaciado interno para cada elemento de la lista */
     border-bottom: 1px solid #eee; /* Borde sutil entre elementos */
+
 }
 
 .notifications-dropdown li:last-child {
@@ -143,3 +147,18 @@
 .view-all-notifications a:hover {
     text-decoration: underline; /* Subrayado al pasar el mouse */
 }
+
+.notificacion-con-burbuja{
+    position: relative;
+}
+
+#burbuja {
+    position: absolute; 
+    width: 12%; /* Esto asegura que las imágenes cubran todo el contenedor */
+    height: 20px; /* Esto mantiene la proporción de las imágenes */
+    margin-left: 45px; /* Ajusta este valor según sea necesario */
+  }
+
+  #titulo-notificacion {
+    font-weight: 600;
+  }

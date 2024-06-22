@@ -4,8 +4,9 @@ from . import apiViews
 
 urlpatterns = [
     # HOME
-    path('', views.home, name='home'),
-    
+    # path('', views.home, name='home'),
+    path('', views.notificaciones_fecha_vencimiento, name='home'),
+
     # PRODUCTOS
     path('producto/', views.producto, name='producto'),
     path('producto/insert/', views.insert_producto, name='insert_producto'),
@@ -28,12 +29,10 @@ urlpatterns = [
 
     # Alerta inventario
     path('notificaciones/', views.notificaciones, name='notificaciones'),
-    path('notificaciones/insert_alerta_stock/', views.insert_alerta_stock, name='insert_alerta_stock'),
-    path('notificaciones/delete/<int:id_inventario>/', views.delete_alerta_stock, name='delete_alerta_stock'),
 
     # Alerta vencimiento
-    path('notificaciones-fecha-vencimiento/', views.notificaciones_fecha_vencimiento, name='notificaciones_fecha_vencimiento'),
-    path('notificaciones-fecha-vencimiento/delete/<int:OC>/', views.delete_alerta_fecha_vencimiento, name='delete_alerta_vencimiento'),
+    
+    #path('notificaciones-fecha-vencimiento/', views.notificaciones_fecha_vencimiento, name='notificaciones_fecha_vencimiento'),
 
     # INVETARIO Y STOCK
     path('Inventario_Y_Stock/', views.inventario_Y_Stock, name='Inventario_Y_Stock'),

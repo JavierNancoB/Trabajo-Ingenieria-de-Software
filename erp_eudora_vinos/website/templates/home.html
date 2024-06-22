@@ -5,17 +5,48 @@
  <link type="text/css" href='{% static "css/homebutton.css" %}' rel="stylesheet"/>
     <body>
         <br>
-        <h4>Accesos Directos</h4>
-        <div class="contenedor-daccess"><!--Contenedor de accesos directos-->
-            <ul class="contenedor-ul">
-                <a id="b001" href="/proveedor" class="boton-daccess"><img src="{% static 'images/user.png' %}" alt="" width="30" height="30"></a>
-                <a id="b002" href="/producto" class="boton-daccess"><img src="{% static 'images/glass.png' %}" alt=""width="30" height="30"></a>
-                <a id="b003" href="/venta" class="boton-daccess"><img src="{% static 'images/cash.png' %}" alt=""width="30" height="30"></a>
-                <a id="b004" href="/Inventario_Y_Stock" class="boton-daccess"><img src="{% static 'images/box.png' %}" alt=""width="30" height="30"></a>
-                <a id="b005" href="/cliente" class="boton-daccess"><img src="{% static 'images/hand.png' %}" alt=""width="30" height="30"></a>
-                <a id="b006" href="/compra_proveedor" class="boton-daccess"><img src="{% static 'images/ticket.png' %}" alt=""width="30" height="30"></a>
-            </ul>
+        <div class="Home">
+        <div>
+            <h4>Accesos Directos</h4>
+            <div class="contenedor-daccess">
+                <ul class="contenedor-ul">
+                    <li><a id="b001" href="/proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/user.png' %}" alt="Proveedores" width="30" height="30"><span>Proveedores</span></a></li>
+                    <li><a id="b002" href="/producto" class="boton-daccess"><img class="Foto" src="{% static 'images/glass.png' %}" alt="Productos" width="30" height="30"><span>Productos</span></a></li>
+                    <li><a id="b003" href="/venta" class="boton-daccess"><img class="Foto" src="{% static 'images/cash.png' %}" alt="Ventas" width="30" height="30"><span>Ventas</span></a></li>
+                    <li><a id="b004" href="/Inventario_Y_Stock" class="boton-daccess"><img class="Foto" src="{% static 'images/box.png' %}" alt="Stock" width="30" height="30"><span>Stock</span></a></li>
+                    <li><a id="b005" href="/cliente" class="boton-daccess"><img class="Foto" src="{% static 'images/hand.png' %}" alt="Clientes" width="30" height="30"><span>Clientes</span></a></li>
+                    <li><a id="b006" href="/compra_proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/ticket.png' %}" alt="Compras" width="30" height="30"><span>Compras</span></a></li>
+                </ul>
+            </div>                        
         </div>
-        
+        <div>
+            <h4>Grafico Ventas</h4>
+        </div>
+        </div>
+        <div class="Home">
+            <div id="bandeja-de-entrada">
+                <h4>Bandeja de entrada</h4>
+            <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive table-fixed">
+                <thead>    
+                <tr class="listado">   
+                    <th>N° ORDEN DE COMPRA</th>
+                    <th>FECHA DE VENCIMIENTO</th>
+                </tr>
+                </thead>
+                <tbody>        
+                    {% for alerta in alertas_de_fecha_vencimiento %}
+                    <tr class="listado">
+                        <td>{{ alerta.OC }}</td>
+                        <td class="Fecha">{{ alerta.fecha_vencimiento }}</td>
+                    </tr> 
+                    {% endfor %}    
+                </tbody>
+            </table>
+            </div>
+            <div>
+                <h4>Grafico Inventario</h4>
+            </div>
+        </div>
+        <script type='text/javascript' src='{% static "js/home.js" %}'></script>
     </body>
 </html>

@@ -1,8 +1,8 @@
 {% load static %}
 {% include "base.html" %}
 {% block content %}
-<div id="notificaciones">
-    <link type="text/css" href='{% static "css/notificaciones.css" %}' rel="stylesheet"/>
+<div id="tablas-css">
+    <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
     <div id="titulo-modelo">
         <h1>VENICIMIENTO ORDEN DE COMPRA</h1>
     </div>
@@ -14,6 +14,7 @@
         <tr class="listado">   
             <th>OC</th>
             <th>FECHA VENCIMIENTO</th>
+            <th>STATUS</th>
             <th>FECHA ALERTA</th>
             <th>SEL</th>
         </tr>
@@ -23,6 +24,7 @@
             <tr class="listado">
                 <td>{{ alerta.OC }}</td>
                 <td>{{ alerta.fecha_vencimiento }}</td>
+                <td>{{ alerta.status }}</td>
                 <td>{{ alerta.fecha_alerta }}</td>
                 <td>
                     <input type="checkbox" data-OC="{{ alerta.OC }}" name="seleccionar" id="seleccionar">

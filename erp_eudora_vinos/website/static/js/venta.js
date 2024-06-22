@@ -1,9 +1,8 @@
-import { transformarFecha } from './tablas.js';
-
 $(document).ready(function(){
     $('#table').DataTable();
     
     /* AÑADIR */
+
     $(document).ready(function() {
         $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
 

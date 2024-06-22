@@ -12,15 +12,20 @@
                     <input type="text" placeholder="Buscar Módulo" id="search-input">
                 </form>
             </li>
-            <li >
+            <li class="notificacion-con-burbuja">
+                {% if notificaciones_activas %}
+                    <img id="burbuja" src="{% static 'images/notification-circlesvg.svg' %}" alt="Logo" width="160" height="50" role="presentation"/>
+                {% endif %}
                 <a href="" class="notifications-button" id="notifications-button">
                     <img class="site-logo" src="{% static 'images/notificaciones.svg' %}" alt="Logo" width="160" height="50" role="presentation">
                 </a>
-                <div id="notifications-dropdown" class="notifications-dropdown" style="display:none;">
-                    <ul>
+                <div id="notifications-dropdown" class="notifications-dropdown" >
+                    <ul> 
+                        <span id="titulo-notificacion">Inventario Insuficiente ultimos 7 días</span>
+                        
                         {% if notificaciones_activas %}
                             {% for notificacion in notificaciones_activas %}
-                                <li>Alerta para {{ notificacion.id_inventario.SKU }} el {{ notificacion.fecha_alerta }}</li>
+                                <li>ID inventario {{ notificacion.id_inventario.id_inventario }}</li>
                             {% endfor %}
                         {% else %}
                             <li>No tienes notificaciones activas</li>

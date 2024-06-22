@@ -1,13 +1,10 @@
 {% load static %}
 {% include "base.html" %}
 {% block content %}
-<div id="notificaciones">
-    <link type="text/css" href='{% static "css/notificaciones.css" %}' rel="stylesheet"/>
+<div id="tablas-css">
+    <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
     <div id="titulo-modelo">
         <h1>NOTIFICACIONES</h1>
-    </div>
-    <div class="col d-grid gap-2 d-md-flex">
-        <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
     </div>
     <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive">
         <thead>    
@@ -16,7 +13,6 @@
             <th>SKU</th>
             <th>Fecha Alerta</th>
             <th>Cantidad</th>
-            <th>Eliminar</th>
         </tr>
         </thead>
         <tbody>        
@@ -25,13 +21,7 @@
                 <td>{{ alerta.id_inventario.id_inventario }}</td>
                 <td>{{ alerta.id_inventario.SKU.SKU }}</td>
                 <td>{{ alerta.fecha_alerta }}</td>
-                <td>{{ alerta.cantidad }}</td>
-                <td>
-                    <form method="post" action="{% url 'delete_alerta_stock' alerta.id_inventario.id_inventario %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
-                    </form>
-                </td>
+                <td>{{ alerta.stock }}</td>
             </tr> 
             {% endfor %}    
         </tbody>

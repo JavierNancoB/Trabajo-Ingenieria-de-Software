@@ -116,42 +116,52 @@ $(document).ready(function(){
         }
     });
     function sendToServer(SKU, value, type){
+        var td = $("[data-sku='" + SKU + "']").parent('td');
+        var tr = td.closest('tr');  // Obtener el <tr> más cercano
+    
         if (type=="cosecha" && isNaN(value)) {
             alert("El valor debe ser numérico.");
+            tr.addClass('table-warning');  // Añadir clase cuando hay error
             return; // No enviar los datos al servidor si el valor no es numérico
         }
         if (type === "cosecha" && (value < 1800 || value > 2050)) {
             alert("El valor para 'cosecha' debe estar entre 1800 y 2050");
+            tr.addClass('table-warning');  // Añadir clase cuando hay error
             return; // No enviar los datos al servidor
         }
         switch (type) {
             case "tipo_producto":
                 if (value.length > 50) {
                     alert("El valor para 'tipo de producto' no puede tener más de 50 caracteres.");
+                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "viña":
                 if (value.length > 150) {
                     alert("El valor para 'viña' no puede tener más de 150 caracteres.");
+                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "cepa":
                 if (value.length > 50) {
                     alert("El valor para 'cepa' no puede tener más de 50 caracteres.");
+                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "nombre_producto":
                 if (value.length > 50) {
                     alert("El valor para 'nombre de producto' no puede tener más de 50 caracteres.");
+                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "cosecha":
                 if (value.length > 50) {
                     alert("El valor para 'cosecha' no puede tener más de 50 caracteres.");
+                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
@@ -171,26 +181,15 @@ $(document).ready(function(){
         })
         .done(function(response) {
             alert('Se guardó correctamente el producto');
+            tr.addClass('table-light');
             console.log(response);
         })
         .fail(function() {
             console.log('Error');
+            tr.addClass('table-warning');  // Añadir clase cuando hay error en la respuesta de AJAX
         });
     }
 
-    /* ELIMINAR */
-
-    $(document).on('click', '.delete', function(e){
-        if (!isEditingEnabled()) { // Si la edición no está habilitada, prevenir la acción de eliminación
-            e.preventDefault();
-            alert('Debe habilitar la edición para eliminar productos.');
-        }
-        else {
-            var confirmation = confirm('¿Está seguro de que desea eliminar este producto?');
-            if (confirmation==false)
-                e.preventDefault();
-        }
-    });
     /* ELIMINAR SELECTIVAMENTE */
     /* Las casillas seleccionadas se podran eliminar despues de presionar el boton eliminar */
 

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
+    'django_apscheduler', # Incluimos la app django_apscheduler que sera la encargada de manejar las tareas programadas
     'authuser', # Incluimos la app authuser que sera la encargada de manejar la autenticacion de usuarios
     
 ]
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'website.middleware.NotificationMiddleware',
 ]
 
 ROOT_URLCONF = 'erp_eudora_vinos.urls'
@@ -68,6 +70,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'website.context_processors.notificaciones', 
             ],
         },
     },
