@@ -19,10 +19,10 @@ class Cliente(models.Model):
 class Producto(models.Model):
     SKU = models.CharField(primary_key=True, max_length=50, unique=True)
     tipo_producto = models.CharField(max_length=50)
-    viña= models.CharField(max_length=150)
-    cepa= models.CharField(max_length=50)
-    nombre_producto = models.CharField(max_length=50)
-    cosecha = models.CharField(max_length=50)
+    cepa= models.CharField(max_length=50, null=True)
+    cosecha = models.CharField(max_length=50, null=True)
+    nombre_producto = models.CharField(max_length=50, null=True)
+    viña= models.CharField(max_length=150, null=True)
     def __str__(self):
         return self.SKU    
 

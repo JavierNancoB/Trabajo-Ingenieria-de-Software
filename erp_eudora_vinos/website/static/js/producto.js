@@ -120,8 +120,9 @@ $(document).ready(function(){
         var tr = td.closest('tr');  // Obtener el <tr> más cercano
     
         if (type=="cosecha" && isNaN(value)) {
-            alert("El valor debe ser numérico.");
             tr.addClass('table-warning');  // Añadir clase cuando hay error
+            alert("El valor debe ser numérico.");
+
             return; // No enviar los datos al servidor si el valor no es numérico
         }
         if (type === "cosecha" && (value < 1800 || value > 2050)) {
