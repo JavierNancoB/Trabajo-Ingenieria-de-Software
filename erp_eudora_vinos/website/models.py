@@ -75,7 +75,7 @@ class Compra_proveedores(models.Model):
     fecha_factura = models.DateField(null=True)
     status = models.CharField(max_length=50)
     fecha_vencimiento = models.DateField()
-    fecha_pago = models.DateField(null=True)
+    fecha_pago = models.DateField(null=True, blank=True)
     costo_unitario = models.IntegerField(null=True)
 
     def __str__(self):

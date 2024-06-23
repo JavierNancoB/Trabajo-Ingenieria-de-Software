@@ -120,6 +120,8 @@ $(document).ready(function(){
         }
     });
     function sendToServer(nombre_prov, value, type){
+        var td = $("[data-nombre_prov='" + nombre_prov + "']").parent('td');
+        var tr = td.closest('tr');  // Obtener el <tr> más cercano
         if (type=="telefono_empresa" && isNaN(value)) {
             alert("El valor debe ser numérico.");
             return; // No enviar los datos al servidor si el valor no es numérico
@@ -127,17 +129,21 @@ $(document).ready(function(){
         switch (type) {
             case "email_empresa":
                 if (value.length > 150) {
+                    tr.addClass('table-warning');
                     alert("El valor para el email no puede tener más de 150 caracteres.");
                     return; // No enviar los datos al servidor
                 }
                 var email_regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!email_regex.test(value)) {
+                    tr.addClass('table-warning');
                     alert("Por favor ingrese un correo electrónico válido.");
+                    
                     return; // No enviar los datos al servidor si el correo no es válido
                 }
                 break;
             case "telefono_empresa":
                 if (value.length > 15) {
+                    tr.addClass('table-warning');
                     alert("El valor para el telefono no puede tener más de 15 caracteres.");
                     return; // No enviar los datos al servidor
                 }
@@ -158,9 +164,11 @@ $(document).ready(function(){
         })
         .done(function(response) {
             alert('Se guardó correctamente el proveedor');
+            tr.addClass('table-light');
             console.log(response);
         })
         .fail(function() {
+            tr.addClass('table-warning');
             console.log('Error');
         });
     }

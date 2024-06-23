@@ -250,19 +250,16 @@ def insert_compra_proveedor(request):
         fecha_factura = request.POST.get('fecha_factura')
         status = request.POST.get('status')
         fecha_vencimiento = request.POST.get('fecha_vencimiento')
-        fecha_pago = request.POST.get('fecha_pago')
+        fecha_pago = request.POST.get('fecha_pago') or None
         costo_unitario = request.POST.get('costo_unitario')
 
-        # Validar que todos los campos están presentes
-        if not all([OC, fecha_oc, SKU_id, nombre_prov_id, cantidad, numero_factura, fecha_factura, status, fecha_vencimiento, fecha_pago, costo_unitario]):
-            return render(request, 'compra_proveedor.html', {'error': 'Por favor, complete todos los campos'})
+        if not all([OC, fecha_oc, SKU_id, nombre_prov_id, cantidad, numero_factura, fecha_factura, status, fecha_vencimiento, costo_unitario]):
+            return render(request, 'compra_proveedor.html', {'error': 'Por favor, complete todos los campos necesarios'})
 
         try:
-            # Obtener los objetos relacionados usando get_object_or_404 para manejar posibles errores
             SKU = get_object_or_404(Producto, SKU=SKU_id)
             nombre_prov = get_object_or_404(Proveedores, nombre_prov=nombre_prov_id)
 
-            # Buscar si existe un registro con el OC proporcionado
             compra_proveedor, created = Compra_proveedores.objects.get_or_create(
                 OC=OC,
                 defaults={
@@ -280,7 +277,6 @@ def insert_compra_proveedor(request):
             )
 
             if not created:
-                # Si el registro ya existe, actualizar los campos
                 compra_proveedor.fecha_oc = fecha_oc
                 compra_proveedor.SKU = SKU
                 compra_proveedor.nombre_prov = nombre_prov
@@ -300,6 +296,7 @@ def insert_compra_proveedor(request):
             return render(request, 'compra_proveedor.html', {'error': 'Proveedor no encontrado'})
     else:
         return render(request, 'compra_proveedor.html')
+
     
 @login_required
 @require_POST
