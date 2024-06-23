@@ -126,43 +126,44 @@ $(document).ready(function(){
             return; // No enviar los datos al servidor si el valor no es numérico
         }
         if (type === "cosecha" && (value < 1800 || value > 2050)) {
+            tr.addClass('table-warning');
             alert("El valor para 'cosecha' debe estar entre 1800 y 2050");
-            tr.addClass('table-warning');  // Añadir clase cuando hay error
+              // Añadir clase cuando hay error
             return; // No enviar los datos al servidor
         }
         switch (type) {
             case "tipo_producto":
                 if (value.length > 50) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'tipo de producto' no puede tener más de 50 caracteres.");
-                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "viña":
                 if (value.length > 150) {
-                    alert("El valor para 'viña' no puede tener más de 150 caracteres.");
-                    tr.addClass('table-warning');  // Añadir clase cuando hay error
+                    tr.addClass('table-warning');
+                    alert("El valor para 'viña' no puede tener más de 150 caracteres.");  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "cepa":
                 if (value.length > 50) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'cepa' no puede tener más de 50 caracteres.");
-                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "nombre_producto":
                 if (value.length > 50) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'nombre de producto' no puede tener más de 50 caracteres.");
-                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "cosecha":
                 if (value.length > 50) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'cosecha' no puede tener más de 50 caracteres.");
-                    tr.addClass('table-warning');  // Añadir clase cuando hay error
                     return; // No enviar los datos al servidor
                 }
                 break;

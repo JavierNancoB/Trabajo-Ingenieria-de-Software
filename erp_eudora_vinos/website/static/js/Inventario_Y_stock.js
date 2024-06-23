@@ -1,33 +1,8 @@
 $(document).ready(function() {
     $('#table').DataTable();
 
-    function transformarFecha(fecha) {
-        // Dividimos el string de fecha en partes
-        const partes = fecha.split(" de ");
-    
-        // Asignamos cada parte a una variable
-        const dia = partes[0];
-        const mes = partes[1];
-        const año = partes[2];
-    
-        // Convertimos el mes de texto a número
-        const meses = {
-            enero: '01', febrero: '02', marzo: '03', abril: '04',
-            mayo: '05', junio: '06', julio: '07', agosto: '08',
-            septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
-        };
-        const mesNumero = meses[mes.toLowerCase()]; // aseguramos que sea minúscula para coincidir con las claves
-    
-        // Aseguramos que el día tenga dos dígitos
-        const diaFormateado = dia.padStart(2, '0');
-    
-        // Creamos la nueva fecha en formato aaaa-mm-dd
-        const fechaFormateada = `${año}-${mesNumero}-${diaFormateado}`;
-    
-        return fechaFormateada;
-    }
-    
 
+    
     $(document).ready(function() {
         $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
 
@@ -58,8 +33,11 @@ $(document).ready(function() {
                 console.error('Error cargando los nombres de los proveedores');
             }
         });
+
+        calcularTotales();
     });
 
+    
     /* AÑADIR */
     
     $('#submit').on('click', function() {
@@ -131,10 +109,11 @@ $(document).ready(function() {
                 $('#precio-unitario').val('');
                 $('#precio-total').val('');
                 window.location='/Inventario_Y_Stock';
-            }
-        });
-    }
-);
+                calcularTotales();
+                }
+            });
+        }
+    );
 
 
     /* EDITAR */
@@ -145,6 +124,32 @@ $(document).ready(function() {
     function isEditingEnabled() {
         // Retorna true si la casilla con id 'flexSwitchCheckDefault' está marcada
         return $('#flexSwitchCheckDefault').prop('checked');
+    }
+
+    function transformarFecha(fecha) {
+        // Dividimos el string de fecha en partes
+        const partes = fecha.split(" de ");
+    
+        // Asignamos cada parte a una variable
+        const dia = partes[0];
+        const mes = partes[1];
+        const año = partes[2];
+    
+        // Convertimos el mes de texto a número
+        const meses = {
+            enero: '01', febrero: '02', marzo: '03', abril: '04',
+            mayo: '05', junio: '06', julio: '07', agosto: '08',
+            septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
+        };
+        const mesNumero = meses[mes.toLowerCase()]; // aseguramos que sea minúscula para coincidir con las claves
+    
+        // Aseguramos que el día tenga dos dígitos
+        const diaFormateado = dia.padStart(2, '0');
+    
+        // Creamos la nueva fecha en formato aaaa-mm-dd
+        const fechaFormateada = `${año}-${mesNumero}-${diaFormateado}`;
+    
+        return fechaFormateada;
     }
     
     // Evento que se activa al hacer doble clic en un elemento con clase 'editable'
@@ -179,9 +184,10 @@ $(document).ready(function() {
     });
     */
     $(document).on('blur', '.input-data', function() {
+        
         var td = $(this).parent('td');
         var value = $(this).val();
-        finishEditing(td, value);
+        //finishEditing(td, value);
 
         var value=$(this).val();
         var td=$(this).parent('td');
@@ -198,6 +204,31 @@ $(document).ready(function() {
     });
     
     $(document).on('keypress', '.input-data', function(e) {
+        function transformarFecha(fecha) {
+            // Dividimos el string de fecha en partes
+            const partes = fecha.split(" de ");
+        
+            // Asignamos cada parte a una variable
+            const dia = partes[0];
+            const mes = partes[1];
+            const año = partes[2];
+        
+            // Convertimos el mes de texto a número
+            const meses = {
+                enero: '01', febrero: '02', marzo: '03', abril: '04',
+                mayo: '05', junio: '06', julio: '07', agosto: '08',
+                septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
+            };
+            const mesNumero = meses[mes.toLowerCase()]; // aseguramos que sea minúscula para coincidir con las claves
+        
+            // Aseguramos que el día tenga dos dígitos
+            const diaFormateado = dia.padStart(2, '0');
+        
+            // Creamos la nueva fecha en formato aaaa-mm-dd
+            const fechaFormateada = `${año}-${mesNumero}-${diaFormateado}`;
+        
+            return fechaFormateada;
+        }
         var key = e.which;
         if(key == 13){
             var value = $(this).val();
@@ -211,7 +242,6 @@ $(document).ready(function() {
             console.log(type, "AWA", value);
             // td.data("OC"); sirve para obtener el valor de la columna OC
             // si Oc es un numero entero, se debe cambiar por el valor de la columna OC
-            var id_inventario = td.data("id_inventario");
             $(this).remove();
             td.html(value);
             td.addClass("editable");
@@ -222,24 +252,31 @@ $(document).ready(function() {
     });
     
     function sendToServer(id_inventario, value, type) {
+        var td = $("[data-id_inventario='" + id_inventario + "']").parent('td');
+        var tr = td.closest('tr');  // Obtener el <tr> más cercano
         
-        if (type == "cantidad" && isNaN(value) || value < 0) { // no se el limite de cantidad
+        if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
+            tr.addClass('table-warning');
+            alert("El valor debe ser numérico y mayor o igual a cero.");
+            return; // No enviar los datos al servidor
+        }
+        if (type == "precio_unitario" && isNaN(value) || value <= 0) {
+            tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "precio_unitario" && isNaN(value) || value < 0) {
+        if (type == "precio_total" && isNaN(value) || value <= 0) {
+            tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "precio_total" && isNaN(value) || value < 0) {
+        if (type == "salidas" && isNaN(value) || value <= 0) {
+            tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "salidas" && isNaN(value) || value < 0) {
-            alert("El valor debe ser numérico y mayor a cero.");
-            return; // No enviar los datos al servidor
-        }
-        if (type == "stock" && isNaN(value) || value < 0) {
+        if (type == "stock" && isNaN(value) || value <= 0) {
+            tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
@@ -247,18 +284,21 @@ $(document).ready(function() {
         switch (type) {
             case "bodega":
                 if (value.length > 150) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'bodega' no puede tener más de 50 caracteres.");
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "mov_bodegas":
                 if (value.length > 50) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'bodegas' no puede tener más de 50 caracteres.");
                     return; // No enviar los datos al servidor
                 }
                 break;
             case "nombre_prov":
                 if (value.length > 150) {
+                    tr.addClass('table-warning');
                     alert("El valor para 'nombre proveedores' no puede tener más de 150 caracteres.");
                     return; // No enviar los datos al servidor
                 }
@@ -281,13 +321,16 @@ $(document).ready(function() {
         })
         .done(function(response) {
             // Alerta y log en caso de éxito
+            tr.addClass('table-light');
             alert('Se guardó correctamente luego de editarlo');
             //alert('La fecha actual es: ' + año + mes + dia);
             //alert('La fecha de ingreso es: ' + yyyy + mm + dd);
             console.log(response);
+            calcularTotales();
         })
         .fail(function() {
             // Log en caso de error
+            tr.addClass('table-warning');
             alert('Ocurrio un error, vuelva a intentarlo');
             
             console.log('Error');
@@ -298,33 +341,93 @@ $(document).ready(function() {
     /* ELIMINAR */
     
     $('#eliminar-seleccion').on('click', function(e){
-        if (!isEditingEnabled()) {
-            e.preventDefault();
-            alert('Debe habilitar la edición para eliminar productos.');
-        } else {
-            var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
-            if (confirmation) {
-                $('input[name="seleccionar"]:checked').each(function() {
-                    var id_inventario = $(this).data('id_inventario');
-                    console.log('Eliminando proveedor ' + id_inventario);
-                    $.ajax({
-                        url: '/Inventario_Y_Stock/delete/' + id_inventario, // Usando la ruta existente
-                        type: 'POST',
-                        headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-                        success: function(response) {
-                            console.log('Inventario_Y_Stock ' + id_inventario + ' eliminado');
-                        },
-                        error: function(xhr) {
-                            console.log('Error al eliminar el proveedor ' + id_inventario);
-                        },
-                        
-                        complete: function() {
-                            location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
-                        }
-                        
-                    });
-                });
-            }
-        }
-    });
 
+        var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
+        if (confirmation) {
+            $('input[name="seleccionar"]:checked').each(function() {
+                var id_inventario = $(this).data('id_inventario');
+                console.log('Eliminando proveedor ' + id_inventario);
+                $.ajax({
+                    url: '/Inventario_Y_Stock/delete/' + id_inventario, // Usando la ruta existente
+                    type: 'POST',
+                    headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+                    success: function(response) {
+                        console.log('Inventario_Y_Stock ' + id_inventario + ' eliminado');
+                        calcularTotales();
+                    },
+                    error: function(xhr) {
+                        console.log('Error al eliminar el proveedor ' + id_inventario);
+                    },
+                    
+                    complete: function() {
+                        location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
+                    }
+                    
+                });
+            });
+        }
+    }
+    );
+
+
+    function calcularTotales() {
+        let totalIngresos = 0, totalSalidas = 0, totalMovBodegas = 0, totalStock = 0, totalCosto = 0;
+    
+        document.querySelectorAll("#table tbody tr").forEach(fila => {
+            // Convertir los valores a enteros, manejar el caso de NaN estableciendo a 0
+            const cantidad = parseInt(fila.cells[5].textContent) || 0;
+            const salidas = parseInt(fila.cells[6].textContent) || 0;
+            const movBodegas = parseInt(fila.cells[7].textContent) || 0;
+            const stock = parseInt(fila.cells[8].textContent) || 0;
+            const precioUnitario = parseFloat(fila.cells[9].textContent) || 0;
+    
+            // Acumular los totales
+            totalIngresos += cantidad;
+            totalSalidas += salidas;
+            totalMovBodegas += movBodegas;
+            totalStock += stock;
+    
+            // Calcular el costo total y redondearlo a entero
+            totalCosto += Math.round(stock * precioUnitario);
+        });
+    
+        // Mostrar los totales como enteros y asegurar que sean 0 si no hay datos
+        document.querySelector(".ingresos-totales").textContent = totalIngresos || 0;
+        document.querySelector(".salidas-totales").textContent = totalSalidas || 0;
+        document.querySelector(".movimiento-entre-bodegas").textContent = totalMovBodegas || 0;
+        document.querySelector(".stock-total").textContent = totalStock || 0;
+        document.querySelector(".costo-total").textContent = totalCosto || 0;
+    }
+    
+    
+    
+    
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function actualizarStockYCosto() {
+            const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
+            const salidas = parseFloat(document.getElementById('salidas').value) || 0;
+            const precioUnitario = parseFloat(document.getElementById('precio-unitario').value) || 0;
+
+            // Cálculo de stock
+            const stock = Math.round(cantidad - salidas);
+
+            // Cálculo de costo total
+            const costoTotal = Math.round(stock * precioUnitario);
+
+            // Actualizar los campos con valores enteros
+            document.getElementById('stock').value = stock;
+            document.getElementById('precio-total').value = costoTotal;
+        }
+
+        // Agrega eventos de cambio a los campos relevantes
+        document.getElementById('cantidad').addEventListener('input', actualizarStockYCosto);
+        document.getElementById('salidas').addEventListener('input', actualizarStockYCosto);
+        document.getElementById('precio-unitario').addEventListener('input', actualizarStockYCosto);
+
+        // Aquí asumes que ya existe la funcionalidad para enviar datos en tu archivo JS, se llama en este lugar
+        document.getElementById('submit').addEventListener('click', function () {
+            // Aquí puedes agregar o llamar tu funcionalidad existente de envío de datos
+        });
+    }
+);

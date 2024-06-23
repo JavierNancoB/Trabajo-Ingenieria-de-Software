@@ -62,7 +62,8 @@ $(document).ready(function(){
         });
     });
     
-    
+    /* AÑADIR */
+
     $('#submit').on('click', function(){
         console.log('click');
         $OC = $('#OC').val();
@@ -79,11 +80,10 @@ $(document).ready(function(){
         $costo_unitario = $('#costo_unitario').val();
     
         console.log($OC, $fecha_oc, $SKU, $nombre_prov, $cantidad, $numero_factura, $fecha_factura, $status, $fecha_vencimiento, $fecha_pago, $costo_unitario);
-        
-        if ($OC == '' || $fecha_oc == '' || $SKU == '' || $nombre_prov == '' || $cantidad == '' || $numero_factura == ''|| $fecha_factura == '' || $status == '' || $fecha_vencimiento == '' || $fecha_pago == '' || $costo_unitario == ''){
+        console.log($fecha_pago);
+        if ($OC == '' || $fecha_oc == '' || $SKU == '' || $nombre_prov == '' || $cantidad == '' || $numero_factura == ''|| $fecha_factura == '' || $status == '' || $fecha_vencimiento == '' || $costo_unitario == ''){
             alert('Por favor no deje campos vacios');
         }
-
         else{
             /* Recorremos la tabla para comparar cada SKU */
             var OCexiste = false;
@@ -117,7 +117,7 @@ $(document).ready(function(){
 
                     },
                     success: function(){
-                        alert('Se guardó correctamente el producto');
+                        
                         $('#OC').val('');
                         $('#fecha_oc').val('');
                         $('#SKU').val('');
@@ -129,7 +129,7 @@ $(document).ready(function(){
                         $('#fecha_vencimiento').val('');
                         $('#fecha_pago').val('');
                         $('#costo_unitario').val('');
-                        
+                        alert('Se guardó correctamente el producto');
                         window.location='/compra_proveedor';
                     }
                 });
@@ -199,6 +199,104 @@ $(document).ready(function(){
     });
     
     function sendToServer(oc, value, type){
+        var td = $("[data-oc='" + oc + "']").parent('td');
+        var tr = td.closest('tr');  // Obtener el <tr> más cercano
+        if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
+            tr.addClass('table-warning');
+            alert("El valor debe ser numérico y mayor o igual a cero.");
+            return; // No enviar los datos al servidor
+        }
+        if (type == "costo_unitario" && isNaN(value) || value <= 0) {
+            tr.addClass('table-warning');
+            alert("El valor debe ser numérico y mayor o igual a cero.");
+            return; // No enviar los datos al servidor
+        }
+        if (type == "status" && value != "pendiente" && value != "pagado") {
+            tr.addClass('table-warning');
+            alert("El valor debe ser 'pendiente' o 'pagado'.");
+            return; // No enviar los datos al servidor
+        }
+        switch (type) {
+            case "OC":
+                if (value.length > 10) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'OC' no puede tener más de 10 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "fecha_oc":
+                if (value.length > 10) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'fecha_oc' no puede tener más de 10 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "SKU":
+                if (value.length > 50) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'SKU' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "nombre_prov":
+                if (value.length > 150) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'nombre_prov' no puede tener más de 150 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "cantidad":
+                if (value.length > 50) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'cantidad' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "numero_factura":
+                if (value.length > 50) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'numero_factura' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "fecha_factura":
+                if (value.length > 10) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'fecha_factura' no puede tener más de 10 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "status":
+                if (value.length > 50) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'status' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "fecha_vencimiento":
+                if (value.length > 10) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'fecha_vencimiento' no puede tener más de 10 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "fecha_pago":
+                if (value.length > 10) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'fecha_pago' no puede tener más de 10 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            case "costo_unitario":
+                if (value.length > 50) {
+                    tr.addClass('table-warning');
+                    alert("El valor para 'costo_unitario' no puede tener más de 50 caracteres.");
+                    return; // No enviar los datos al servidor
+                }
+                break;
+            default:
+                break;
+        }
         
         console.log("Sending to server:", oc, value, type);  // Log para ver qué datos se están enviando
         $.ajax({
@@ -223,15 +321,17 @@ $(document).ready(function(){
     /* ELIMINAR */
 
     $('#eliminar-seleccion').on('click', function(e){
-        if (!isEditingEnabled()) {
+        if(!isEditingEnabled()) { // Comprueba si la edición está habilitada
             e.preventDefault();
             alert('Debe habilitar la edición para eliminar productos.');
-        } else {
-            var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
+        }
+        else
+        {
+            var confirmation = confirm('¿Estáaa seguro de que desea eliminar los productos seleccionados?');
             if (confirmation) {
                 $('input[name="seleccionar"]:checked').each(function() {
                     var oc = $(this).data('oc');
-    
+
                     $.ajax({
                         url: '/compra_proveedor/delete/' + oc, // Usando la ruta existente
                         type: 'POST',
@@ -249,7 +349,9 @@ $(document).ready(function(){
                 });
             }
         }
-    });
+        }
+        
+    );
 
     //$('#table').DataTable();
  //---------------------------------Funcion de totales---------------------------------
@@ -269,7 +371,7 @@ $(document).ready(function(){
         $('#total-cantidad').text(totalCantidad);
         $('#total-pagado').text(totalPagado); 
     }
-
+    /*
     // Esta función ahora actualiza tanto el total de cantidades como el total pagado
     function sendToServer(oc, value, type) {
         $.ajax({
@@ -304,7 +406,8 @@ $(document).ready(function(){
     $('#submit').on('click', function() {
         actualizarTotales();  // Llamar después de añadir un nuevo proveedor
     });
-
+    */
+    /*
     $('#eliminar-seleccion').on('click', function() {
         if (confirm('¿Está seguro de que desea eliminar los productos seleccionados?')) {
             $('input[name="seleccionar"]:checked').each(function() {
@@ -324,6 +427,7 @@ $(document).ready(function(){
             });
         }
     });
+    */
 
     actualizarTotales();  // Inicializar al cargar la página
     
