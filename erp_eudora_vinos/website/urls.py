@@ -25,7 +25,7 @@ urlpatterns = [
     path('venta/', views.ventas, name='venta'),
     path('venta/insert/', views.insert_ventas, name='insert_venta'),
     path('venta/update/', apiViews.guardarventa, name='update_venta'),
-    path('venta/delete/<str:sku>', views.delete_ventas, name='delete_ventas'),
+    path('venta/delete/<str:pedido>', views.delete_ventas, name='delete_ventas'),
 
     # Alerta inventario
     path('notificaciones/', views.notificaciones, name='notificaciones'),

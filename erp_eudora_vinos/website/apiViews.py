@@ -88,27 +88,25 @@ def guardar_alerta_stock(request):
         return JsonResponse({'error': 'Método no permitido'}, status=405)
 
 
-
-
 # VENTAS
 @csrf_exempt
 def guardarventa(request):
-    sku = request.POST.get('SKU', '')
+    pedido = request.POST.get('pedido', '')
     type = request.POST.get('type', '')
     value = request.POST.get('value', '')
 
     try:
-        venta = Ventas.objects.get(SKU=sku)
-        if type == 'medio_de_pago':
-            venta.medio_de_pago = value
-        elif type == 'nombre_producto':
-            venta.nombre_producto = value
-        elif type == 'precio_unitario':
-            venta.precio_unitario = value
-        elif type == 'cantidad':
-            venta.cantidad = value
-        elif type == 'iva':
-            venta.iva = value
+        venta = Ventas.objects.get(pedido=pedido)
+        if type == 'comprador':
+            venta.comprador = value
+        elif type == 'venta_total':
+             venta.venta_total = int(value)
+        elif type == 'flete':
+            venta.flete = int(value)
+        elif type == 'fecha_boleta':
+            venta.fecha_boleta = value
+        if type in ['venta_total', 'flete']:
+            venta.pago = (venta.venta_total or 0) + (venta.flete or 0)
 
         venta.save()
         return JsonResponse({'status': 'Updated'})

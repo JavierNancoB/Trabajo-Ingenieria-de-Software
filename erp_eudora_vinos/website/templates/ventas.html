@@ -39,39 +39,24 @@
                     <form method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
-                            <label for="SKU">SKU</label>
-                            <div class="d-flex align-items-center">
-                                <select class="form-control" id="SKU" style="flex-grow: 1;">
-                                    <!-- Las opciones se llenarán con JavaScript -->
-                                </select>
-                                <a href="/producto?openModal=true" id="link-svg">
-                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
-                                </a>
-                            </div>
-                        </div>      
-                        <div class="mb-3">
-                            <label>Medio de pago</label>
-                            <input type="text" id="medio_de_pago" class="form-control"/>
+                            <label>Pedido</label>
+                            <input type="text" id="pedido" class="form-control"/>
                         </div>
                         <div class="mb-3">
-                            <label>Nombre producto</label>
-                            <input type="text" id="nombre_producto" class="form-control"/>
+                            <label>Comprador</label>
+                            <input type="text" id="comprador" class="form-control"/>
                         </div>
                         <div class="mb-3">
-                            <label>Precio unitario</label>
-                            <input type="number" id="precio_unitario" class="form-control"/>
+                            <label>Venta total</label>
+                            <input type="number" id="venta_total" class="form-control"/>
                         </div>
                         <div class="mb-3">
-                            <label>Cantidad</label>
-                            <input type="number" id="cantidad" class="form-control"/>
+                            <label>Flete</label>
+                            <input type="number" id="flete" class="form-control"/>
                         </div>
                         <div class="mb-3">
-                            <label>IVA</label>
-                            <input type="number" id="iva" class="form-control"/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Numero boleta</label>
-                            <input type="number" id="numero_boleta" class="form-control"/>
+                            <label>Fecha de la boleta</label>
+                            <input type="date" id="fecha_boleta" class="form-control"/>
                         </div>
                     </form>
                 </div>
@@ -85,28 +70,26 @@
         <table id="table" summary="tabla venta" class="table table-bordered table-hover dt-responsive">
             <thead>    
             <tr class="listado">   
-                <th> SKU </th>
-                <th> METODO DE PAGO </th>     
-                <th> NOMBRE PRODUCTO</th>
-                <th> PRECIO UNITARIO </th>
-                <th> CANTIDAD </th>  
-                <th> IVA </th>
-                <th> NUMERO DE BOLETA </th>
-                <th> SEL </th>
+                <th> Pedido </th>     
+                <th> Comprador</th>
+                <th> Venta total </th>
+                <th> Flete </th>  
+                <th> Fecha de la boleta </th>
+                <th> Pago </th>
+                <th> SEL</th>
             </tr>
             </thead>
             <tbody>        
                 {% for venta in ventas %}
                 <tr class="listado">
-                    <td>{{ venta.SKU }}</td>
-                    <td class="editable" data-sku="{{ venta.SKU }}" data-type="medio_de_pago">{{ venta.medio_de_pago }}</td>
-                    <td class="editable" data-sku="{{ venta.SKU }}" data-type="nombre_producto">{{ venta.nombre_producto }}</td>
-                    <td class="editable" data-sku="{{ venta.SKU }}" data-type="precio_unitario">{{ venta.precio_unitario }}</td>
-                    <td class="editable" data-sku="{{ venta.SKU }}" data-type="cantidad">{{ venta.cantidad }}</td>
-                    <td class="editable" data-sku="{{ venta.SKU }}" data-type="iva">{{ venta.iva }}</td>
-                    <td class="editable" data-sku="{{ venta.SKU }}" data-type="numero_boleta">{{ venta.numero_boleta }}</td>
+                    <td>{{ venta.pedido }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="comprador">{{ venta.comprador }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="venta_total">{{ venta.venta_total }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="flete">{{ venta.flete }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="fecha_boleta">{{ venta.fecha_boleta }}</td>
+                    <td class="noteditable" data-pedido="{{ venta.pedido }}" data-type="pago">{{ venta.pago }}</td>
                     <td>
-                        <input type="checkbox" data-sku="{{ venta.SKU }}" name="seleccionar" id="seleccionar">
+                        <input type="checkbox" data-pedido="{{ venta.pedido }}" name="seleccionar">
                     </td>
                 </tr> 
                 {% endfor %}    

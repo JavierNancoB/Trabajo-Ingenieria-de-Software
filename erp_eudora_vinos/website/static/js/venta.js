@@ -3,68 +3,72 @@ $(document).ready(function(){
     
     /* AÑADIR */
 
-    $(document).ready(function() {
-        $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
-
-        $.ajax({
-            url: '/api/skus/',  // Asegúrate de que esta URL es correcta según tu configuración de Django
-            type: 'GET',
-            success: function(data) {
-                var select = $('#SKU');
-                data.skus.forEach(function(sku) {
-                    select.append($('<option>', { value: sku, text: sku }));
-                });
-            },
-            error: function() {
-                console.error('Error cargando los SKU');
-            }
-        });
-    });
-
     $('#submit').on('click', function(){
         var validador = 0;
-        $SKU = $('#SKU').val();
-        $medio_de_pago = $('#medio_de_pago').val();
-        $nombre_producto = $('#nombre_producto').val();
-        $precio_unitario = $('#precio_unitario').val();
-        $cantidad = $('#cantidad').val();
-        $iva = $('#iva').val();
-        $numero_boleta = $('#numero_boleta').val();
+        var pedido = $('#pedido').val();
+        var comprador = $('#comprador').val();
+        var venta_total = parseInt($('#venta_total').val()) || 0;  // Asegurar que es un número
+        var flete = parseInt($('#flete').val()) || 0;  // Asegurar que es un número
+        var fecha_boleta = $('#fecha_boleta').val();
+        var pago = venta_total + flete;  // Calcular pago como suma de venta_total y flete
     
-        /*
-
-        comprueba que no haya campos vacios, que no se excedan los limites de caracteres
-        y que el año de iva sea valido (1800-2050).
-        
-        */ 
-        
-        if ($SKU == '' || $medio_de_pago == '' || $nombre_producto == '' || $precio_unitario == '' || $cantidad == '' || $iva == '' || $numero_boleta == ''){
+        // Comprobación de que no haya campos vacíos
+        if (pedido == '' || comprador == '' || $('#venta_total').val() == '' || $('#flete').val() == '' || fecha_boleta == '') {
             validador = 1;
             alert('Por favor no deje campos vacios');
+        }
+
+        // Validación de comprador
+        if (comprador.length > 50) {
+            alert("El valor para 'comprador' no puede tener más de 50 caracteres.");
+            e.preventDefault();
+            return;
+        }
+
+        // Validación de fecha
+        var fechaIngresada = new Date(fecha_boleta);
+        var hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+        if (fechaIngresada > hoy) {
+            alert("La fecha de la boleta no puede ser futura.");
+            e.preventDefault();
+            return;
+        }
+
+        // Validación de venta_total
+        if (isNaN(venta_total) || venta_total < 0) {
+            alert("El valor para 'venta total' debe ser un número positivo.");
+            e.preventDefault();
+            return;
+        }
+
+        // Validación de flete
+        if (isNaN(flete) || flete < 0) {
+            alert("El valor para 'flete' debe ser un número positivo.");
+            e.preventDefault();
+            return;
         }
         else{
             $.ajax({
                 type: 'POST',
                 url: 'insert/',
                 data: {
-                    SKU: $SKU,
-                    medio_de_pago: $medio_de_pago,
-                    nombre_producto: $nombre_producto,
-                    precio_unitario: $precio_unitario,
-                    cantidad: $cantidad,
-                    iva: $iva,
-                    numero_boleta: $numero_boleta,
+                    pedido: pedido,
+                    comprador: comprador,
+                    venta_total: venta_total,  // Enviar como entero
+                    flete: flete,              // Enviar como entero
+                    fecha_boleta: fecha_boleta,
+                    pago: pago,                // Enviar el pago calculado
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
                 success: function(){
                     alert('Se guardó correctamente la venta');
-                    $('#SKU').val('');
-                    $('#medio_de_pago').val('');
-                    $('#nombre_producto').val('');
-                    $('#precio_unitario').val('');
-                    $('#cantidad').val('');
-                    $('#iva').val('');
-                    $('#numero_boleta').val('');
+                    $('#pago').val('');  // Limpiar campos
+                    $('#pedido').val('');
+                    $('#comprador').val('');
+                    $('#venta_total').val('');
+                    $('#flete').val('');
+                    $('#fecha_boleta').val('');
                     window.location='/venta';
                 }
             });
@@ -72,7 +76,7 @@ $(document).ready(function(){
     });
     /* EDITAR */
 
-    /* comprobar si la casilla editar esta activada */
+    /* comprobar si la casilla editar esta actfecha_boletada */
 
     function isEditingEnabled() {
         return $('#flexSwitchCheckDefault').prop('checked');
@@ -89,13 +93,13 @@ $(document).ready(function(){
     $(document).on('blur', '.input-data', function(){
         var value=$(this).val();
         var td=$(this).parent('td');
-        var SKU=td.data('sku');
-        console.log(SKU);
+        var pedido=td.data('pedido');
+        console.log(pedido);
         $(this).remove();
         td.html(value);
         td.addClass('editable');
         var type=td.data('type');
-        sendToServer(td.data("sku"), value, type);
+        sendToServer(td.data("pedido"), value, type);
     }); 
     $(document).on('keypress', '.input-data', function(e){
         var key = e.which;
@@ -106,63 +110,55 @@ $(document).ready(function(){
             console.log(td);
             var type = td.data("type");
             console.log(type);
-            var SKU = td.data("sku");
-            console.log(SKU);
+            var pedido = td.data("pedido");
+            console.log(pedido);
             $(this).remove();
             td.html(value);
             td.addClass("editable");
-            sendToServer(td.data("sku"), value, type);
+            sendToServer(td.data("pedido"), value, type);
         }
     });
-    function sendToServer(SKU, value, type){
-        if (type=="cosecha" && isNaN(value)) {
-            alert("El valor debe ser numérico.");
-            return; // No enviar los datos al servidor si el valor no es numérico
-        }
-        if (type === "cosecha" && (value < 1800 || value > 2050)) {
-            alert("El valor para 'cosecha' debe estar entre 1800 y 2050");
-            return; // No enviar los datos al servidor
-        }
+    function sendToServer(pedido, value, type){
         switch (type) {
-            case "tipo_producto":
+            case "comprador":
                 if (value.length > 50) {
                     alert("El valor para 'tipo de producto' no puede tener más de 50 caracteres.");
                     return; // No enviar los datos al servidor
                 }
                 break;
-            case "viña":
-                if (value.length > 150) {
-                    alert("El valor para 'viña' no puede tener más de 150 caracteres.");
+            case "fecha_boleta":
+                var fechaIngresada = new Date(value);
+                var hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);  // Ajustar la hora a medianoche para comparaciones precisas.
+        
+                // Validar que la fecha está en el formato correcto y no es futura
+                if (isNaN(fechaIngresada.getTime())) {
+                    alert("La fecha ingresada no es válida. Por favor, ingrese una fecha en formato YYYY-MM-DD.");
+                    return; // No enviar los datos al servidor
+                } else if (fechaIngresada > hoy) {
+                    alert("La fecha de la boleta no puede ser futura.");
                     return; // No enviar los datos al servidor
                 }
                 break;
-            case "cepa":
-                if (value.length > 50) {
-                    alert("El valor para 'cepa' no puede tener más de 50 caracteres.");
+            case "venta_total":
+                if (isNaN(value) || value < 0) {
+                    alert("El valor para 'venta total' debe ser un número positivo.");
                     return; // No enviar los datos al servidor
                 }
                 break;
-            case "nombre_producto":
-                if (value.length > 50) {
-                    alert("El valor para 'nombre de producto' no puede tener más de 50 caracteres.");
+            case "flete":
+                if (isNaN(value) || value < 0) {
+                    alert("El valor para 'flete' debe ser un número positivo.");
                     return; // No enviar los datos al servidor
                 }
-                break;
-            case "cosecha":
-                if (value.length > 50) {
-                    alert("El valor para 'cosecha' no puede tener más de 50 caracteres.");
-                    return; // No enviar los datos al servidor
-                }
-                break;
-            default:
                 break;
         }
-        console.log("Sending to server:", SKU, value, type);  // Log para ver qué datos se están enviando
+        console.log("Sending to server:", pedido, value, type);  // Log para ver qué datos se están enviando
         $.ajax({
             url: 'update/',
             type: 'POST',
             data: {
-                SKU: SKU,
+                pedido: pedido,
                 value: value,
                 type: type,
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
@@ -176,33 +172,31 @@ $(document).ready(function(){
             console.log('Error');
         });
     }
-    /* ELIMINAR */
-    $('#eliminar-seleccion').on('click', function(e){
-        if (!isEditingEnabled()) {
-            e.preventDefault();
-            alert('Debe habilitar la edición para eliminar productos.');
-        } else {
-            var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
-            if (confirmation) {
-                $('input[name="seleccionar"]:checked').each(function() {
-                    var sku = $(this).data('sku');
-    
-                    $.ajax({
-                        url: '/venta/delete/' + sku, // Usando la ruta existente
-                        type: 'POST',
-                        headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-                        success: function(response) {
-                            console.log('Producto con OC ' + sku + ' eliminado');
-                        },
-                        error: function(xhr) {
-                            console.log('Error al eliminar el producto con OC ' + sku);
-                        },                        
-                        complete: function() {
-                            location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
-                        }
+        /* ELIMINAR */
+        $('#eliminar-seleccion').on('click', function(e){
+            if (!isEditingEnabled()) {
+                e.preventDefault();
+                alert('Debe habilitar la edición para eliminar productos.');
+            } else {
+                var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
+                if (confirmation) {
+                    $('input[name="seleccionar"]:checked').each(function() {
+                        var pedido = $(this).data('pedido');
+                        console.log('Intentando eliminar el pedido: ' + pedido);  // Verificación de consola
+                        $.ajax({
+                            url: '/venta/delete/' + pedido,
+                            type: 'POST',
+                            headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
+                            success: function(response) {
+                                console.log('Producto con pedido ' + pedido + ' eliminado');
+                                location.reload();  // Recargar la página después de todas las eliminaciones
+                            },
+                            error: function(xhr) {
+                                console.log('Error al eliminar el producto con pedido ' + pedido);
+                            }
+                        });
                     });
-                });
+                }
             }
-        }
-    });
+        });
 });
