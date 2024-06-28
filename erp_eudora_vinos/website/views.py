@@ -75,38 +75,27 @@ def ventas(request):
 
 @login_required
 def insert_ventas(request):
-    if request.method == 'POST':
-        SKU = request.POST.get('SKU')
-        medio_de_pago = request.POST.get('medio_de_pago')
-        nombre_producto = request.POST.get('nombre_producto')
-        precio_unitario = request.POST.get('precio_unitario')
-        cantidad = request.POST.get('cantidad')
-        iva = request.POST.get('iva')
-        numero_boleta = request.POST.get('numero_boleta')
-        if SKU and medio_de_pago and nombre_producto and precio_unitario and cantidad and iva and numero_boleta:
-                producto = Producto.objects.get(SKU=SKU)
-                member = Ventas(
-                    SKU=producto,
-                    medio_de_pago=medio_de_pago,
-                    nombre_producto=nombre_producto,
-                    precio_unitario=precio_unitario,
-                    cantidad=cantidad,
-                    iva=iva,
-                    numero_boleta=numero_boleta
-                )
-                member.save()
-                return redirect('/venta')
+    member = Ventas(
+                        pedido=request.POST.get('pedido'),
+                        comprador=request.POST.get('comprador'),
+                        venta_total=request.POST.get('venta_total'),
+                        flete=request.POST.get('flete'),
+                        fecha_boleta=request.POST.get('fecha_boleta'),
+                        pago=request.POST.get('pago')
+
+                    )
+    member.save()
+    return redirect('/')
 
 @login_required
 @require_POST
-def delete_ventas(request, sku):
+def delete_ventas(request, pedido):
     try:
-        member = Ventas.objects.get(SKU=sku)
-        member.delete()
-        return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
+        venta = Ventas.objects.get(pedido=pedido)
+        venta.delete()
+        return JsonResponse({'status': 'success'})
     except Ventas.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-
+        return JsonResponse({'status': 'error'}, status=404)
 # ALERTAS
 
 # Notificaciones de stock

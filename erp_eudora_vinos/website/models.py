@@ -27,16 +27,14 @@ class Producto(models.Model):
         return self.SKU    
 
 class Ventas(models.Model):
-    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE, default='1')
-    numero_boleta = models.IntegerField(unique=True)
-    nombre_producto = models.CharField(max_length=50)
-    precio_unitario = models.IntegerField()
-    cantidad = models.IntegerField()
-    iva = models.IntegerField()
-    medio_de_pago = models.CharField(max_length=50)
-
+    pedido = models.CharField(primary_key=True ,unique=True, max_length=50, default='0')
+    comprador = models.CharField(max_length=50,null=True)
+    venta_total = models.IntegerField(null=True)
+    flete = models.IntegerField(null=True)
+    fecha_boleta = models.DateField(null=True)
+    pago = models.IntegerField(null=True)
     def __str__(self):
-        return f"{self.SKU.SKU} - {self.nombre_producto}"
+        return self.pedido
     
       
 class Proveedores(models.Model):
