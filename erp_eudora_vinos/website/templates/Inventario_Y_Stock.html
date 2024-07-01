@@ -107,7 +107,7 @@
                             <label>Movimiento de bodegas</label>
                             <input type="text" id="mov-bodegas" class="form-control"/>
                         </div>
-                        <div class="mb-3">
+                        <<div class="mb-3">
                             <label>Stock</label>
                             <input type="text" id="stock" class="form-control"/>
                         </div>
@@ -161,6 +161,9 @@
                     <td class="editable" data-id_inventario="{{ inventario_Y_stock.id_inventario }}" data-type="stock">{{ inventario_Y_stock.stock }}</td>
                     <td class="editable" data-id_inventario="{{ inventario_Y_stock.id_inventario }}" data-type="precio_unitario">{{ inventario_Y_stock.precio_unitario }}</td>
                     <td class="editable" data-id_inventario="{{ inventario_Y_stock.id_inventario }}" data-type="precio_total">{{ inventario_Y_stock.precio_total }}</td>
+                    <!-- stock y precio total no son editables
+                    <td>{{ inventario_Y_stock.stock }}</td>
+                    <td>{{ inventario_Y_stock.precio_total }}</td> -->
                     <td>
                         <input type="checkbox" data-id_inventario="{{ inventario_Y_stock.id_inventario }}" name="seleccionar" id="seleccionar">
                     </td>

@@ -184,22 +184,19 @@ $(document).ready(function() {
     });
     */
     $(document).on('blur', '.input-data', function() {
-        
         var td = $(this).parent('td');
         var value = $(this).val();
-        //finishEditing(td, value);
+        var id_inventario = td.data('id_inventario');
+        var type = td.data('type');
 
-        var value=$(this).val();
-        var td=$(this).parent('td');
-        var id_inventario=td.data('id_inventario');
-        $(this).remove();
-        td.html(value);
-        td.addClass('editable');
-        var type=td.data('type');
-        if (type === 'fecha_de_ingreso' ) {
+        if (type === 'fecha_de_ingreso') {
             value = transformarFecha(value);
         }
-        sendToServer(td.data("id_inventario"), value, type);
+
+        $(this).remove();
+        td.html(value).addClass('editable');
+        actualizarFila(td.closest('tr'));
+        sendToServer(id_inventario, value, type);
     });
     });
     
@@ -399,7 +396,18 @@ $(document).ready(function() {
         document.querySelector(".costo-total").textContent = totalCosto || 0;
     }
     
-    
+    function actualizarFila(fila) {
+        const cantidad = parseFloat(fila.find('[data-type="cantidad"]').text()) || 0;
+        const salidas = parseFloat(fila.find('[data-type="salidas"]').text()) || 0;
+        const movBodegas = parseFloat(fila.find('[data-type="mov_bodegas"]').text()) || 0;
+        const precioUnitario = parseFloat(fila.find('[data-type="precio_unitario"]').text()) || 0;
+
+        const stock = cantidad - salidas - movBodegas;
+        const precioTotal = stock * precioUnitario;
+
+        fila.find('[data-type="stock"]').text(stock.toFixed(2));
+        fila.find('[data-type="precio_total"]').text(precioTotal.toFixed(2));
+    }
     
     
 
@@ -427,7 +435,7 @@ $(document).ready(function() {
 
         // Aquí asumes que ya existe la funcionalidad para enviar datos en tu archivo JS, se llama en este lugar
         document.getElementById('submit').addEventListener('click', function () {
-            // Aquí puedes agregar o llamar tu funcionalidad existente de envío de datos
+            
         });
     }
 );
