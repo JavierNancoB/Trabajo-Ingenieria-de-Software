@@ -119,7 +119,7 @@ def guardarventa(request):
     
 # Inventario_Y_Stock
 
-@csrf_exempt
+'''@csrf_exempt
 def guardar_Inventario_Y_Stock(request):
     sku = request.POST.get('SKU', '')
     type = request.POST.get('type', '')
@@ -141,7 +141,76 @@ def guardar_Inventario_Y_Stock(request):
         Inventario_Y_Stock.save()
         return JsonResponse({'status': 'Updated'})
     except Inventario_Y_Stock.DoesNotExist:
+        return JsonResponse({'status': 'Stock not found'}, status=404)'''
+'''@csrf_exempt
+def guardar_Inventario_Y_Stock(request):
+    id_inventario = request.POST.get('id_inventario', '')  # Asegúrate de que este nombre coincida con lo que envías desde el cliente
+    type = request.POST.get('type', '')
+    value = request.POST.get('value', '')
+
+    try:
+        inventario_y_stock = Inventario_Y_Stock.objects.get(id_inventario=id_inventario)  # Asegúrate de que el nombre del campo clave sea correcto, aquí es 'SKU'
+        if type == 'salidas':
+            inventario_y_stock.salidas = int(value) # Convierte a entero
+        elif type == 'cantidad':
+            inventario_y_stock.cantidad = int(value)  # Convierte a entero
+        elif type == 'precio_unitario':
+            inventario_y_stock.precio_unitario = int(value)  # Convierte a float
+        elif type == 'fecha_de_ingreso':
+            inventario_y_stock.fecha_de_ingreso = value  # Asegúrate de que el formato de fecha sea correcto
+        elif type == 'venta':
+            inventario_y_stock.venta = int(value)  # Convierte a entero
+        elif type =='mov_bodegas':
+            inventario_y_stock.mov_bodegas = int(value)
+        elif type == 'bodega':
+            inventario_y_stock.bodega = value
+        elif type == 'stock':
+            inventario_y_stock.stock = int(value)
+        elif type == 'precio_total':
+            inventario_y_stock.precio_total = int(value)
+
+
+        inventario_y_stock.save()
+        return JsonResponse({'status': 'Updated'})
+    except Inventario_Y_Stock.DoesNotExist:
+        return JsonResponse({'status': 'Stock not found'}, status=404)'''
+@csrf_exempt
+def guardar_Inventario_Y_Stock(request):
+    id_inventario = request.POST.get('id_inventario', '')  # ID del inventario como cadena
+    type = request.POST.get('type', '')  # Tipo de actualización
+    value = request.POST.get('value', '')  # Valor recibido como cadena
+
+    try:
+        inventario_y_stock = Inventario_Y_Stock.objects.get(id_inventario=id_inventario)
+        
+        # Convertir value a entero antes de guardar, manejar errores si la conversión falla
+        try:
+            value = int(value)
+        except ValueError:
+            return JsonResponse({'status': 'Error', 'message': 'Invalid input for integer field'}, status=400)
+
+        # Actualizar campos según el tipo
+        if type == 'cantidad':
+            inventario_y_stock.cantidad = value
+        elif type == 'salidas':
+            inventario_y_stock.salidas = value
+        elif type == 'mov_bodegas':
+            inventario_y_stock.mov_bodegas = value
+        elif type == 'stock':
+            inventario_y_stock.stock = value
+        elif type == 'precio_unitario':
+            inventario_y_stock.precio_unitario = value
+        elif type == 'precio_total':
+            inventario_y_stock.precio_total = value
+
+        # Guardar cambios en la base de datos
+        inventario_y_stock.save()
+
+        return JsonResponse({'status': 'Updated'})
+    except Inventario_Y_Stock.DoesNotExist:
         return JsonResponse({'status': 'Stock not found'}, status=404)
+    except Exception as e:
+        return JsonResponse({'status': 'Error', 'message': str(e)}, status=500)
     
 # COMPRA A PROVEEDORES
 

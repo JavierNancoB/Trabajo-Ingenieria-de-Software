@@ -195,7 +195,7 @@ $(document).ready(function() {
 
         $(this).remove();
         td.html(value).addClass('editable');
-        actualizarFila(td.closest('tr'));
+        actualizarFila(td.closest('tr'), id_inventario);
         sendToServer(id_inventario, value, type);
     });
     });
@@ -249,30 +249,38 @@ $(document).ready(function() {
     });
     
     function sendToServer(id_inventario, value, type) {
+        console.log("Sending to server:", id_inventario, value, type);
         var td = $("[data-id_inventario='" + id_inventario + "']").parent('td');
         var tr = td.closest('tr');  // Obtener el <tr> más cercano
+        var element = $("[data-id_inventario='" + id_inventario + "']");
+        element.prop('disabled', true);
         
-        if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
+        if (type == "cantidad" && isNaN(value) || value < 0) { // no se el limite de cantidad
             tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor o igual a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "precio_unitario" && isNaN(value) || value <= 0) {
+        if (type == "mov_bodegas" && isNaN(value) || value < 0) {
             tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "precio_total" && isNaN(value) || value <= 0) {
+        if (type == "precio_unitario" && isNaN(value) || value < 0) {
             tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "salidas" && isNaN(value) || value <= 0) {
+        if (type == "precio_total" && isNaN(value) || value < 0) {
             tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (type == "stock" && isNaN(value) || value <= 0) {
+        if (type == "salidas" && isNaN(value) || value < 0) {
+            tr.addClass('table-warning');
+            alert("El valor debe ser numérico y mayor a cero.");
+            return; // No enviar los datos al servidor
+        }
+        if (type == "stock" && isNaN(value) || value < 0) {
             tr.addClass('table-warning');
             alert("El valor debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
@@ -324,6 +332,7 @@ $(document).ready(function() {
             //alert('La fecha de ingreso es: ' + yyyy + mm + dd);
             console.log(response);
             calcularTotales();
+            element.prop('disabled', false);
         })
         .fail(function() {
             // Log en caso de error
@@ -331,6 +340,7 @@ $(document).ready(function() {
             alert('Ocurrio un error, vuelva a intentarlo');
             
             console.log('Error');
+            element.prop('disabled', false);    
         });
     }
     
@@ -370,43 +380,49 @@ $(document).ready(function() {
     function calcularTotales() {
         let totalIngresos = 0, totalSalidas = 0, totalMovBodegas = 0, totalStock = 0, totalCosto = 0;
     
+        // Selecciona cada fila en el cuerpo de la tabla con id 'table'
         document.querySelectorAll("#table tbody tr").forEach(fila => {
-            // Convertir los valores a enteros, manejar el caso de NaN estableciendo a 0
+            // Extrae los valores de las celdas de la fila y conviértelos a números apropiados
             const cantidad = parseInt(fila.cells[5].textContent) || 0;
             const salidas = parseInt(fila.cells[6].textContent) || 0;
             const movBodegas = parseInt(fila.cells[7].textContent) || 0;
-            const stock = parseInt(fila.cells[8].textContent) || 0;
+            // Calcula el stock usando la nueva fórmula
+            const stock = cantidad - salidas - movBodegas; // Usa la fórmula correcta aquí
             const precioUnitario = parseFloat(fila.cells[9].textContent) || 0;
     
-            // Acumular los totales
+            // Acumula los totales de ingresos, salidas y movimientos de bodega
             totalIngresos += cantidad;
             totalSalidas += salidas;
             totalMovBodegas += movBodegas;
-            totalStock += stock;
+            totalStock += stock; // Asegúrate de sumar el stock calculado
     
-            // Calcular el costo total y redondearlo a entero
-            totalCosto += Math.round(stock * precioUnitario);
+            // Calcula el costo total por cada fila y redondea a un entero
+            totalCosto += stock * precioUnitario;
         });
     
-        // Mostrar los totales como enteros y asegurar que sean 0 si no hay datos
+        // Muestra los totales calculados en los elementos del DOM correspondientes
         document.querySelector(".ingresos-totales").textContent = totalIngresos || 0;
         document.querySelector(".salidas-totales").textContent = totalSalidas || 0;
         document.querySelector(".movimiento-entre-bodegas").textContent = totalMovBodegas || 0;
-        document.querySelector(".stock-total").textContent = totalStock || 0;
+        document.querySelector(".stock-total").textContent = totalStock || 0; // Actualiza el stock total
         document.querySelector(".costo-total").textContent = totalCosto || 0;
     }
     
-    function actualizarFila(fila) {
-        const cantidad = parseFloat(fila.find('[data-type="cantidad"]').text()) || 0;
-        const salidas = parseFloat(fila.find('[data-type="salidas"]').text()) || 0;
-        const movBodegas = parseFloat(fila.find('[data-type="mov_bodegas"]').text()) || 0;
-        const precioUnitario = parseFloat(fila.find('[data-type="precio_unitario"]').text()) || 0;
+    function actualizarFila(fila, id_inventario) {
+        const cantidad = parseInt(fila.find('[data-type="cantidad"]').text()) || 0; // Usa parseInt para asegurarte de que sea entero
+        const salidas = parseInt(fila.find('[data-type="salidas"]').text()) || 0; // Usa parseInt para asegurarte de que sea entero
+        const movBodegas = parseInt(fila.find('[data-type="mov_bodegas"]').text()) || 0; // Usa parseInt para asegurarte de que sea entero
+        const precioUnitario = parseInt(fila.find('[data-type="precio_unitario"]').text()) || 0; // Sigue siendo float porque los precios pueden tener decimales
+    
+        const stock = cantidad - salidas - movBodegas; // Cálculo de stock como entero
+        const precioTotal = stock * precioUnitario; // Redondea el precio total para que sea entero
+    
+        fila.find('[data-type="stock"]').text(stock.toString()); // Convierte a string para mostrar
+        fila.find('[data-type="precio_total"]').text(precioTotal.toString()); // Convierte a string para mostrar
+        console.log('imprimiendo stock', stock, 'imprimiendo precio total', precioTotal);
+        sendToServer(id_inventario, stock, 'stock');
+        //sendToServer(id_inventario, precioTotal, 'precio_total');
 
-        const stock = cantidad - salidas - movBodegas;
-        const precioTotal = stock * precioUnitario;
-
-        fila.find('[data-type="stock"]').text(stock.toFixed(2));
-        fila.find('[data-type="precio_total"]').text(precioTotal.toFixed(2));
     }
     
     
@@ -415,10 +431,11 @@ $(document).ready(function() {
         function actualizarStockYCosto() {
             const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
             const salidas = parseFloat(document.getElementById('salidas').value) || 0;
+            const movBodegas = parseFloat(document.getElementById('mov-bodegas').value) || 0;
             const precioUnitario = parseFloat(document.getElementById('precio-unitario').value) || 0;
-
+            
             // Cálculo de stock
-            const stock = Math.round(cantidad - salidas);
+            const stock = Math.round(cantidad - salidas - movBodegas);
 
             // Cálculo de costo total
             const costoTotal = Math.round(stock * precioUnitario);

@@ -56,7 +56,7 @@ class Inventario_Y_Stock(models.Model):
     fecha_de_ingreso = models.DateField()
     cantidad = models.IntegerField() # es el ingreso
     salidas = models.IntegerField()
-    mov_bodegas = models.CharField(max_length=50)
+    mov_bodegas = models.IntegerField()
     stock = models.IntegerField() # stock total
     precio_unitario = models.IntegerField()
     precio_total = models.IntegerField()
