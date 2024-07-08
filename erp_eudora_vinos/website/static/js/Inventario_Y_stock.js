@@ -48,13 +48,13 @@ $(document).ready(function() {
         $fecha_de_ingreso = $('#fecha-ingreso').val();
         $cantidad = $('#cantidad').val();
         $salidas = $('#salidas').val();
-        $mov_bodegas = $('#mov-bodegas').val();
+        $mov_bodega = $('#mov-bodega').val();
         $stock = $('#stock').val();
         $precio_unitario = $('#precio-unitario').val();
         $precio_total = $('#precio-total').val();
         
         // Comprobación de campos vacíos
-        if ($bodega == '' || $fecha_de_ingreso == '' || $cantidad == '' || $salidas == '' || $mov_bodegas == '' || $stock == '' || $precio_unitario == '' || $precio_total == '') {
+        if ($bodega == '' || $fecha_de_ingreso == '' || $cantidad == '' || $salidas == '' || $mov_bodega == '' || $stock == '' || $precio_unitario == '' || $precio_total == '') {
             alert('Por favor no deje campos vacíos');
         }
         
@@ -88,7 +88,7 @@ $(document).ready(function() {
                 fecha_de_ingreso: $fecha_de_ingreso,
                 cantidad: $cantidad,
                 salidas: $salidas,
-                mov_bodegas: $mov_bodegas,
+                mov_bodega: $mov_bodega,
                 stock: $stock,
                 precio_unitario: $precio_unitario,
                 precio_total: $precio_total,
@@ -104,7 +104,7 @@ $(document).ready(function() {
                 $('#fecha-ingreso').val('');
                 $('#cantidad').val('');
                 $('#salidas').val('');
-                $('#mov-bodegas').val('');
+                $('#mov-bodega').val('');
                 $('#stock').val('');
                 $('#precio-unitario').val('');
                 $('#precio-total').val('');
@@ -119,6 +119,57 @@ $(document).ready(function() {
     /* EDITAR */
 
     /* comprobar si la casilla editar esta activada */
+    
+    function actualizarStock(idInventario) {
+        // Buscar en la fila del id_inventario específico
+        const row = $(`td[data-id_inventario='${idInventario}'][data-type='cantidad']`).closest('tr');
+    
+        // Extraer los valores de los inputs de cantidad, salidas y movimiento de bodegas
+        const cantidad = parseFloat(row.find(`td[data-id_inventario='${idInventario}'][data-type='cantidad']`).text()) || 0;
+        const salidas = parseFloat(row.find(`td[data-id_inventario='${idInventario}'][data-type='salidas']`).text()) || 0;
+        //const movBodegas = parseFloat(row.find(`td[data-id_inventario='${idInventario}'][data-type='mov_bodega']`).text()) || 0;
+    
+        // Calcular el nuevo stock
+        const stock = Math.round(cantidad - salidas);
+    
+        // Actualizar el valor del stock en la fila
+        row.find(`td[data-id_inventario='${idInventario}'][data-type='stock']`).text(stock);
+    
+        // Llamar a la función sendToServer para enviar los cambios al servidor
+        sendToServer(idInventario, stock, 'stock');
+    }
+    
+
+    document.addEventListener('DOMContentLoaded', function () {
+        function actualizarStockYCosto() {
+            const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
+            const salidas = parseFloat(document.getElementById('salidas').value) || 0;
+            const movBodegas = parseFloat(document.getElementById('mov-bodega').value) || 0;
+            const precioUnitario = parseFloat(document.getElementById('precio-unitario').value) || 0;
+            
+            // Cálculo de stock
+            const stock = Math.round(cantidad - salidas - movBodegas);
+
+            // Cálculo de costo total
+            const costoTotal = Math.round(stock * precioUnitario);
+
+            // Actualizar los campos con valores enteros
+            document.getElementById('stock').value = stock;
+            document.getElementById('precio-total').value = costoTotal;
+        }
+
+        // Agrega eventos de cambio a los campos relevantes
+        document.getElementById('cantidad').addEventListener('input', actualizarStockYCosto);
+        document.getElementById('salidas').addEventListener('input', actualizarStockYCosto);
+        document.getElementById('mov-bodega').addEventListener('input', actualizarStockYCosto);
+        document.getElementById('precio-unitario').addEventListener('input', actualizarStockYCosto);
+
+        // Aquí asumes que ya existe la funcionalidad para enviar datos en tu archivo JS, se llama en este lugar
+        document.getElementById('submit').addEventListener('click', function () {
+            
+        });
+    }
+);
     
     // Función que comprueba si la casilla de edición está activada
     function isEditingEnabled() {
@@ -153,6 +204,7 @@ $(document).ready(function() {
     }
     
     // Evento que se activa al hacer doble clic en un elemento con clase 'editable'
+    /*
     $(document).on('dblclick', '.editable', function() {
         if (isEditingEnabled()) {
             var value=$(this).text();
@@ -161,48 +213,26 @@ $(document).ready(function() {
             $(this).removeClass('editable');
         }
     });
-    /*
-    // Evento que se activa al perder el foco un input con clase 'input-data'
-    $(document).on('blur', '.input-data', function() {
-        // Obtiene el valor del input
-        var value = $(this).val();
-        // Obtiene el elemento padre (td) del input
-        var td = $(this).parent('td');
-        // Obtiene el SKU del atributo 'data-sku' del td
-        var id_inventario = td.data('id_inventario');
-        console.log(id_inventario);
-        // Elimina el input
-        $(this).remove();
-        // Inserta el valor en el td
-        td.html(value);
-        // Añade de nuevo la clase 'editable' al td
-        td.addClass('editable');
-        // Obtiene el tipo del atributo 'data-type' del td
-        var type = td.data('type');
-        // Envía los datos al servidor
-        sendToServer(td.data("id_inventario"), value, type);
-    });
-    */
-    $(document).on('blur', '.input-data', function() {
-        
-        var td = $(this).parent('td');
-        var value = $(this).val();
-        //finishEditing(td, value);
 
-        var value=$(this).val();
-        var td=$(this).parent('td');
-        var id_inventario=td.data('id_inventario');
-        $(this).remove();
-        td.html(value);
-        td.addClass('editable');
-        var type=td.data('type');
-        if (type === 'fecha_de_ingreso' ) {
+    $(document).on('blur', '.input-data', function() {
+        var td = $(this).parent('td');
+        var value = $(this).val();
+        var id_inventario = td.data('id_inventario');
+        var type = td.data('type');
+
+        if (type === 'fecha_de_ingreso') {
             value = transformarFecha(value);
         }
-        sendToServer(td.data("id_inventario"), value, type);
+        
+        $(this).remove();
+        td.html(value).addClass('editable');
+        sendToServer(id_inventario, value, type);
+        if(type == 'cantidad' || type == 'salidas' || type == 'mov_bodega' || type == 'precio_unitario')
+            {
+                actualizarStock(td.data("id_inventario"));
+            }
     });
-    });
-    
+     
     $(document).on('keypress', '.input-data', function(e) {
         function transformarFecha(fecha) {
             // Dividimos el string de fecha en partes
@@ -239,48 +269,142 @@ $(document).ready(function() {
             if (type === 'fecha_de_ingreso') {
                 value = transformarFecha(value);
             }
+            
             console.log(type, "AWA", value);
             // td.data("OC"); sirve para obtener el valor de la columna OC
             // si Oc es un numero entero, se debe cambiar por el valor de la columna OC
             $(this).remove();
             td.html(value);
+            // add class editable sirve para que se pueda editar la celda
             td.addClass("editable");
             console.log(td.data("id_inventario"));
             sendToServer(td.data("id_inventario"), value, type);
+            if(type == 'cantidad' || type == 'salidas' || type == 'mov_bodega' || type == 'precio_unitario')
+            {
+                actualizarStock(td.data("id_inventario"));
+            }
         }
         
     });
-    
+    */
+
+    // Cola de solicitudes para manejar actualizaciones secuenciales
+    let requestQueue = [];
+    let isRequestInProgress = false;
+
+    function addToRequestQueue(id_inventario, value, type) {
+        requestQueue.push({ id_inventario, value, type });
+        processNextRequest();
+    }
+
+    function processNextRequest() {
+        if (isRequestInProgress || requestQueue.length === 0) {
+            return;
+        }
+
+        isRequestInProgress = true;
+        const { id_inventario, value, type } = requestQueue.shift();
+
+        $.ajax({
+            url: 'update/', // Asegúrate que la URL es la correcta
+            type: 'POST',
+            data: {
+                id_inventario: id_inventario,
+                value: value,
+                type: type,
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function(response) {
+                console.log('Success:', response);
+                if (type === 'stock') {
+                    alert('Stock actualizado correctamente.');
+                }
+                else 
+                {
+                    alert('Se guardó correctamente luego de editarlo');
+                }
+                isRequestInProgress = false;
+                processNextRequest();
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', xhr.responseText);
+                isRequestInProgress = false;
+                processNextRequest();  // Decide si quieres reintentar automáticamente o no
+            }
+        });
+    }
+
+    $(document).on('dblclick', '.editable', function() {
+        if (isEditingEnabled()) {
+            var value=$(this).text();
+            var input="<input type='text' class='input-data' value='"+value+"' class='form-control' /> ";
+            $(this).html(input);
+            $(this).removeClass('editable');
+        }
+    });
+
+    $(document).on('blur', '.input-data', function() {
+        var td = $(this).parent('td');
+        var value = $(this).val();
+        var id_inventario = td.data('id_inventario');
+        var type = td.data('type');
+
+        if (type === 'fecha_de_ingreso') {
+            value = transformarFecha(value);
+        }
+        
+        $(this).remove();
+        td.html(value).addClass('editable');
+
+        // Agregamos la solicitud a la cola en lugar de enviarla directamente
+        addToRequestQueue(id_inventario, value, type);
+
+        if(type == 'cantidad' || type == 'salidas' || type == 'mov_bodega' || type == 'precio_unitario') {
+            var cantidad = parseFloat($(`td[data-id_inventario='${id_inventario}'][data-type='cantidad']`).text()) || 0;
+            var salidas = parseFloat($(`td[data-id_inventario='${id_inventario}'][data-type='salidas']`).text()) || 0;
+            var movBodegas = parseFloat($(`td[data-id_inventario='${id_inventario}'][data-type='mov_bodega']`).text()) || 0;
+            var stock = Math.round(cantidad - salidas - movBodegas);
+            addToRequestQueue(id_inventario, stock, 'stock');
+        }
+    });
+
+    // Eliminar duplicado de transformarFecha dentro de keypress ya que se define fuera
+    $(document).on('keypress', '.input-data', function(e) {
+        var key = e.which;
+        if(key == 13) {
+            var value = $(this).val();
+            var td = $(this).parent("td");
+            var type = td.data("type");
+            if (type === 'fecha_de_ingreso') {
+                value = transformarFecha(value);
+            }
+
+            $(this).remove();
+            td.html(value).addClass("editable");
+            addToRequestQueue(td.data("id_inventario"), value, type);
+
+            if(type == 'cantidad' || type == 'salidas' || type == 'mov_bodega' || type == 'precio_unitario') {
+                actualizarStock(td.data("id_inventario"));
+            }
+        }
+    });
+
+
     function sendToServer(id_inventario, value, type) {
         var td = $("[data-id_inventario='" + id_inventario + "']").parent('td');
         var tr = td.closest('tr');  // Obtener el <tr> más cercano
+        var element = $("[data-id_inventario='" + id_inventario + "']");
+        element.prop('disabled', true);
         
-        if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
-            tr.addClass('table-warning');
-            alert("El valor debe ser numérico y mayor o igual a cero.");
-            return; // No enviar los datos al servidor
-        }
-        if (type == "precio_unitario" && isNaN(value) || value <= 0) {
-            tr.addClass('table-warning');
-            alert("El valor debe ser numérico y mayor a cero.");
-            return; // No enviar los datos al servidor
-        }
-        if (type == "precio_total" && isNaN(value) || value <= 0) {
-            tr.addClass('table-warning');
-            alert("El valor debe ser numérico y mayor a cero.");
-            return; // No enviar los datos al servidor
-        }
-        if (type == "salidas" && isNaN(value) || value <= 0) {
-            tr.addClass('table-warning');
-            alert("El valor debe ser numérico y mayor a cero.");
-            return; // No enviar los datos al servidor
-        }
-        if (type == "stock" && isNaN(value) || value <= 0) {
-            tr.addClass('table-warning');
-            alert("El valor debe ser numérico y mayor a cero.");
-            return; // No enviar los datos al servidor
+        if(type == "stock" || type == "precio_total" || type == "salidas" || type == "precio_unitario" || type == "cantidad" || type == "mov_bodega" ){
+            if (value < 0 && type != isNaN(value)) {
+                tr.addClass('table-warning');
+                alert("El valor debe ser numérico y mayor a cero.");
+                return; // No enviar los datos al servidor
+            }
         }
         // Validaciones para diferentes tipos de datos
+        
         switch (type) {
             case "bodega":
                 if (value.length > 150) {
@@ -289,7 +413,7 @@ $(document).ready(function() {
                     return; // No enviar los datos al servidor
                 }
                 break;
-            case "mov_bodegas":
+            case "mov_bodega":
                 if (value.length > 50) {
                     tr.addClass('table-warning');
                     alert("El valor para 'bodegas' no puede tener más de 50 caracteres.");
@@ -321,21 +445,21 @@ $(document).ready(function() {
         })
         .done(function(response) {
             // Alerta y log en caso de éxito
-            tr.addClass('table-light');
-            alert('Se guardó correctamente luego de editarlo');
-            //alert('La fecha actual es: ' + año + mes + dia);
-            //alert('La fecha de ingreso es: ' + yyyy + mm + dd);
-            console.log(response);
+            if (type != 'stock' && type != 'precio_total') {
+                alert('Se guardó correctamente luego de editarlo');
+            }
             calcularTotales();
+
         })
         .fail(function() {
             // Log en caso de error
             tr.addClass('table-warning');
             alert('Ocurrio un error, vuelva a intentarlo');
             
-            console.log('Error');
+            console.log('Error');   
         });
     }
+        
     
 
     /* ELIMINAR */
@@ -373,61 +497,31 @@ $(document).ready(function() {
     function calcularTotales() {
         let totalIngresos = 0, totalSalidas = 0, totalMovBodegas = 0, totalStock = 0, totalCosto = 0;
     
+        // Selecciona cada fila en el cuerpo de la tabla con id 'table'
         document.querySelectorAll("#table tbody tr").forEach(fila => {
-            // Convertir los valores a enteros, manejar el caso de NaN estableciendo a 0
+            // Extrae los valores de las celdas de la fila y conviértelos a números apropiados
             const cantidad = parseInt(fila.cells[5].textContent) || 0;
             const salidas = parseInt(fila.cells[6].textContent) || 0;
             const movBodegas = parseInt(fila.cells[7].textContent) || 0;
-            const stock = parseInt(fila.cells[8].textContent) || 0;
+            // Calcula el stock usando la nueva fórmula
+            const stock = cantidad - salidas - movBodegas; // Usa la fórmula correcta aquí
             const precioUnitario = parseFloat(fila.cells[9].textContent) || 0;
     
-            // Acumular los totales
+            // Acumula los totales de ingresos, salidas y movimientos de bodega
             totalIngresos += cantidad;
             totalSalidas += salidas;
             totalMovBodegas += movBodegas;
-            totalStock += stock;
+            totalStock += stock; // Asegúrate de sumar el stock calculado
     
-            // Calcular el costo total y redondearlo a entero
-            totalCosto += Math.round(stock * precioUnitario);
+            // Calcula el costo total por cada fila y redondea a un entero
+            totalCosto += stock * precioUnitario;
         });
     
-        // Mostrar los totales como enteros y asegurar que sean 0 si no hay datos
+        // Muestra los totales calculados en los elementos del DOM correspondientes
         document.querySelector(".ingresos-totales").textContent = totalIngresos || 0;
         document.querySelector(".salidas-totales").textContent = totalSalidas || 0;
         document.querySelector(".movimiento-entre-bodegas").textContent = totalMovBodegas || 0;
-        document.querySelector(".stock-total").textContent = totalStock || 0;
+        document.querySelector(".stock-total").textContent = totalStock || 0; // Actualiza el stock total
         document.querySelector(".costo-total").textContent = totalCosto || 0;
     }
-    
-    
-    
-    
-
-    document.addEventListener('DOMContentLoaded', function () {
-        function actualizarStockYCosto() {
-            const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
-            const salidas = parseFloat(document.getElementById('salidas').value) || 0;
-            const precioUnitario = parseFloat(document.getElementById('precio-unitario').value) || 0;
-
-            // Cálculo de stock
-            const stock = Math.round(cantidad - salidas);
-
-            // Cálculo de costo total
-            const costoTotal = Math.round(stock * precioUnitario);
-
-            // Actualizar los campos con valores enteros
-            document.getElementById('stock').value = stock;
-            document.getElementById('precio-total').value = costoTotal;
-        }
-
-        // Agrega eventos de cambio a los campos relevantes
-        document.getElementById('cantidad').addEventListener('input', actualizarStockYCosto);
-        document.getElementById('salidas').addEventListener('input', actualizarStockYCosto);
-        document.getElementById('precio-unitario').addEventListener('input', actualizarStockYCosto);
-
-        // Aquí asumes que ya existe la funcionalidad para enviar datos en tu archivo JS, se llama en este lugar
-        document.getElementById('submit').addEventListener('click', function () {
-            // Aquí puedes agregar o llamar tu funcionalidad existente de envío de datos
-        });
-    }
-);
+});

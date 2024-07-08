@@ -119,27 +119,31 @@ def guardarventa(request):
 
 @csrf_exempt
 def guardar_Inventario_Y_Stock(request):
-    sku = request.POST.get('SKU', '')
-    type = request.POST.get('type', '')
-    value = request.POST.get('value', '')
+    id_inventario = request.POST.get('id_inventario', '')  # ID del inventario como cadena
+    type = request.POST.get('type', '')  # Tipo de actualización
+    value = request.POST.get('value', '')  # Valor recibido como cadena
 
     try:
-        inventario_Y_Stock= Inventario_Y_Stock.objects.get(SKU=sku)
-        if type == 'nombre_producto':
-            inventario_Y_Stock.nombre_producto = value
-        elif type == 'cantidad':
-            inventario_Y_Stock.cantidad = value
+        inventario_y_stock = Inventario_Y_Stock.objects.get(id_inventario=id_inventario)
+        if type == 'cantidad':
+            inventario_y_stock.cantidad = value
+        elif type == 'salidas':
+            inventario_y_stock.salidas = value
+        elif type == 'mov_bodegas':
+            inventario_y_stock.mov_bodegas = value
+        elif type == 'stock':
+            inventario_y_stock.stock = value
         elif type == 'precio_unitario':
-            inventario_Y_Stock.precio_unitario = value
-        elif type == 'fecha_de_ingreso':
-            inventario_Y_Stock.fecha_de_ingreso = value
-        elif type == 'venta':
-            inventario_Y_Stock.venta = value
+            inventario_y_stock.precio_unitario = value
+        elif type == 'precio_total':
+            inventario_y_stock.precio_total = value
 
-        Inventario_Y_Stock.save()
+        # Guardar cambios en la base de datos
+        inventario_y_stock.save()
+
         return JsonResponse({'status': 'Updated'})
     except Inventario_Y_Stock.DoesNotExist:
-        return JsonResponse({'status': 'Stock not found'}, status=404)
+        return JsonResponse({'status': 'Product not found'}, status=404)
     
 # COMPRA A PROVEEDORES
 
@@ -227,8 +231,8 @@ def guardar_Inventario_Y_Stock(request):
             inventario.cantidad = value
         elif type == 'salidas': 
             inventario.salidas = value
-        elif type == 'mov_bodegas':
-            inventario.mov_bodega = value
+        elif type == 'mov_bodega':
+            inventario.mov_bodegas = value
         elif type == 'stock':
             inventario.stock = value
         elif type == 'precio_unitario':
