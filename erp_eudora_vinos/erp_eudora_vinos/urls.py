@@ -17,17 +17,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from authuser import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', include('website.urls')),
     path('admin/', admin.site.urls),
     path('admin/', include('django.contrib.auth.urls')),
-    # Incluimos las urls de la app website que sera la encargada de mostrar la pagina web
     
     path('accounts/', include('django.contrib.auth.urls')),
-    #path('login/', views.LoginView.as_view(), name='login')
-    
-    #LOGOUT
-    path('salir/', views.salir , name='salir')
-]
 
+    # LOGOUT
+    path('salir/', views.salir, name='salir'),
+    
+    # Password reset URLs
+    
+    path('password_reset/', auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'), name='password_reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
+]

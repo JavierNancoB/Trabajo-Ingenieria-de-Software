@@ -1,4 +1,4 @@
-{% load static%}
+{% load static %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +23,7 @@
                 <input type="password" id="password" name="password" placeholder="Contraseña">
             </div>
             <input type="submit" value="Entrar" class="btn">
-            <p class="forgot-password">¿Olvidaste tu contraseña?</p>
+            <p class="forgot-password"><a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a></p>
         </form>
     </div>
 </body>
