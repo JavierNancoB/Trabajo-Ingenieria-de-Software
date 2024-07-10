@@ -4,7 +4,7 @@ from django.db import models
 
 class Cliente(models.Model):
     rut = models.CharField(max_length=12, unique=True)
-    nombre = models.CharField(max_length=50)
+    nombre = models.CharField(primary_key=True, max_length=50, unique=True)
     apellido = models.CharField(max_length=50)
     email = models.EmailField()
     comuna = models.CharField(max_length=50)
@@ -13,7 +13,7 @@ class Cliente(models.Model):
     telefono = models.IntegerField()
 
     def __str__(self):
-        return self.nombre + ' ' + self.apellido
+        return self.nombre
 
 
 class Producto(models.Model):
@@ -28,9 +28,13 @@ class Producto(models.Model):
 
 class Ventas(models.Model):
     pedido = models.CharField(primary_key=True ,unique=True, max_length=50, default='0')
-    comprador = models.CharField(max_length=50,null=True)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) # foreign key
+    nombre = models.ForeignKey(Cliente, on_delete=models.CASCADE) # foreign key
+    precio_unitario = models.IntegerField(null=True)
+    cantidad = models.IntegerField(null=True)
     venta_total = models.IntegerField(null=True)
     flete = models.IntegerField(null=True)
+    factura_o_boleta = models.CharField(max_length=50, null=True)
     fecha_boleta = models.DateField(null=True)
     pago = models.IntegerField(null=True)
     def __str__(self):

@@ -49,6 +49,7 @@ urlpatterns = [
     # API
     path('api/skus/', apiViews.get_product_skus, name='api_skus'),
     path('api/proveedores/', apiViews.get_proveedor_nombre, name='api_proveedores'),
+    path('api/cliente/', apiViews.get_cliente_nombre, name='api_ventas'),
 
     # CLIENTE  
     path('cliente/', views.cliente, name='cliente'),

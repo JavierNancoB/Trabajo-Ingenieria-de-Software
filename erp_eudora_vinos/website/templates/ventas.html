@@ -6,6 +6,28 @@
         <div id="titulo-modelo">
             <h1>VENTAS</h1>
         </div>
+        <!-- Aqui se crea la nueva tabla con el resumen -->
+        <div>
+            <table id="totals-table" class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>CANTIDAD TOTAL</th>
+                        <th>VENTAS TOTALES</th>
+                        <th>COSTO ENVIOS TOTALES</th>
+                        <th>PAGO TOTAL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cantidad-total" data-value="{{ cantidad_totales }}">{{ cantidad_totales }}</td>
+                        <td class="ventas-totales" data-value="{{ ventas_totales }}">{{ ventas_totales }}</td>
+                        <td class="fletes-totales" data-value="{{ fletes_totales }}">{{ fletes_totales }}</td>
+                        <td class="pago-total" data-value="{{ pago_total }}">{{ pago_total }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- Aqui se crea la nueva tabla con el resumen -->
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
@@ -44,20 +66,55 @@
                         </div>
                         <div class="mb-3">
                             <label>Comprador</label>
-                            <input type="text" id="comprador" class="form-control"/>
+                            <div class="d-flex align-items-center">
+                                <select class="form-control" id="nombre" style="flex-grow: 1;">
+                                    <!-- Las opciones se llenarán con JavaScript -->
+                                </select>
+                                <a href="/cliente?openModal=true" id="link-svg">
+                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
+                                </a>
+                            </div>
                         </div>
                         <div class="mb-3">
+                            <label for="SKU">SKU</label>
+                            <div class="d-flex align-items-center">
+                                <select class="form-control" id="SKU" style="flex-grow: 1;">
+                                    <!-- Las opciones se llenarán con JavaScript -->
+                                </select>
+                                <a href="/producto?openModal=true" id="link-svg">
+                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
+                                </a>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label>Precio unitario</label>
+                            <input type="number" id="precio_unitario" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
+                            <label>Cantidad</label>
+                            <input type="number" id="cantidad" class="form-control"/>
+                        </div>
+
+                        <div class="mb-3">
                             <label>Venta total</label>
-                            <input type="number" id="venta_total" class="form-control"/>
+                            <input type="number" id="venta_total" class="form-control" disabled/>
                         </div>
                         <div class="mb-3">
                             <label>Flete</label>
                             <input type="number" id="flete" class="form-control"/>
                         </div>
                         <div class="mb-3">
+                            <label>Factura o Boleta</label>
+                            <input type="text" id="factura_o_boleta" class="form-control"/>
+                        </div>
+                        <div class="mb-3">
                             <label>Fecha de la boleta</label>
                             <input type="date" id="fecha_boleta" class="form-control"/>
                         </div>
+                        <div class="mb-3">
+                            <label>Pago</label>
+                            <input type="text" id="pago" class="form-control" disabled/>
+                        </div> 
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -72,9 +129,13 @@
             <tr class="listado">   
                 <th> Pedido </th>     
                 <th> Comprador</th>
+                <th> SKU </th>
+                <th> Precio unitario </th>
+                <th> Cantidad</th>
                 <th> Venta total </th>
                 <th> Flete </th>  
                 <th> Fecha de la boleta </th>
+                <th> Factura o Boleta </th>
                 <th> Pago </th>
                 <th> SEL</th>
             </tr>
@@ -83,11 +144,16 @@
                 {% for venta in ventas %}
                 <tr class="listado">
                     <td>{{ venta.pedido }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="comprador">{{ venta.comprador }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="venta_total">{{ venta.venta_total }}</td>
+                    
+                    <td>{{ venta.nombre }}</td>
+                    <td>{{ venta.SKU }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="precio_unitario">{{ venta.precio_unitario }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="cantidad">{{ venta.cantidad }}</td>
+                    <td>{{ venta.venta_total }}</td>
                     <td class="editable" data-pedido="{{ venta.pedido }}" data-type="flete">{{ venta.flete }}</td>
                     <td class="editable" data-pedido="{{ venta.pedido }}" data-type="fecha_boleta">{{ venta.fecha_boleta }}</td>
-                    <td class="noteditable" data-pedido="{{ venta.pedido }}" data-type="pago">{{ venta.pago }}</td>
+                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="factura_o_boleta">{{ venta.factura_o_boleta }}</td>
+                    <td>{{ venta.pago }}</td>
                     <td>
                         <input type="checkbox" data-pedido="{{ venta.pedido }}" name="seleccionar">
                     </td>

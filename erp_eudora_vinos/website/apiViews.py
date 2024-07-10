@@ -21,6 +21,11 @@ def get_proveedor_nombre(request):
     nombres = list(Proveedores.objects.values_list('nombre_prov', flat=True))
     return JsonResponse({'nombres': nombres})
 
+def get_cliente_nombre(request):
+    nombres = list(Cliente.objects.values_list('nombre', flat=True))
+    return JsonResponse({'nombres': nombres})
+
+
 @csrf_exempt
 def guardarproducto(request):
     sku = request.POST.get('SKU', '')
@@ -97,16 +102,19 @@ def guardarventa(request):
 
     try:
         venta = Ventas.objects.get(pedido=pedido)
-        if type == 'comprador':
-            venta.comprador = value
+        if type == 'precio_unitario':
+            venta.precio_unitario = value
+        elif type == 'cantidad':
+            venta.cantidad = value
         elif type == 'venta_total':
-             venta.venta_total = int(value)
+            venta.venta_total = value
         elif type == 'flete':
-            venta.flete = int(value)
+            venta.flete = value
         elif type == 'fecha_boleta':
+            venta.factura_o_boleta = value
+        elif type == 'factura_o_boleta':
             venta.fecha_boleta = value
-        if type in ['venta_total', 'flete']:
-            venta.pago = (venta.venta_total or 0) + (venta.flete or 0)
+        
 
         venta.save()
         return JsonResponse({'status': 'Updated'})

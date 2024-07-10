@@ -39,6 +39,24 @@ $(document).ready(function() {
 
     
     /* AÑADIR */
+
+    function calcularValores() {
+        var cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
+        var salidas = parseFloat(document.getElementById('salidas').value) || 0;
+        var movBodegas = parseFloat(document.getElementById('mov-bodega').value) || 0;
+        var stock = Math.round(cantidad - salidas - movBodegas);
+        var precioUnitario = parseFloat(document.getElementById('precio-unitario').value) || 0;
+        var precioTotal = Math.round(stock * precioUnitario);
+
+        document.getElementById('stock').value = stock;
+        document.getElementById('precio-total').value = precioTotal;
+    }
+
+    // Eventos que disparan el cálculo
+    document.getElementById('cantidad').addEventListener('change', calcularValores);
+    document.getElementById('salidas').addEventListener('change', calcularValores);
+    document.getElementById('mov-bodega').addEventListener('change', calcularValores);
+    document.getElementById('precio-unitario').addEventListener('change', calcularValores);
     
     $('#submit').on('click', function() {
         
@@ -202,91 +220,6 @@ $(document).ready(function() {
     
         return fechaFormateada;
     }
-    
-    // Evento que se activa al hacer doble clic en un elemento con clase 'editable'
-    /*
-    $(document).on('dblclick', '.editable', function() {
-        if (isEditingEnabled()) {
-            var value=$(this).text();
-            var input="<input type='text' class='input-data' value='"+value+"' class='form-control' /> ";
-            $(this).html(input);
-            $(this).removeClass('editable');
-        }
-    });
-
-    $(document).on('blur', '.input-data', function() {
-        var td = $(this).parent('td');
-        var value = $(this).val();
-        var id_inventario = td.data('id_inventario');
-        var type = td.data('type');
-
-        if (type === 'fecha_de_ingreso') {
-            value = transformarFecha(value);
-        }
-        
-        $(this).remove();
-        td.html(value).addClass('editable');
-        sendToServer(id_inventario, value, type);
-        if(type == 'cantidad' || type == 'salidas' || type == 'mov_bodega' || type == 'precio_unitario')
-            {
-                actualizarStock(td.data("id_inventario"));
-            }
-    });
-     
-    $(document).on('keypress', '.input-data', function(e) {
-        function transformarFecha(fecha) {
-            // Dividimos el string de fecha en partes
-            const partes = fecha.split(" de ");
-        
-            // Asignamos cada parte a una variable
-            const dia = partes[0];
-            const mes = partes[1];
-            const año = partes[2];
-        
-            // Convertimos el mes de texto a número
-            const meses = {
-                enero: '01', febrero: '02', marzo: '03', abril: '04',
-                mayo: '05', junio: '06', julio: '07', agosto: '08',
-                septiembre: '09', octubre: '10', noviembre: '11', diciembre: '12'
-            };
-            const mesNumero = meses[mes.toLowerCase()]; // aseguramos que sea minúscula para coincidir con las claves
-        
-            // Aseguramos que el día tenga dos dígitos
-            const diaFormateado = dia.padStart(2, '0');
-        
-            // Creamos la nueva fecha en formato aaaa-mm-dd
-            const fechaFormateada = `${año}-${mesNumero}-${diaFormateado}`;
-        
-            return fechaFormateada;
-        }
-        var key = e.which;
-        if(key == 13){
-            var value = $(this).val();
-            console.log(value);
-            var td = $(this).parent("td");
-            console.log(td);
-            var type = td.data("type");
-            if (type === 'fecha_de_ingreso') {
-                value = transformarFecha(value);
-            }
-            
-            console.log(type, "AWA", value);
-            // td.data("OC"); sirve para obtener el valor de la columna OC
-            // si Oc es un numero entero, se debe cambiar por el valor de la columna OC
-            $(this).remove();
-            td.html(value);
-            // add class editable sirve para que se pueda editar la celda
-            td.addClass("editable");
-            console.log(td.data("id_inventario"));
-            sendToServer(td.data("id_inventario"), value, type);
-            if(type == 'cantidad' || type == 'salidas' || type == 'mov_bodega' || type == 'precio_unitario')
-            {
-                actualizarStock(td.data("id_inventario"));
-            }
-        }
-        
-    });
-    */
 
     // Cola de solicitudes para manejar actualizaciones secuenciales
     let requestQueue = [];
@@ -364,7 +297,9 @@ $(document).ready(function() {
             var salidas = parseFloat($(`td[data-id_inventario='${id_inventario}'][data-type='salidas']`).text()) || 0;
             var movBodegas = parseFloat($(`td[data-id_inventario='${id_inventario}'][data-type='mov_bodega']`).text()) || 0;
             var stock = Math.round(cantidad - salidas - movBodegas);
+            var precio_total = stock * parseFloat($(`td[data-id_inventario='${id_inventario}'][data-type='precio_unitario']`).text()) || 0;
             addToRequestQueue(id_inventario, stock, 'stock');
+            addToRequestQueue(id_inventario, precio_total, 'precio_total');
         }
     });
 
@@ -500,6 +435,7 @@ $(document).ready(function() {
         // Selecciona cada fila en el cuerpo de la tabla con id 'table'
         document.querySelectorAll("#table tbody tr").forEach(fila => {
             // Extrae los valores de las celdas de la fila y conviértelos a números apropiados
+            // || 0 se usa para manejar celdas vacías o no numéricas
             const cantidad = parseInt(fila.cells[5].textContent) || 0;
             const salidas = parseInt(fila.cells[6].textContent) || 0;
             const movBodegas = parseInt(fila.cells[7].textContent) || 0;

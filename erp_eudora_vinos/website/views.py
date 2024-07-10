@@ -14,8 +14,6 @@ def home(request):
     verificar_vencimientos()
     return render(request, 'home.html')
 
-
-
 # PRODUCTOS
 
 @login_required
@@ -76,14 +74,17 @@ def ventas(request):
 @login_required
 def insert_ventas(request):
     member = Ventas(
-                        pedido=request.POST.get('pedido'),
-                        comprador=request.POST.get('comprador'),
-                        venta_total=request.POST.get('venta_total'),
-                        flete=request.POST.get('flete'),
-                        fecha_boleta=request.POST.get('fecha_boleta'),
-                        pago=request.POST.get('pago')
-
-                    )
+        pedido=request.POST.get('pedido'),
+        nombre_id=request.POST.get('nombre'),
+        SKU_id=request.POST.get('SKU'),
+        precio_unitario=request.POST.get('precio_unitario'),
+        cantidad=request.POST.get('cantidad'),
+        venta_total=request.POST.get('venta_total'),
+        flete=request.POST.get('flete'),
+        factura_o_boleta=request.POST.get('factura_o_boleta'),
+        fecha_boleta=request.POST.get('fecha_boleta'),
+        pago=request.POST.get('pago')
+    )
     member.save()
     return redirect('/')
 
@@ -165,6 +166,25 @@ def inventario_Y_Stock(request):
     inventario_Y_stocks = Inventario_Y_Stock.objects.all()
     return render(request, 'Inventario_Y_Stock.html', {'inventario_Y_stocks': inventario_Y_stocks})
 
+'''
+@login_required
+def insert_ventas(request):
+    member = Ventas(
+        pedido=request.POST.get('pedido'),
+        nombre_id=request.POST.get('nombre'),
+        SKU_id=request.POST.get('SKU'),
+        precio_unitario=request.POST.get('precio_unitario'),
+        cantidad=request.POST.get('cantidad'),
+        venta_total=request.POST.get('venta_total'),
+        flete=request.POST.get('flete'),
+        factura_o_boleta=request.POST.get('factura_o_boleta'),
+        fecha_boleta=request.POST.get('fecha_boleta'),
+        pago=request.POST.get('pago')
+    )
+    member.save()
+    return redirect('/')
+'''
+'''
 @login_required
 def insert_Inventario_Y_Stock(request):
     if request.method == 'POST':
@@ -181,7 +201,7 @@ def insert_Inventario_Y_Stock(request):
 
         # Validar que todos los campos necesarios estén presentes
         if not all([SKU_id, nombre_prov_id, bodega, fecha_de_ingreso, cantidad, salidas, mov_bodegas, stock, precio_unitario, precio_total]):
-            return render(request, 'inventario_form.html', {'error': 'Por favor, complete todos los campos'})
+            return render(request, 'Inventario_Y_Stock.html', {'error': 'Por favor, complete todos los campos'})
 
         try:
             # Obtener los objetos relacionados
@@ -204,11 +224,28 @@ def insert_Inventario_Y_Stock(request):
 
             return redirect('/Inventario_Y_Stock')
         except Producto.DoesNotExist:
-            return render(request, 'inventario_form.html', {'error': 'Producto no encontrado'})
+            return render(request, 'Inventario_Y_Stock.html', {'error': 'Producto no encontrado'})
         except Proveedores.DoesNotExist:
-            return render(request, 'inventario_form.html', {'error': 'Proveedor no encontrado'})
+            return render(request, 'Inventario_Y_Stock.html', {'error': 'Proveedor no encontrado'})
     else:
-        return render(request, 'inventario_form.html')   
+        return render(request, 'Inventario_Y_Stock.html')   
+'''
+@login_required
+def insert_Inventario_Y_Stock(request):
+    member = Inventario_Y_Stock(
+        SKU_id=request.POST.get('SKU'),
+        nombre_prov_id=request.POST.get('nombre_prov'),
+        bodega=request.POST.get('bodega'),
+        fecha_de_ingreso=request.POST.get('fecha_de_ingreso'),
+        cantidad=request.POST.get('cantidad'),
+        salidas=request.POST.get('salidas'),
+        mov_bodegas=request.POST.get('mov_bodega'),
+        stock=request.POST.get('stock'),
+        precio_unitario=request.POST.get('precio_unitario'),
+        precio_total=request.POST.get('precio_total'),
+    )
+    member.save()
+    return redirect('/')
     
 @login_required
 @require_POST
