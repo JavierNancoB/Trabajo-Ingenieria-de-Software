@@ -21,12 +21,14 @@ def producto(request):
     productos = Producto.objects.all()
     return render(request, 'producto.html', {'productos': productos})
 
+# insertar un producto
 @login_required
 def insert_producto(request):
     member = Producto(SKU=request.POST.get('SKU'), tipo_producto=request.POST.get('tipo_producto'), viña=request.POST.get('viña'), cepa=request.POST.get('cepa'), nombre_producto=request.POST.get('nombre_producto'), cosecha=request.POST.get('cosecha'))
     member.save()
     return redirect('/')
 
+#borrar un producto
 @login_required
 @require_POST
 def delete_producto(request, SKU):
@@ -39,11 +41,12 @@ def delete_producto(request, SKU):
 
 # PROVEEDORES
 
+#muestra los proveedores
 @login_required
 def proveedor(request):
     proveedores = Proveedores.objects.all()
     return render(request, 'proveedores.html', {'proveedores': proveedores})
-
+#inserta un proveedor
 @login_required
 def insert_proveedor(request):
     member = Proveedores(
@@ -53,7 +56,7 @@ def insert_proveedor(request):
                          )
     member.save()
     return redirect('/')
-
+#borra un proveedor
 @login_required
 @require_POST
 def delete_proveedor(request, nombre_prov):
@@ -65,12 +68,12 @@ def delete_proveedor(request, nombre_prov):
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # VENTAS
-
+#muestra las ventas
 @login_required
 def ventas(request):
     ventas = Ventas.objects.all()
     return render(request, 'ventas.html', {'ventas': ventas})
-
+#inserta una venta
 @login_required
 def insert_ventas(request):
     member = Ventas(
@@ -87,7 +90,7 @@ def insert_ventas(request):
     )
     member.save()
     return redirect('/')
-
+#borra una venta
 @login_required
 @require_POST
 def delete_ventas(request, pedido):
@@ -100,7 +103,7 @@ def delete_ventas(request, pedido):
 # ALERTAS
 
 # Notificaciones de stock
-
+# FUNCION QUE VERIFICA LOS STOCKS CUANDO SE REINICIA LA PAGINA
 @login_required
 def notificaciones(request):
     alertas_stock = Alerta_stock.objects.all()  # Obtén todas las alertas
@@ -113,6 +116,7 @@ def delete_alerta_stock(request, id_inventario):
     alerta_stock.delete()
     return redirect('notificaciones')
 '''
+#borra una alerta de stock
 @login_required
 @require_POST
 def delete_alerta_stock(id_inventario):
@@ -142,7 +146,7 @@ def verificar_vencimientos():
                     'fecha_alerta': hoy
                 }
             )
-
+#muestra las notificaciones de vencimiento
 @login_required
 def notificaciones_fecha_vencimiento(request):
     alertas_de_fecha_vencimiento = Alerta_vencimiento.objects.all()  # Obtén todas las alertas
@@ -160,7 +164,7 @@ def delete_alerta_informes(request, numero_boleta):
 '''
 
 # INVENTARIO Y STOCK
-
+#muestra el inventario y stock
 @login_required
 def inventario_Y_Stock(request):
     inventario_Y_stocks = Inventario_Y_Stock.objects.all()
@@ -230,6 +234,7 @@ def insert_Inventario_Y_Stock(request):
     else:
         return render(request, 'Inventario_Y_Stock.html')   
 '''
+#inserta un inventario y stock
 @login_required
 def insert_Inventario_Y_Stock(request):
     member = Inventario_Y_Stock(
@@ -246,7 +251,7 @@ def insert_Inventario_Y_Stock(request):
     )
     member.save()
     return redirect('/')
-    
+#borra un inventario y stock
 @login_required
 @require_POST
 def delete_Inventario_Y_Stock(request, id_inventario):
@@ -258,14 +263,14 @@ def delete_Inventario_Y_Stock(request, id_inventario):
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # COMPRA PROVEEDORES
-
+#muestra las compras a proveedores
 @login_required
 def compra_proveedor(request):
     compra_proveedores = Compra_proveedores.objects.all()
     return render(request, 'compra_proveedor.html', {'compra_proveedores': compra_proveedores})
-
+#inserta una compra a proveedores
 @login_required
-def insert_compra_proveedor(request):
+def insert_compra_proveedor(request): #inserta una compra a proveedores con metodo post
     if request.method == 'POST':
         OC = request.POST.get('OC')
         fecha_oc = request.POST.get('fecha_oc')
@@ -286,7 +291,7 @@ def insert_compra_proveedor(request):
             SKU = get_object_or_404(Producto, SKU=SKU_id)
             nombre_prov = get_object_or_404(Proveedores, nombre_prov=nombre_prov_id)
 
-            compra_proveedor, created = Compra_proveedores.objects.get_or_create(
+            compra_proveedor, created = Compra_proveedores.objects.get_or_create( 
                 OC=OC,
                 defaults={
                     'fecha_oc': fecha_oc,
@@ -302,7 +307,7 @@ def insert_compra_proveedor(request):
                 }
             )
 
-            if not created:
+            if not created: #
                 compra_proveedor.fecha_oc = fecha_oc
                 compra_proveedor.SKU = SKU
                 compra_proveedor.nombre_prov = nombre_prov
@@ -323,7 +328,7 @@ def insert_compra_proveedor(request):
     else:
         return render(request, 'compra_proveedor.html')
 
-    
+#borra una compra a proveedores
 @login_required
 @require_POST
 def delete_compra_proveedor(request, OC):
@@ -335,18 +340,18 @@ def delete_compra_proveedor(request, OC):
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
 
 # CLIENTE
-
+#muestra los clientes
 @login_required
 def cliente(request):
     clientes = Cliente.objects.all()
     return render(request, 'cliente.html', {'clientes': clientes})
-
+#inserta un cliente
 @login_required
 def insert_cliente(request):
     member = Cliente(rut=request.POST.get('rut'), nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'), email=request.POST.get('email'), comuna=request.POST.get('comuna'), calle=request.POST.get('calle'), numero_de_casa=request.POST.get('numero_de_casa'), telefono=request.POST.get('telefono'))
     member.save()
     return redirect('/')
-
+#borra un cliente
 @login_required
 @require_POST
 def delete_cliente(request, rut):
@@ -356,7 +361,7 @@ def delete_cliente(request, rut):
         return JsonResponse({'status': 'success', 'message': 'Producto eliminado'})
     except Cliente.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Producto no encontrado'}, status=404)
-    
+# muestra el navbar    
 def navbar_view(request):
     notificaciones_activas = Alerta_stock.objects.all()
     return render(request, 'navbar.html', {'notificaciones_activas': notificaciones_activas})

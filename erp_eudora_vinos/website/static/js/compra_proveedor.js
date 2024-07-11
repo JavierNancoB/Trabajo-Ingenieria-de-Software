@@ -1,6 +1,6 @@
 //import { transformarFecha } from './tablas.js';
 
-$(document).ready(function(){
+$(document).ready(function(){ 
     $('#table').DataTable();
     
     /* AÑADIR */
@@ -30,26 +30,27 @@ $(document).ready(function(){
         return fechaFormateada;
     }
     
+    // Función para cargar los datos de los proveedores y los SKU
     $(document).ready(function() {
         $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
 
         $.ajax({
             url: '/api/skus/',  // Asegúrate de que esta URL es correcta según tu configuración de Django
             type: 'GET',
-            success: function(data) {
+            success: function(data) { // data es el objeto que devuelve la API
                 var select = $('#SKU');
                 data.skus.forEach(function(sku) {
                     select.append($('<option>', { value: sku, text: sku }));
                 });
             },
-            error: function() {
+            error: function() { // Si hay un error en la petición
                 console.error('Error cargando los SKU');
             }
         });
-        $.ajax({
+        $.ajax({ // Petición para obtener los nombres de los proveedores
             url: '/api/proveedores/',
             type: 'GET',
-            success: function(data) {
+            success: function(data) { // data es el objeto que devuelve la API
                 var selectProveedor = $('#nombre_prov');
                 selectProveedor.empty();
                 data.nombres.forEach(function(nombre) {
@@ -64,7 +65,7 @@ $(document).ready(function(){
     
     /* AÑADIR */
 
-    $('#submit').on('click', function(){
+    $('#submit').on('click', function(){ //valida
         console.log('click');
         $OC = $('#OC').val();
         console.log($OC);
@@ -98,7 +99,7 @@ $(document).ready(function(){
                 alert('El OC ya existe en la tabla');
             }else{
                 /* Si el SKU no existe en la tabla, procedemos a la inserción */
-                $.ajax({
+                $.ajax({ // Petición para insertar un nuevo proveedor
                     type: 'POST',
                     url: 'insert/',
                     data: {
@@ -116,7 +117,7 @@ $(document).ready(function(){
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
 
                     },
-                    success: function(){
+                    success: function(){ // Si la inserción es exitosa
                         
                         $('#OC').val('');
                         $('#fecha_oc').val('');
@@ -145,7 +146,7 @@ $(document).ready(function(){
 
     // EDITAR
  
-    $(document).on('dblclick', '.editable', function(){
+    $(document).on('dblclick', '.editable', function(){ // Doble clic para editar
         if (isEditingEnabled()) { // Comprueba si la edición está habilitada
             var value=$(this).text();
             var input="<input type='text' class='input-data' value='"+value+"' class='form-control' /> ";
@@ -158,7 +159,7 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on('blur', '.input-data', function(){
+    $(document).on('blur', '.input-data', function(){ // Al hacer clic fuera del input se guarda el valor
         var value=$(this).val();
         var td=$(this).parent('td');
         var oc=td.data('oc');
@@ -173,7 +174,7 @@ $(document).ready(function(){
         sendToServer(td.data("oc"), value, type);
     });
 
-    $(document).on('keypress', '.input-data', function(e){
+    $(document).on('keypress', '.input-data', function(e){ // Al presionar enter se guarda el valor
         var key = e.which;
         if(key == 13){
             var value = $(this).val();
@@ -198,7 +199,7 @@ $(document).ready(function(){
         }
     });
     
-    function sendToServer(oc, value, type){
+    function sendToServer(oc, value, type){     // Función para enviar los datos al servidor
         var td = $("[data-oc='" + oc + "']").parent('td');
         var tr = td.closest('tr');  // Obtener el <tr> más cercano
         if (type == "cantidad" && isNaN(value) || value <= 0) { // no se el limite de cantidad
@@ -216,7 +217,7 @@ $(document).ready(function(){
             alert("El valor debe ser 'pendiente' o 'pagado'.");
             return; // No enviar los datos al servidor
         }
-        switch (type) {
+        switch (type) { // Validar la longitud de los campos
             case "OC":
                 if (value.length > 10) {
                     tr.addClass('table-warning');
@@ -299,7 +300,7 @@ $(document).ready(function(){
         }
         
         console.log("Sending to server:", oc, value, type);  // Log para ver qué datos se están enviando
-        $.ajax({
+        $.ajax({ // Enviamos los datos al servidor
             url: 'update/',
             type: 'POST',
             data: {
@@ -309,30 +310,30 @@ $(document).ready(function(){
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             }
         })
-        .done(function(response) {
+        .done(function(response) {  // Si la petición es exitosa
             alert('Se guardó correctamente el proveedor');
             console.log(response);
         })
-        .fail(function() {
+        .fail(function() { // Si la petición falla
             console.log('Error');
         });
     }
 
     /* ELIMINAR */
 
-    $('#eliminar-seleccion').on('click', function(e){
+    $('#eliminar-seleccion').on('click', function(e){ // Al hacer clic en el botón de eliminar
         if(!isEditingEnabled()) { // Comprueba si la edición está habilitada
             e.preventDefault();
             alert('Debe habilitar la edición para eliminar productos.');
         }
-        else
+        else  
         {
             var confirmation = confirm('¿Estáaa seguro de que desea eliminar los productos seleccionados?');
             if (confirmation) {
                 $('input[name="seleccionar"]:checked').each(function() {
                     var oc = $(this).data('oc');
 
-                    $.ajax({
+                    $.ajax({ // Petición para eliminar un proveedor
                         url: '/compra_proveedor/delete/' + oc, // Usando la ruta existente
                         type: 'POST',
                         headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
@@ -355,7 +356,7 @@ $(document).ready(function(){
 
     //$('#table').DataTable();
  //---------------------------------Funcion de totales---------------------------------
-    function actualizarTotales() {
+    function actualizarTotales() { // Función para actualizar los totales
         let totalCantidad = 0;
         let totalPagado = 0;
         $('#table tbody tr').each(function() {

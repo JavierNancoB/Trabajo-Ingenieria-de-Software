@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = url;
     }
 
-    document.getElementById('search-form').addEventListener('submit', redirectToPage);
+    document.getElementById('search-form').addEventListener('submit', redirectToPage); // Redirecciona al hacer clic en el botón de búsqueda
 
    // Manejo del botón de notificaciones
-   const notificationsButton = document.getElementById('notifications-button');
+   const notificationsButton = document.getElementById('notifications-button'); 
    const notificationsDropdown = document.getElementById('notifications-dropdown');
 
    notificationsButton.addEventListener('click', function(event) {

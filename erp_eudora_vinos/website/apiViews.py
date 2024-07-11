@@ -25,7 +25,7 @@ def get_cliente_nombre(request):
     nombres = list(Cliente.objects.values_list('nombre', flat=True))
     return JsonResponse({'nombres': nombres})
 
-
+#api que guarda un producto en la base de datos 
 @csrf_exempt
 def guardarproducto(request):
     sku = request.POST.get('SKU', '')
@@ -52,7 +52,7 @@ def guardarproducto(request):
     
 
 # PROVEEDORES
-
+#api que guarda un proveedor en la base de datos
 @csrf_exempt
 def guardarproveedor(request):
     nombre_prov = request.POST.get('nombre_prov', '')
@@ -72,6 +72,7 @@ def guardarproveedor(request):
         return JsonResponse({'status': 'Provider not found'}, status=404)
     
 #ALERTAS STOCK
+#api que guarda una alerta de stock en la base de datos
 @csrf_exempt
 def guardar_alerta_stock(request):
     if request.method == 'POST':
@@ -94,6 +95,7 @@ def guardar_alerta_stock(request):
 
 
 # VENTAS
+#api que guarda una venta en la base de datos
 @csrf_exempt
 def guardarventa(request):
     pedido = request.POST.get('pedido', '')
@@ -124,7 +126,7 @@ def guardarventa(request):
 
     
 # Inventario_Y_Stock
-
+#api que guarda un inventario en la base de datos
 @csrf_exempt
 def guardar_Inventario_Y_Stock(request):
     id_inventario = request.POST.get('id_inventario', '')  # ID del inventario como cadena
@@ -154,7 +156,7 @@ def guardar_Inventario_Y_Stock(request):
         return JsonResponse({'status': 'Product not found'}, status=404)
     
 # COMPRA A PROVEEDORES
-
+#api que guarda una compra a proveedores en la base de datos
 @csrf_exempt
 def guardar_compra_proveedor(request):
     oc = request.POST.get('OC', '')
@@ -195,7 +197,7 @@ def guardar_compra_proveedor(request):
         return JsonResponse({'status': 'Updated'})
     except Compra_proveedores.DoesNotExist:
         return JsonResponse({'status': 'Product not found'}, status=404)
-    
+#api que guarda un cliente en la base de datos    
 def guardar_cliente(request):
     rut = request.POST.get('rut','')
     type = request.POST.get('type', '')
@@ -223,6 +225,7 @@ def guardar_cliente(request):
     except Cliente.DoesNotExist:
         return JsonResponse({'status': 'Client not found'}, status=404)
 
+#api que guarda inventario y stock en la base de datos
 @csrf_exempt
 def guardar_Inventario_Y_Stock(request):
     id_inventario = request.POST.get('id_inventario', '')

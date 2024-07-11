@@ -1,12 +1,12 @@
 $(document).ready(function() {
-    $('#table').DataTable();
+    $('#table').DataTable(); // Inicializar la tabla con DataTables
 
 
     
-    $(document).ready(function() {
-        $('.dt-layout-row.dt-layout-table').addClass('table-responsive');
+    $(document).ready(function() { 
+        $('.dt-layout-row.dt-layout-table').addClass('table-responsive');  
 
-        $.ajax({
+        $.ajax({ // petición AJAX para cargar los datos de la tabla
             url: '/api/skus/',  // Asegúrate de que esta URL es correcta según tu configuración de Django
             type: 'GET',
             success: function(data) {
@@ -19,7 +19,7 @@ $(document).ready(function() {
                 console.error('Error cargando los SKU');
             }
         });
-        $.ajax({
+        $.ajax({ // petición AJAX para cargar los datos de la tabla
             url: '/api/proveedores/',
             type: 'GET',
             success: function(data) {
@@ -34,13 +34,13 @@ $(document).ready(function() {
             }
         });
 
-        calcularTotales();
+        calcularTotales(); // Calcular los totales al cargar la página
     });
 
     
     /* AÑADIR */
-
-    function calcularValores() {
+ 
+    function calcularValores() { // Función para calcular los valores de stock y precio total
         var cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
         var salidas = parseFloat(document.getElementById('salidas').value) || 0;
         var movBodegas = parseFloat(document.getElementById('mov-bodega').value) || 0;
@@ -58,7 +58,7 @@ $(document).ready(function() {
     document.getElementById('mov-bodega').addEventListener('change', calcularValores);
     document.getElementById('precio-unitario').addEventListener('change', calcularValores);
     
-    $('#submit').on('click', function() {
+    $('#submit').on('click', function() { // Evento para enviar los datos al servidor
         
         $SKU = $('#SKU').val();
         $nombre_prov = $('#nombre_prov').val();
@@ -96,7 +96,7 @@ $(document).ready(function() {
 
         
             // Proceso de inserción si todas las validaciones son correctas
-        $.ajax({
+        $.ajax({ // Petición AJAX para enviar los datos al servidor
             type: 'POST',
             url: 'insert/',
             data: {
@@ -138,7 +138,7 @@ $(document).ready(function() {
 
     /* comprobar si la casilla editar esta activada */
     
-    function actualizarStock(idInventario) {
+    function actualizarStock(idInventario) { // Función para actualizar el stock de un producto
         // Buscar en la fila del id_inventario específico
         const row = $(`td[data-id_inventario='${idInventario}'][data-type='cantidad']`).closest('tr');
     
@@ -158,7 +158,7 @@ $(document).ready(function() {
     }
     
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function () { // Esperar a que el DOM esté completamente cargado
         function actualizarStockYCosto() {
             const cantidad = parseFloat(document.getElementById('cantidad').value) || 0;
             const salidas = parseFloat(document.getElementById('salidas').value) || 0;
@@ -257,9 +257,9 @@ $(document).ready(function() {
                     alert('Se guardó correctamente luego de editarlo');
                 }
                 isRequestInProgress = false;
-                processNextRequest();
+                processNextRequest(); // Decide si quieres procesar la siguiente solicitud automáticamente o no
             },
-            error: function(xhr, status, error) {
+            error: function(xhr, status, error) { // Manejar errores
                 console.error('Error:', xhr.responseText);
                 isRequestInProgress = false;
                 processNextRequest();  // Decide si quieres reintentar automáticamente o no
@@ -324,8 +324,8 @@ $(document).ready(function() {
         }
     });
 
-
-    function sendToServer(id_inventario, value, type) {
+   
+    function sendToServer(id_inventario, value, type) { // Función para enviar los datos al servidor
         var td = $("[data-id_inventario='" + id_inventario + "']").parent('td');
         var tr = td.closest('tr');  // Obtener el <tr> más cercano
         var element = $("[data-id_inventario='" + id_inventario + "']");
@@ -399,7 +399,7 @@ $(document).ready(function() {
 
     /* ELIMINAR */
     
-    $('#eliminar-seleccion').on('click', function(e){
+    $('#eliminar-seleccion').on('click', function(e){ // Al hacer clic en el botón de eliminar
 
         var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
         if (confirmation) {
@@ -429,7 +429,7 @@ $(document).ready(function() {
     );
 
 
-    function calcularTotales() {
+    function calcularTotales() { // Función para calcular los totales de ingresos, salidas, stock y costo
         let totalIngresos = 0, totalSalidas = 0, totalMovBodegas = 0, totalStock = 0, totalCosto = 0;
     
         // Selecciona cada fila en el cuerpo de la tabla con id 'table'

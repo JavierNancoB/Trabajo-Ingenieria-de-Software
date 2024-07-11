@@ -8,6 +8,7 @@ from .models import Alerta_stock
 from .models import Compra_proveedores
 # Register your models here.
 
+#Aqui se registran los modelos en el sitio de administracion 
 admin.site.register(Cliente)
 admin.site.register(Producto)
 admin.site.register(Ventas)
