@@ -1,5 +1,6 @@
 {% load static %}    
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de Inventario y Stock, la cual será heredada en la página de Inventario y Stock. En ella se encontrarán los productos que se encuentran en la base de datos.-->
 {% block content %}
     <div id="tablas-css">
         <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
@@ -11,6 +12,7 @@
             <table id="totals-table" class="table table-bordered table-hover">
                 <thead>
                     <tr>
+                        <!-- Encabezado de la tabla resumen. -->
                         <th>INGRESOS TOTALES</th>
                         <th>SALIDAS TOTALES</th>
                         <th>MOVIMIENTO ENTRE BODEGAS</th>
@@ -20,6 +22,7 @@
                 </thead>
                 <tbody>
                     <tr>
+                        <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
                         <td class="ingresos-totales" data-value="{{ ingresos_totales }}">{{ ingresos_totales }}</td>
                         <td class="salidas-totales" data-value="{{ total_salidas }}">{{ total_salidas }}</td>
                         <td class="movimiento-entre-bodegas" data-value="{{ movimiento_entre_bodegas }}">{{ movimiento_entre_bodegas }}</td>
@@ -30,11 +33,11 @@
                 </tbody>
             </table>
         </div>
-        <!-- Aqui se crea la nueva tabla con el resumen -->
-
+        <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
+        <!-- Contenedor principal con opciones de edición y añadir producto. -->
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -64,7 +67,7 @@
                 <div class="modal-body">
                     <form method="POST">
                         {% csrf_token %}
-                        
+                        <!-- Formulario para añadir un producto. -->
                         <div class="mb-3">
                             <label for="SKU">SKU</label>
                             <div class="d-flex align-items-center">
@@ -123,6 +126,7 @@
                         
                     </form>
                 </div>
+                <!-- Botones para guardar o cancelar. -->
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                   <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
@@ -130,9 +134,11 @@
               </div>
             </div>
         </div>
+        <!-- Inicio de la tabla. -->
         <table id="table" summary="tabla Inventario stock" class="table table-bordered table-hover dt-responsive">
             <thead>    
             <tr class="listado"> 
+                <!-- Encabezados. -->
                 <th> ID </th>
                 <th> SKU </th>
                 <th> NOMBRE PROVEEDOR </th>
@@ -148,6 +154,7 @@
             </tr>
             </thead>
             <tbody>        
+                <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
                 {% for inventario_Y_stock in inventario_Y_stocks %}
                 <tr class="listado">
                     <td>{{ inventario_Y_stock.id_inventario }}</td>

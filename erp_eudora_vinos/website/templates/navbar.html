@@ -1,17 +1,21 @@
 {% load static %}
+<!--En este archivo HTML se crea la barra de navegación (navbar), la cual será heredada en todas las páginas. En ella se encontrarán botones esenciales para el usuario.-->
 <!DOCTYPE html>
 <html>
     <link type="text/css" href='{% static "css/navbar.css" %}' rel="stylesheet"/>
     <body>
         <ul id="puntos_navbar">
+            <!--Imagen del logo.-->
             <a class="logo" href="/">
                 <img class="site-logo" src="{% static 'images/logo.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
+            <!--Barra de busquedad.-->
             <li id="search-container">
                 <form id="search-form" onsubmit="redirectToPage(event)">
                     <input type="text" placeholder="Buscar Módulo" id="search-input">
                 </form>
             </li>
+            <!--Botón de notificaciones.-->
             <li class="notificacion-con-burbuja">
                 {% if notificaciones_activas %}
                     <img id="burbuja" src="{% static 'images/notification-circlesvg.svg' %}" alt="Logo" width="160" height="50" role="presentation"/>
@@ -37,6 +41,7 @@
                     </ul>
                 </div>
             </li>
+            <!--Botón de cierre de sesión.-->
             <li>
                 <a href="{% url 'salir' %}" class="logout-button">
                     <img class="site-logo" src="{% static 'images/Log_Out_Buton.png' %}" alt="Logo" width="160" height="50" role="presentation">

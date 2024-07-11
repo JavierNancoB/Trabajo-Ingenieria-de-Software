@@ -117,8 +117,8 @@ $(document).ready(function(){
     });
     function sendToServer(SKU, value, type){
         var td = $("[data-sku='" + SKU + "']").parent('td');
-        var tr = td.closest('tr');  // Obtener el <tr> más cercano
-    
+        var tr = td.closest('tr');
+        // Validar los datos antes de enviarlos al servidor
         if (type=="cosecha" && isNaN(value)) {
             tr.addClass('table-warning');  // Añadir clase cuando hay error
             alert("El valor debe ser numérico.");

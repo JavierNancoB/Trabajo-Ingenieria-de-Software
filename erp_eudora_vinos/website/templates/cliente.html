@@ -1,14 +1,18 @@
 {% load static%}    
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de clientes, la cual será heredada en la página de clientes. En ella se encontrarán los clientes que se encuentran en la base de datos.-->
 {% block content %}
 <div id="tablas-css">
     <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
+    <!-- Título de la tabla. -->
     <div id="titulo-modelo">
         <h1>CLIENTE</h1>
     </div>
+    <!-- Botón para eliminar. -->
     <div class="col d-grid gap-2 d-md-flex">
         <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
     </div>
+    <!-- Contenedor principal con opciones de edición y añadir cliente. -->
     <div class="a">
         <div class="row align-items-end">
             <div class="col">
@@ -37,6 +41,7 @@
             </div>
             <div class="modal-body">
                 <form method="POST">
+                    <!-- Formulario para añadir un cliente. -->
                     {% csrf_token %}
                     <div class="mb-3">
                         <label>RUT</label>
@@ -92,7 +97,6 @@
                             <option value="Vitacura">Vitacura</option>
                         </select>
                     </div>
-                    
                     <div class="mb-3">
                         <label>Calle</label>
                         <input type="text" id="calle" class="form-control" placeholder="Ejemplo calle 123"/>
@@ -107,6 +111,7 @@
                     </div>
                 </form>
             </div>
+            <!-- Botones para guardar o cancelar. -->
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
               <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
@@ -114,9 +119,11 @@
           </div>
         </div>
     </div>
+    <!-- Inicio de la tabla. -->
     <table id="table" summary="tabla cliente" class="table table-bordered table-hover dt-responsive">
         <thead>    
         <tr class="listado">   
+            <!-- Encabezados. -->
             <th> RUT </th>
             <th> NOMBRE </th>     
             <th> APELLIDO</th>
@@ -129,6 +136,7 @@
         </tr>
         </thead>
         <tbody>        
+            <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
             {% for cliente in clientes %}
             <tr class="listado">
                 <td>{{ cliente.rut }}</td>
