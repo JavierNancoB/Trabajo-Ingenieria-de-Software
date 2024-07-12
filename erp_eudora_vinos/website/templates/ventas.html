@@ -1,5 +1,6 @@
 {% load static%}    
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de ventas, la cual será heredada en la página de ventas. En ella se encontrarán las ventas que se encuentran en la base de datos.-->
 {% block content %}
     <div id="tablas-css">
         <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
@@ -27,10 +28,11 @@
                 </tbody>
             </table>
         </div>
-        <!-- Aqui se crea la nueva tabla con el resumen -->
+        <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
+        <!-- Contenedor principal con opciones de edición y añadir producto. -->
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -59,6 +61,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST">
+                        <!-- Formulario para anadir una venta. -->
                         {% csrf_token %}
                         <div class="mb-3">
                             <label>Pedido</label>
@@ -117,6 +120,7 @@
                         </div> 
                     </form>
                 </div>
+                <!-- Botones para guardar o cancelar. -->
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                   <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
@@ -124,8 +128,10 @@
               </div>
             </div>
         </div>
+        <!-- Inicio de la tabla. -->  
         <table id="table" summary="tabla venta" class="table table-bordered table-hover dt-responsive">
-            <thead>    
+            <thead>
+            <!-- Encabezados. -->    
             <tr class="listado">   
                 <th> Pedido </th>     
                 <th> Comprador</th>
@@ -140,7 +146,8 @@
                 <th> SEL</th>
             </tr>
             </thead>
-            <tbody>        
+            <tbody>
+                <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->        
                 {% for venta in ventas %}
                 <tr class="listado">
                     <td>{{ venta.pedido }}</td>

@@ -2,8 +2,8 @@ from django.db import models
 # aqui se crean los modelos de la base de datos
 # a través de clases que heredan de models.Model
 
+# Modelo de la clase Cliente
 
-#modelo de cliente
 class Cliente(models.Model):
     rut = models.CharField(max_length=12, unique=True)
     nombre = models.CharField(primary_key=True, max_length=50, unique=True)
@@ -17,7 +17,8 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nombre
 
-#modelo de producto
+# Modelo de la clase Producto
+
 class Producto(models.Model):
     SKU = models.CharField(primary_key=True, max_length=50, unique=True)
     tipo_producto = models.CharField(max_length=50)
@@ -28,7 +29,8 @@ class Producto(models.Model):
     def __str__(self):
         return self.SKU    
 
-#modelo de ventas
+# Modelo de la clase Ventas
+
 class Ventas(models.Model):
     pedido = models.CharField(primary_key=True ,unique=True, max_length=50, default='0')
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) # foreign key
@@ -43,7 +45,8 @@ class Ventas(models.Model):
     def __str__(self):
         return self.pedido
     
-#modelo de proveedores      
+# Modelo de la clase Proveedores     
+
 class Proveedores(models.Model):
     nombre_prov = models.CharField(primary_key=True, unique=True, max_length=50)
     email_empresa = models.EmailField(null=True)
@@ -52,7 +55,8 @@ class Proveedores(models.Model):
     def __str__(self):
         return self.nombre_prov
 
-#modelo de inventario y stock
+# Modelo de la clase Inventario_Y_Stock
+
 class Inventario_Y_Stock(models.Model):
 
     id_inventario = models.AutoField(primary_key=True)
@@ -71,7 +75,8 @@ class Inventario_Y_Stock(models.Model):
     def str(self):
         return self.id_inventario
 
-#modelo de compra a proveedores    
+# Modelo de la clase Gastos    
+
 class Compra_proveedores(models.Model):
     OC = models.IntegerField(primary_key=True, unique=True)
     nombre_prov = models.ForeignKey(Proveedores, on_delete=models.CASCADE) #foreign 
@@ -88,7 +93,8 @@ class Compra_proveedores(models.Model):
     def __str__(self):
         return str(self.OC)
 
-#modelo de informes
+# Modelo de la clase Gastos
+
 class Informes(models.Model):
     fecha_informe =models.DateField()
     cantidad_ventas = models.IntegerField()
@@ -100,7 +106,9 @@ class Informes(models.Model):
     
     def __str__(self):
         return self.fecha_informe
-#modelo de alerta de stock
+
+# Modelo de la clase Alerta_stock
+
 class Alerta_stock(models.Model):
     id_inventario=models.ForeignKey(Inventario_Y_Stock, on_delete=models.CASCADE, default='0')
     fecha_alerta = models.DateField()
@@ -109,7 +117,9 @@ class Alerta_stock(models.Model):
 
     def __str__(self):
         return str(self.id_inventario.id) + ' ' + str(self.fecha_alerta) + ' ' + str(self.cantidad)
-#modelo de alerta de vencimiento
+
+# Modelo de la clase Alerta_vencimiento
+
 class Alerta_vencimiento(models.Model):
     OC = models.ForeignKey(Compra_proveedores, on_delete=models.CASCADE, default='0')
     fecha_alerta = models.DateField()

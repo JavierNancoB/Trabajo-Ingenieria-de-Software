@@ -1,5 +1,6 @@
 {% load static%}    
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de compras a proveedores, la cual será heredada en la página de compras a proveedores. En ella se encontrarán las compras a proveedores que se encuentran en la base de datos.-->
 {% block content %}
 
     <div id="tablas-css" >
@@ -26,12 +27,11 @@
                 </tbody>
             </table>
         </div>
-        <!-- Aqui se crea la nueva tabla con los totales -->
-
-
+        <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
+        <!-- Contenedor principal con opciones de edición y añadir compra (proveedor). -->
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -60,6 +60,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST">
+                        <!-- Formulario para añadir una compra (proveedor). -->
                         {% csrf_token %}
                         <div class="mb-3">
                             <label>Orden de compra</label>
@@ -122,6 +123,7 @@
                         </div>        
                     </form>
                 </div>
+                <!-- Botones para cancelar y guardar cambios. -->
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
@@ -129,12 +131,12 @@
                 </div>
             </div>
         </div>
-
+        <!-- Inicio de la tabla. -->
         <div>
             <table id="table" summary="tabla compra_proveedor" class=" table table-bordered table-hover dt-responsive" >
                 <thead>    
                 <tr class="listado"> 
-
+                    <!-- Encabezado de la tabla. -->
                     <th> OC </th> <!-- 1 -->
                     <th> FECHA OC </th>     
                     <th> SKU</th>
@@ -150,6 +152,7 @@
                 </tr>
                 </thead>
                 <tbody>        
+                    <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
                     {% for compra_proveedor in compra_proveedores %}
                     <tr class="listado">
                         <td>{{ compra_proveedor.OC }}</td>

@@ -1,14 +1,17 @@
 {% load static %}
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de notificaciones, la cual será heredada en la página de notificaciones. En ella se encontrarán las notificaciones que se encuentran en la base de datos.-->
 {% block content %}
 <div id="tablas-css">
     <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
     <div id="titulo-modelo">
         <h1>NOTIFICACIONES</h1>
     </div>
+    <!-- Inicio de la tabla. --> 
     <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive">
         <thead>    
         <tr class="listado">   
+            <!-- Encabezado de la tabla. -->
             <th>ID Inventario</th>
             <th>SKU</th>
             <th>Fecha Alerta</th>
@@ -16,6 +19,7 @@
         </tr>
         </thead>
         <tbody>        
+            <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
             {% for alerta in alertas_stock %}
             <tr class="listado">
                 <td>{{ alerta.id_inventario.id_inventario }}</td>

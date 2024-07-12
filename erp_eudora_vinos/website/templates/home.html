@@ -1,5 +1,7 @@
 {% load static%}  
-{% include "base.html" %}   
+{% include "base.html" %}
+<!-- En este archivo HTML se crea la página de inicio, la cual será heredada en la página de inicio. En ella se encontrarán los accesos directos a las diferentes secciones de la aplicación, un gráfico de ventas, una bandeja de entrada con alertas de fecha de vencimiento y un gráfico de inventario.-->
+{% block content %}  
 <!DOCTYPE html> 
 <html>
  <link type="text/css" href='{% static "css/homebutton.css" %}' rel="stylesheet"/>
@@ -10,6 +12,7 @@
             <h4>Accesos Directos</h4>
             <div class="contenedor-daccess">
                 <ul class="contenedor-ul">
+                    <!-- Botones de acceso rápido a diferentes secciones -->
                     <li><a id="b001" href="/proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/user.png' %}" alt="Proveedores" width="30" height="30"><span>Proveedores</span></a></li>
                     <li><a id="b002" href="/producto" class="boton-daccess"><img class="Foto" src="{% static 'images/glass.png' %}" alt="Productos" width="30" height="30"><span>Productos</span></a></li>
                     <li><a id="b003" href="/venta" class="boton-daccess"><img class="Foto" src="{% static 'images/cash.png' %}" alt="Ventas" width="30" height="30"><span>Ventas</span></a></li>
@@ -28,12 +31,15 @@
                 <h4>Bandeja de entrada</h4>
             <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive table-fixed">
                 <thead>    
+                <!-- Tabla de notificaciones -->
                 <tr class="listado">   
+                    <!-- Encabezados de la tabla -->
                     <th>N° ORDEN DE COMPRA</th>
                     <th>FECHA DE VENCIMIENTO</th>
                 </tr>
                 </thead>
                 <tbody>        
+                    <!-- Ciclo para mostrar las alertas de fecha de vencimiento -->
                     {% for alerta in alertas_de_fecha_vencimiento %}
                     <tr class="listado">
                         <td>{{ alerta.OC }}</td>

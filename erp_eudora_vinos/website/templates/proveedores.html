@@ -1,14 +1,17 @@
 {% load static%}    
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de proveedores, la cual será heredada en la página de proveedores. En ella se encontrarán los proveedores que se encuentran en la base de datos.-->
 {% block content %}
     <div id="proveedores">
         <link type="text/css" href='{% static "css/proveedor.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
             <h1>PROVEEDORES</h1>
         </div>
+        <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
+        <!-- Contenedor principal con opciones de edición y añadir proveedor. -->
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -37,6 +40,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST">
+                        <!-- Formulario para añadir un proveedor. --> 
                         {% csrf_token %}
                         <div class="mb-3">
                             <label>Nombre del proveedor</label>
@@ -52,6 +56,7 @@
                         </div>                       
                     </form>
                 </div>
+                <!-- Botones para guardar o cancelar. -->
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                   <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
@@ -59,9 +64,11 @@
               </div>
             </div>
         </div>
+        <!-- Inicio de la tabla. --> 
         <table id="table" summary="tabla Proveedor" class="table table-bordered table-hover dt-responsive">
             <thead>    
             <tr class="listado">   
+                <!-- Encabezados. --> 
                 <th> NOMBRE PROVEEDOR </th>     
                 <th> EMAIL</th>
                 <th> TELEFONO </th>
@@ -71,6 +78,7 @@
             <tbody>        
                 {% for proveedor in proveedores %}
                 <tr class="listado">
+                    <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->  
                     <td >{{ proveedor.nombre_prov }}</td>
                     <td class="editable" data-nombre_prov="{{ proveedor.nombre_prov }}" data-type="email_empresa">{{ proveedor.email_empresa }}</td>
                     <td class="editable" data-nombre_prov="{{ proveedor.nombre_prov }}" data-type="telefono_empresa">{{ proveedor.telefono_empresa }}</td>

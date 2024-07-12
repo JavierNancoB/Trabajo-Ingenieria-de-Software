@@ -1,16 +1,20 @@
 {% load static %}
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de notificaciones de fecha de vencimiento, la cual será heredada en la página de notificaciones de fecha de vencimiento. En ella se encontrarán las notificaciones de fecha de vencimiento que se encuentran en la base de datos.-->
 {% block content %}
 <div id="tablas-css">
     <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
     <div id="titulo-modelo">
         <h1>VENICIMIENTO ORDEN DE COMPRA</h1>
     </div>
+    <!-- Botón para eliminar. -->
     <div class="col d-grid gap-2 d-md-flex">
         <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
     </div>
+    <!-- Inicio de la tabla. --> 
     <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive">
-        <thead>    
+        <thead>
+        <!-- Encabezado de la tabla. -->
         <tr class="listado">   
             <th>OC</th>
             <th>FECHA VENCIMIENTO</th>
@@ -20,6 +24,7 @@
         </tr>
         </thead>
         <tbody>        
+            <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
             {% for alerta in alertas_de_fecha_vencimiento %}
             <tr class="listado">
                 <td>{{ alerta.OC }}</td>

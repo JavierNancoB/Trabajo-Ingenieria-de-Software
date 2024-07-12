@@ -121,7 +121,8 @@ $(document).ready(function(){
     });
     function sendToServer(nombre_prov, value, type){
         var td = $("[data-nombre_prov='" + nombre_prov + "']").parent('td');
-        var tr = td.closest('tr');  // Obtener el <tr> más cercano
+        var tr = td.closest('tr');
+        // Validaciones
         if (type=="telefono_empresa" && isNaN(value)) {
             alert("El valor debe ser numérico.");
             return; // No enviar los datos al servidor si el valor no es numérico

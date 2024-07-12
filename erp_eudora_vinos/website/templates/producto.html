@@ -1,14 +1,17 @@
 {% load static%}    
 {% include "base.html" %}
+<!-- En este archivo HTML se crea la tabla de productos, la cual será heredada en la página de productos. En ella se encontrarán los productos que se encuentran en la base de datos.-->
 {% block content %}
     <div id="productos">
         <link type="text/css" href='{% static "css/producto.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
             <h1>PRODUCTOS</h1>
         </div>
+        <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
+        <!-- Contenedor principal con opciones de edición y añadir producto. -->
         <div class="a">
             <div class="row align-items-end">
                 <div class="col">
@@ -37,6 +40,7 @@
                 </div>
                 <div class="modal-body">
                     <form method="POST">
+                        <!-- Formulario para añadir un producto. -->
                         {% csrf_token %}
                         <div class="mb-3">
                             <label>SKU</label>
@@ -71,10 +75,11 @@
               </div>
             </div>
         </div>
+        <!-- Inicio de la tabla. -->  
         <table id="table" summary="tabla producto" class="table table-bordered table-hover dt-responsive">
             <thead>    
+            <!-- Encabezados. -->
             <tr class="listado"> 
-                <!--<th> SEL</th>-->
                 <th> SKU </th>
                 <th> TIPO </th>     
                 <th> VIÑA</th>
@@ -85,9 +90,9 @@
             </tr>
             </thead>
             <tbody>        
+                <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
                 {% for producto in productos %}
                 <tr class="listado">
-                    <!--<td><input type="checkbox" name="seleccionar" id="seleccionar"></td>-->
                     <td>{{ producto.SKU }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="tipo_producto">{{ producto.tipo_producto }}</td>
                     <td class="editable" data-sku="{{ producto.SKU }}" data-type="cepa">{{ producto.cepa }}</td>
