@@ -1,6 +1,6 @@
 /* PERMITE EDITAR FECHAS */
 
-function formatDateToISO(textDate) {
+function formatDateToISO(textDate) {  // Cambia el formato de la fecha a ISO
     var parts = textDate.trim().match(/^(\d{1,2}) de (\w+) de (\d{4})$/);
     if (!parts) return '';
 

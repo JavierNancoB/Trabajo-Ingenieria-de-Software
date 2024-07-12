@@ -5,7 +5,9 @@ from .models import Alerta_vencimiento, Compra_proveedores
 from django.utils import timezone
 import datetime
 
+#manejar automaticamente las alertas de stock y vencimiento
 
+# Signal para verificar el stock de un producto
 @receiver(post_save, sender=Inventario_Y_Stock)
 def verificar_stock(sender, instance, **kwargs):
     # Verificar si el stock es igual o menor a 2
@@ -23,8 +25,9 @@ def verificar_stock(sender, instance, **kwargs):
         Alerta_stock.objects.filter(id_inventario=instance).delete()
         print(f"Alertas eliminada para el inventario ID {instance.id_inventario}: quedan {instance.stock} unidades.")
 
+# Signal para verificar el vencimiento de una compra
 @receiver(post_save, sender=Compra_proveedores)
-def indicar_vencimiento(sender, instance, **kwargs):
+def indicar_vencimiento(sender, instance, **kwargs): # instance es la compra 
     fecha_objeto = instance.fecha_vencimiento
     if isinstance(fecha_objeto, str):
         fecha_objeto = datetime.datetime.strptime(fecha_objeto, '%Y-%m-%d').date()

@@ -2,8 +2,8 @@ $(document).ready(function(){
     $('#table').DataTable();
     
     /* AÑADIR */
-
-    $('#submit').on('click', function(){
+  //valida
+    $('#submit').on('click', function(){ 
         let validador = 0;
         const $rut = $('#rut').val();
         const $nombre = $('#nombre').val();
@@ -23,7 +23,7 @@ $(document).ready(function(){
         const emailPattern =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
 
-        
+        // Validaciones
         if ($rut === '' || $nombre === '' || $apellido === '' || $email === '' || $comuna === '' || $calle === '' || $numero_de_casa === '' || $telefono === '') {
             validador = 1;
             alert('Por favor no deje campos vacíos');
@@ -71,7 +71,7 @@ $(document).ready(function(){
                         telefono: $telefono,
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                     },
-                    success: function() {
+                    success: function() { // Si la inserción es exitosa 
                         alert('Se guardó correctamente el cliente');
                         $('#rut').val('');
                         $('#nombre').val('');
@@ -104,7 +104,7 @@ $(document).ready(function(){
             $(this).removeClass('editable');
         }
     });
-    $(document).on('blur', '.input-data', function(){
+    $(document).on('blur', '.input-data', function(){ // Al hacer clic fuera del input se guarda el valor
         var value=$(this).val();
         var td=$(this).parent('td');
         var RUT=td.data('rut');
@@ -115,7 +115,7 @@ $(document).ready(function(){
         var type=td.data('type');
         sendToServer(td.data("rut"), value, type);
     }); 
-    $(document).on('keypress', '.input-data', function(e){
+    $(document).on('keypress', '.input-data', function(e){ // Al presionar enter se guarda el valor
         var key = e.which;
         if(key == 13){
             var value = $(this).val();
@@ -132,7 +132,7 @@ $(document).ready(function(){
             sendToServer(td.data("rut"), value, type);
         }
     });
-    function sendToServer(rut, value, type){
+    function sendToServer(rut, value, type){ // Función para enviar los datos al servidor
         /*
         const maxLengths = {
             nombre: 50,
@@ -179,7 +179,7 @@ $(document).ready(function(){
         }
         */
         console.log("Sending to server:", rut, value, type);  // Log para ver qué datos se están enviando
-        $.ajax({
+        $.ajax({ // Enviamos los datos al servidor
             url: 'update/',
             type: 'POST',
             data: {
@@ -189,11 +189,11 @@ $(document).ready(function(){
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             }
         })
-        .done(function(response) {
+        .done(function(response) { // Si la actualización es exitosa
             alert('Se guardó correctamente el cliente');
             console.log(response);
         })
-        .fail(function() {
+        .fail(function() { // Si la actualización falla
             alert('Error al guardar el cliente');
             console.log('Error');
         });
@@ -201,7 +201,7 @@ $(document).ready(function(){
 
     /* ELIMINAR */
 
-    $('#eliminar-seleccion').on('click', function(e){
+    $('#eliminar-seleccion').on('click', function(e){ // Al hacer clic en el botón de eliminar
         if (!isEditingEnabled()) {
             e.preventDefault();
             alert('Debe habilitar la edición para eliminar productos.');
@@ -215,10 +215,10 @@ $(document).ready(function(){
                         url: '/cliente/delete/' + rut, // Usando la ruta existente
                         type: 'POST',
                         headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
-                        success: function(response) {
-                            console.log('Producto con SKU ' + rut + ' eliminado');
+                        success: function(response) { // Si la eliminación es exitosa
+                            console.log('Producto con SKU ' + rut + ' eliminado'); // Log para ver qué producto se eliminó
                         },
-                        error: function(xhr) {
+                        error: function(xhr) { // Si la eliminación falla
                             console.log('Error al eliminar el producto con SKU ' + rut);
                         },
                         complete: function() {
