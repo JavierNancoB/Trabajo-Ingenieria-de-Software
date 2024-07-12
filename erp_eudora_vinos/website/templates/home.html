@@ -1,7 +1,8 @@
 {% load static%}  
 {% include "base.html" %}
+{% block content %}
 <!-- En este archivo HTML se crea la página de inicio, la cual será heredada en la página de inicio. En ella se encontrarán los accesos directos a las diferentes secciones de la aplicación, un gráfico de ventas, una bandeja de entrada con alertas de fecha de vencimiento y un gráfico de inventario.-->
-{% block content %}  
+
 <!DOCTYPE html> 
 <html>
  <link type="text/css" href='{% static "css/homebutton.css" %}' rel="stylesheet"/>
@@ -56,3 +57,4 @@
         <script type='text/javascript' src='{% static "js/home.js" %}'></script>
     </body>
 </html>
+{% endblock %}

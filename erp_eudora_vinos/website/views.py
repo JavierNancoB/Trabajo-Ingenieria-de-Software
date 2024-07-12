@@ -6,6 +6,7 @@ from django.http import JsonResponse
 import datetime
 from django.utils import timezone
 from.models import *
+from .sync import SyncWoocomerce 
 
 # HOME
 
@@ -71,8 +72,10 @@ def delete_proveedor(request, nombre_prov):
 #muestra las ventas
 @login_required
 def ventas(request):
+    # SyncWoocomerce()
     ventas = Ventas.objects.all()
     return render(request, 'ventas.html', {'ventas': ventas})
+
 #inserta una venta
 @login_required
 def insert_ventas(request):

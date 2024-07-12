@@ -227,6 +227,26 @@ $(document).ready(function(){
         });
     }
     */
+    /*
+        function actualizarPago(pedido) { // Función para actualizar el stock de un producto
+            // Buscar en la fila del id_inventario específico
+            const row = $(`td[data-id_inventario='${pedido}'][data-type='venta_total']`).closest('tr');
+        
+            // Extraer los valores de los inputs de cantidad, salidas y movimiento de bodegas
+            const ventaTotal = parseFloat(row.find(`td[data-id_inventario='${pedido}'][data-type='venta_total']`).text()) || 0;
+            const envio = parseFloat(row.find(`td[data-id_inventario='${pedido}'][data-type='envio']`).text()) || 0;
+            //const movBodegas = parseFloat(row.find(`td[data-id_inventario='${idInventario}'][data-type='mov_bodega']`).text()) || 0;
+        
+            // Calcular el nuevo stock
+            const pago = Math.round(ventaTotal + envio);
+        
+            // Actualizar el valor del stock en la fila
+            row.find(`td[data-id_inventario='${pedido}'][data-type='stock']`).text(pago);
+        
+            // Llamar a la función sendToServer para enviar los cambios al servidor
+            addToRequestQueue(pedido, pago, 'pago');
+        }
+    */
         function isEditingEnabled() {
             return $('#flexSwitchCheckDefault').prop('checked');
         }
@@ -267,7 +287,11 @@ $(document).ready(function(){
                 },
                 success: function(response) {
                     console.log('Success:', response);
-                    alert('Se guardó correctamente la venta editada');
+                    
+                    // ahora si type es distinto de pago o venta_total, entonces se mandara este mensaje
+                    if (type !== 'pago' && type !== 'venta_total') {
+                        alert('Se guardó correctamente la venta editada, por favor recargue la página para ver los cambios.');
+                    }
                     isRequestInProgress = false;
                     processNextRequest();
                 },
@@ -290,9 +314,22 @@ $(document).ready(function(){
                 $(this).remove();
                 td.html(value);
                 td.addClass("editable");
-                console.log('Pedido:', pedido, 'Valor:', value, 'Tipo:', type);
-                addToRequestQueue(pedido, value, type);
                 
+                console.log('Pedido:', pedido, 'Valor:', value, 'Tipo:', type);
+                if (type == 'fecha_boleta') {
+                    value = transformarFecha(value);
+                }
+                addToRequestQueue(pedido, value, type);
+
+               if (type == 'venta_total' || type == 'flete' || type == 'pago' || type == 'precio_unitario' || type == 'cantidad' ) {
+                    var cantidad = parseFloat($(`td[data-pedido='${pedido}'][data-type='cantidad']`).text()) || 0;
+                    var precio_unitario = parseFloat($(`td[data-pedido='${pedido}'][data-type='precio_unitario']`).text()) || 0;
+                    var flete = parseFloat($(`td[data-pedido='${pedido}'][data-type='flete']`).text()) || 0;
+                    var venta_total = cantidad * precio_unitario;
+                    var pago = venta_total + flete;
+                    addToRequestQueue(pedido, venta_total, 'venta_total');
+                    addToRequestQueue(pedido, pago, 'pago');
+               }
             }
         });
         
@@ -301,11 +338,29 @@ $(document).ready(function(){
             var value=$(this).val();
             var td=$(this).parent('td');
             var pedido=td.data('pedido');
+            var type = td.data("type");
             $(this).remove();
             td.html(value);
             td.addClass('editable');
+            if (type === 'fecha_boleta') {
+                value = transformarFecha(value);
+            }
             console.log('Pedido:', pedido, 'Valor:', value, 'Tipo:', td.data('type'));
+            if (type == 'venta_total' || type == 'flete' || type == 'pago' || type == 'precio_unitario' || type == 'cantidad' ) {
+                var cantidad = parseFloat($(`td[data-pedido='${pedido}'][data-type='cantidad']`).text()) || 0;
+                var precio_unitario = parseFloat($(`td[data-pedido='${pedido}'][data-type='precio_unitario']`).text()) || 0;
+                var flete = parseFloat($(`td[data-pedido='${pedido}'][data-type='flete']`).text()) || 0;
+                var venta_total = cantidad * precio_unitario;
+                var pago = venta_total + flete;
+                addToRequestQueue(pedido, pago, 'pago');
+                console.log('Pedido:', pedido, 'Valor:', venta_total, 'Tipo:', 'venta_total');
+                addToRequestQueue(pedido, venta_total, 'venta_total');
+                console.log('Pedido:', pedido, 'Valor:', pago, 'Tipo:', 'pago');
+                
+            }
             addToRequestQueue(pedido, value, td.data('type'));
+
+            
         });
 
     /* ELIMINAR */

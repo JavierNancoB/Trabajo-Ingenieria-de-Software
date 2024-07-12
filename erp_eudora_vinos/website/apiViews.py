@@ -113,9 +113,11 @@ def guardarventa(request):
         elif type == 'flete':
             venta.flete = value
         elif type == 'fecha_boleta':
-            venta.factura_o_boleta = value
-        elif type == 'factura_o_boleta':
             venta.fecha_boleta = value
+        elif type == 'factura_o_boleta':
+            venta.factura_o_boleta = value
+        elif type == 'pago':
+            venta.pago = value
         
 
         venta.save()
