@@ -6,7 +6,7 @@ from django.http import JsonResponse
 import datetime
 from django.utils import timezone
 from.models import *
-from .sync import SyncWoocomerce 
+#from .sync import SyncWoocomerce 
 
 # HOME
 
@@ -254,6 +254,25 @@ def insert_Inventario_Y_Stock(request):
     )
     member.save()
     return redirect('/')
+
+@login_required
+def update_Inventario_Y_Stock(request):
+    if request.method == 'POST':
+        SKU = request.POST.get('SKU')
+        cantidad = int(request.POST.get('cambio'))  # Esta es la cantidad vendida
+
+        try:
+            inventario = Inventario_Y_Stock.objects.get(SKU__SKU=SKU)
+            inventario.cantidad -= cantidad
+            inventario.salidas += cantidad  # Aumenta las salidas
+            if inventario.cantidad < 0:
+                return JsonResponse({'status': 'error', 'message': 'Stock insuficiente'}, status=400)
+
+            inventario.save()
+            return JsonResponse({'status': 'success', 'message': 'Inventario actualizado correctamente'})
+        except Inventario_Y_Stock.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'SKU no encontrado'}, status=404)
+
 #borra un inventario y stock
 @login_required
 @require_POST

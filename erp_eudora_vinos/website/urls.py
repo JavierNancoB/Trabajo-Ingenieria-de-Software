@@ -37,7 +37,8 @@ urlpatterns = [
     # INVETARIO Y STOCK
     path('Inventario_Y_Stock/', views.inventario_Y_Stock, name='Inventario_Y_Stock'), #muestra
     path('Inventario_Y_Stock/insert/', views.insert_Inventario_Y_Stock, name='insert_Inventario_Y_Stock'), #inserta
-    path('Inventario_Y_Stock/update/', apiViews.guardar_Inventario_Y_Stock, name='update_Inventario_Y_Stock'), #actualiza
+    path('Inventario_Y_Stock/update/', apiViews.guardar_Inventario_Y_Stock, name='guardar_Inventario_Y_Stock'), #actualiza
+    path('Inventario_Y_Stock/update_ventas/', views.update_Inventario_Y_Stock, name='update_Inventario_Y_Stock'), #actualiza para ventas
     path('Inventario_Y_Stock/delete/<int:id_inventario>', views.delete_Inventario_Y_Stock, name='delete_Inventario_Y_Stock'),  #borra 
 
     # COMPRAS PROVEEDORES
