@@ -10,11 +10,17 @@
                 <img class="site-logo" src="{% static 'images/logo.png' %}" alt="Logo" width="160" height="50" role="presentation">
             </a>
             <!--Barra de busquedad.-->
+
+            {% comment "XD" %}
             <li id="search-container">
                 <form id="search-form" onsubmit="redirectToPage(event)">
                     <input type="text" placeholder="Buscar Módulo" id="search-input">
                 </form>
             </li>
+            {% endcomment %}
+            {% comment "Este es un comentario en Django Template" %}
+                <p>Este contenido está comentado y no será mostrado en el navegador.</p>
+            {% endcomment %}
             <!--Botón de notificaciones.-->
             <li class="notificacion-con-burbuja">
                 {% if notificaciones_activas %}

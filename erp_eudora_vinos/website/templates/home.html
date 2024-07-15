@@ -9,25 +9,20 @@
     <body>
         <br>
         <div class="Home">
-        <div>
-            <h4>Accesos Directos</h4>
-            <div class="contenedor-daccess">
-                <ul class="contenedor-ul">
-                    <!-- Botones de acceso rápido a diferentes secciones -->
-                    <li><a id="b001" href="/proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/user.png' %}" alt="Proveedores" width="30" height="30"><span>Proveedores</span></a></li>
-                    <li><a id="b002" href="/producto" class="boton-daccess"><img class="Foto" src="{% static 'images/glass.png' %}" alt="Productos" width="30" height="30"><span>Productos</span></a></li>
-                    <li><a id="b003" href="/venta" class="boton-daccess"><img class="Foto" src="{% static 'images/cash.png' %}" alt="Ventas" width="30" height="30"><span>Ventas</span></a></li>
-                    <li><a id="b004" href="/Inventario_Y_Stock" class="boton-daccess"><img class="Foto" src="{% static 'images/box.png' %}" alt="Stock" width="30" height="30"><span>Stock</span></a></li>
-                    <li><a id="b005" href="/cliente" class="boton-daccess"><img class="Foto" src="{% static 'images/hand.png' %}" alt="Clientes" width="30" height="30"><span>Clientes</span></a></li>
-                    <li><a id="b006" href="/compra_proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/ticket.png' %}" alt="Compras" width="30" height="30"><span>Compras</span></a></li>
-                </ul>
-            </div>                        
-        </div>
-        <div>
-            <h4>Grafico Ventas</h4>
-        </div>
-        </div>
-        <div class="Home">
+            <div>
+                <h4>Accesos Directos</h4>
+                <div class="contenedor-daccess">
+                    <ul class="contenedor-ul">
+                        <!-- Botones de acceso rápido a diferentes secciones -->
+                        <li><a id="b001" href="/proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/user.png' %}" alt="Proveedores" width="30" height="30"><span>Proveedores</span></a></li>
+                        <li><a id="b002" href="/producto" class="boton-daccess"><img class="Foto" src="{% static 'images/glass.png' %}" alt="Productos" width="30" height="30"><span>Productos</span></a></li>
+                        <li><a id="b003" href="/venta" class="boton-daccess"><img class="Foto" src="{% static 'images/cash.png' %}" alt="Ventas" width="30" height="30"><span>Ventas</span></a></li>
+                        <li><a id="b004" href="/Inventario_Y_Stock" class="boton-daccess"><img class="Foto" src="{% static 'images/box.png' %}" alt="Stock" width="30" height="30"><span>Stock</span></a></li>
+                        <li><a id="b005" href="/cliente" class="boton-daccess"><img class="Foto" src="{% static 'images/hand.png' %}" alt="Clientes" width="30" height="30"><span>Clientes</span></a></li>
+                        <li><a id="b006" href="/compra_proveedor" class="boton-daccess"><img class="Foto" src="{% static 'images/ticket.png' %}" alt="Compras" width="30" height="30"><span>Compras</span></a></li>
+                    </ul>
+                </div>                        
+            </div>
             <div id="bandeja-de-entrada">
                 <h4>Bandeja de entrada</h4>
             <table id="table" summary="tabla notificaciones" class="table table-bordered table-hover dt-responsive table-fixed">
@@ -49,9 +44,6 @@
                     {% endfor %}    
                 </tbody>
             </table>
-            </div>
-            <div>
-                <h4>Grafico Inventario</h4>
             </div>
         </div>
         <script type='text/javascript' src='{% static "js/home.js" %}'></script>
