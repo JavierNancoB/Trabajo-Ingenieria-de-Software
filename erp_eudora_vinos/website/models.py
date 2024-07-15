@@ -5,14 +5,14 @@ from django.db import models
 # Modelo de la clase Cliente
 
 class Cliente(models.Model):
-    rut = models.CharField(max_length=12, unique=True)
+    rut = models.CharField(max_length=12, unique=True, null=True)
     nombre = models.CharField(primary_key=True, max_length=50, unique=True)
-    apellido = models.CharField(max_length=50)
-    email = models.EmailField()
-    comuna = models.CharField(max_length=50)
-    calle = models.CharField(max_length=50)
-    numero_de_casa = models.IntegerField()
-    telefono = models.IntegerField()
+    apellido = models.CharField(max_length=50, null=True)
+    email = models.EmailField(null=True)
+    comuna = models.CharField(max_length=50, null=True)
+    calle = models.CharField(max_length=50, null=True)
+    numero_de_casa = models.IntegerField(null=True)
+    telefono = models.IntegerField(null=True)
 
     def __str__(self):
         return self.nombre
