@@ -1,4 +1,4 @@
-"""import requests
+import requests
 from requests.auth import HTTPBasicAuth
 from .models import Ventas
 
@@ -43,4 +43,4 @@ def SyncWoocomerce():
 ######## IMPORTANTE ########
 
 # Variable de ejemplo para acceso a datos
-# product_name = data[0]['name'] if data else 'No Data Available'"""
+# product_name = data[0]['name'] if data else 'No Data Available'

@@ -143,9 +143,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'coniolifer@gmail.com'
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = 'coniolifer@gmail.com'
+EMAIL_HOST_USER = 'erp.eudoravinos@gmail.com'
+EMAIL_HOST_PASSWORD = 'wqcr nggk cqbm igjd'
+DEFAULT_FROM_EMAIL = 'erp.eudoravinos@gmail.com'
 LOGIN_REDIRECT_URL = '/'
 
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
