@@ -7,7 +7,7 @@ $(document).ready(function(){
         let validador = 0;
         const $rut = $('#rut').val();
         const $nombre = $('#nombre').val();
-        const $apellido = $('#apellido').val();
+      
         const $email = $('#email').val();
         const $comuna = $('#comuna').val();
         const $calle = $('#calle').val();
@@ -24,22 +24,20 @@ $(document).ready(function(){
     
 
         // Validaciones
-        if ($rut === '' || $nombre === '' || $apellido === '' || $email === '' || $comuna === '' || $calle === '' || $numero_de_casa === '' || $telefono === '') {
+        if ($rut === '' || $nombre === '' ||  $email === '' || $comuna === '' || $calle === '' || $numero_de_casa === '' || $telefono === '') {
             validador = 1;
             alert('Por favor no deje campos vacíos');
-        } else if (!rutPattern.test($rut)) {
+        
+        } else if (!namePattern.test($nombre) || !namePattern.test($comuna)) {
             validador = 1;
-            alert('Por favor ingrese un RUT válido (formato: 12345678-9 o 12345678-K)');
-        } else if (!namePattern.test($nombre) || !namePattern.test($apellido) || !namePattern.test($comuna)) {
-            validador = 1;
-            alert('El nombre, apellido y comuna solo deben contener letras y espacios');
+            alert('El nombre y comuna solo deben contener letras y espacios');
         } else if (!emailPattern.test($email)) {
             validador = 1;
             alert('Por favor ingrese un email válido: usuario@example.com');
         } else if (!numberPattern.test($telefono) || $telefono.length !== 9) {
             validador = 1;
             alert('El teléfono debe tener exactamente 9 dígitos numéricos (Ya contemplamos el +56)');
-        } else if ($nombre.length > 50 || $apellido.length > 100 || $email.length > 30 || $comuna.length > 20 || $calle.length > 100) {
+        } else if ($nombre.length > 50 || $email.length > 30 || $comuna.length > 20 || $calle.length > 100) {
             validador = 1;
             alert('El número de caracteres de un campo no cumple con la cantidad de caracteres permitidos');
         }
@@ -63,7 +61,7 @@ $(document).ready(function(){
                     data: {
                         rut: $rut,
                         nombre: $nombre,
-                        apellido: $apellido,
+
                         email: $email,
                         comuna: $comuna,
                         calle: $calle,
@@ -75,7 +73,7 @@ $(document).ready(function(){
                         alert('Se guardó correctamente el cliente');
                         $('#rut').val('');
                         $('#nombre').val('');
-                        $('#apellido').val('');
+
                         $('#email').val('');
                         $('#comuna').val('');
                         $('#calle').val('');
