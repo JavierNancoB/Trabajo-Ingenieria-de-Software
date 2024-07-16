@@ -111,7 +111,6 @@ $(document).ready(function(){
                     csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                 },
                 success: function(){
-                    actualizarInventario($SKU, $cantidad); 
                     $('#pedido').val('');
                     $('#rut').val('');
                     $('#SKU').val('');
@@ -122,7 +121,7 @@ $(document).ready(function(){
                     $('#factura_o_boleta').val('');
                     $('#fecha_boleta').val('');
                     $('#pago').val('');
-                    
+                    alert('Se guardó correctamente la venta');
                     window.location='/venta';
                 }
             });
@@ -421,27 +420,6 @@ $(document).ready(function(){
         }
         calcularTotales();
 });
-
-// Modifica el stock de un producto en la base de datos
-function actualizarInventario(SKU, cantidad) {
-    console.log('Actualizando inventario:', SKU, cantidad);
-    $.ajax({
-        url: '/Inventario_Y_Stock/update_ventas/',  // Asegúrate que esta es la URL correcta
-        type: 'POST',
-        data: {
-            SKU: SKU,
-            cambio: cantidad,
-            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-        },
-        success: function() {
-            alert('Inventario actualizado correctamente.');
-        },
-        error: function() {
-            alert('Error al actualizar el inventario.');
-        }
-    });
-}
-
 
 function transformarFecha(fecha) {
     // Dividimos el string de fecha en partes

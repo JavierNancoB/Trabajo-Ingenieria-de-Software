@@ -4,6 +4,7 @@ from .models import Inventario_Y_Stock, Alerta_stock
 from .models import Alerta_vencimiento, Compra_proveedores
 from django.utils import timezone
 import datetime
+from .models import Ventas, Inventario_Y_Stock
 
 #manejar automaticamente las alertas de stock y vencimiento
 
@@ -49,3 +50,24 @@ def indicar_vencimiento(sender, instance, **kwargs): # instance es la compra
         # Eliminar cualquier alerta existente si la compra ha sido pagada
         Alerta_vencimiento.objects.filter(OC=instance).delete()
         print(f"Alertas eliminadas para la Orden de compra {instance.OC} porque ha sido pagada.")
+
+@receiver(post_save, sender=Ventas)
+def actualizar_inventario(sender, instance, created, **kwargs):
+    try:
+        # Obtener la primera entrada de inventario para el SKU dado
+        inventario = Inventario_Y_Stock.objects.filter(SKU=instance.SKU).first()
+        if not inventario:
+            print("Inventario no encontrado para el SKU proporcionado.")
+            return
+
+        cantidad = int(instance.cantidad)  # Asegurar que la cantidad es un entero
+
+        if created:
+            # Si es una venta nueva, reducir el stock y aumentar las salidas
+            inventario.stock -= cantidad  # Disminuye el stock por la cantidad vendida
+            inventario.salidas += cantidad  # Aumenta las salidas por la cantidad vendida
+        inventario.save()
+    except ValueError:
+        print("Error: la cantidad debe ser un número.")
+    except Exception as e:
+        print(f"Error al actualizar el inventario: {e}")
