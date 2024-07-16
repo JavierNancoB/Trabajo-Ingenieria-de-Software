@@ -256,30 +256,6 @@ def insert_Inventario_Y_Stock(request):
     member.save()
     return redirect('/')
 
-#### Ajuste????? ####
-
-# Elija la primera bodega que encuentre ????
-
-@login_required
-def update_Inventario_Y_Stock(request):
-    if request.method == 'POST':
-        SKU = request.POST.get('SKU')
-        cantidad = int(request.POST.get('cambio'))  # Esta es la cantidad vendida
-
-        try:
-            inventario = Inventario_Y_Stock.objects.get(SKU__SKU=SKU)
-            # inventario.cantidad -= cantidad
-            inventario.salidas += cantidad  # Aumenta las salidas
-            inventario.stock -= cantidad  # Disminuye el stock
-            '''
-            if inventario.cantidad < 0:
-                return JsonResponse({'status': 'error', 'message': 'Stock insuficiente'}, status=400)
-            '''
-            inventario.save()
-            return JsonResponse({'status': 'success', 'message': 'Inventario actualizado correctamente'})
-        except Inventario_Y_Stock.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': 'SKU no encontrado'}, status=404)
-
 #borra un inventario y stock
 @login_required
 @require_POST
