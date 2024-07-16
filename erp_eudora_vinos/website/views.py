@@ -7,7 +7,7 @@ import datetime
 from django.utils import timezone
 import random
 from.models import *
-# from .sync import SyncWoocomerce 
+from .sync import SyncWoocomerce 
 
 # HOME
 
@@ -73,7 +73,7 @@ def delete_proveedor(request, nombre_prov):
 #muestra las ventas
 @login_required
 def ventas(request):
-    # SyncWoocomerce()
+    SyncWoocomerce()
     ventas = Ventas.objects.all()
     return render(request, 'ventas.html', {'ventas': ventas})
 
@@ -82,7 +82,7 @@ def ventas(request):
 def insert_ventas(request):
     member = Ventas(
         pedido=request.POST.get('pedido'),
-        nombre_id=request.POST.get('nombre'),
+        rut_id=request.POST.get('rut'),
         SKU_id=request.POST.get('SKU'),
         precio_unitario=request.POST.get('precio_unitario'),
         cantidad=request.POST.get('cantidad'),
@@ -377,7 +377,7 @@ def cliente(request):
 #inserta un cliente
 @login_required
 def insert_cliente(request):
-    member = Cliente(rut=request.POST.get('rut'), nombre=request.POST.get('nombre'), apellido=request.POST.get('apellido'), email=request.POST.get('email'), comuna=request.POST.get('comuna'), calle=request.POST.get('calle'), numero_de_casa=request.POST.get('numero_de_casa'), telefono=request.POST.get('telefono'))
+    member = Cliente(rut=request.POST.get('rut'), nombre=request.POST.get('nombre'), email=request.POST.get('email'), comuna=request.POST.get('comuna'), calle=request.POST.get('calle'), numero_de_casa=request.POST.get('numero_de_casa'), telefono=request.POST.get('telefono'))
     member.save()
     return redirect('/')
 #borra un cliente

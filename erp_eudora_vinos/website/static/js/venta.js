@@ -42,14 +42,14 @@ $(document).ready(function(){
             url: '/api/cliente/',
             type: 'GET',
             success: function(data) {
-                var selectProveedor = $('#nombre');
+                var selectProveedor = $('#rut');
                 selectProveedor.empty();
-                data.nombres.forEach(function(nombre) {
-                    selectProveedor.append($('<option>', { value: nombre, text: nombre }));
+                data.ruts.forEach(function(rut) {
+                    selectProveedor.append($('<option>', { value: rut, text: rut }));
                 });
             },
             error: function() {
-                console.error('Error cargando los nombres de los proveedores');
+                console.error('Error cargando los ruts de clientes');
             }
         });
         calcularTotales();
@@ -58,7 +58,7 @@ $(document).ready(function(){
     $('#submit').on('click', function(){
 
         var $pedido = $('#pedido').val();
-        var $nombre = $('#nombre').val();
+        var $rut = $('#rut').val();
         var $SKU = $('#SKU').val();
         var $precio_unitario = $('#precio_unitario').val();
         var $cantidad = $('#cantidad').val();
@@ -70,7 +70,7 @@ $(document).ready(function(){
         
     
         // Comprobación de que no haya campos vacíos
-        if ($pedido === '' || $nombre === '' || $SKU === '' || $precio_unitario === '' || $cantidad === '' || $venta_total === '' || $flete === '' || $factura_o_boleta === '' || $fecha_boleta === '' || $pago === '') {
+        if ($pedido === '' || $rut === '' || $SKU === '' || $precio_unitario === '' || $cantidad === '' || $venta_total === '' || $flete === '' || $factura_o_boleta === '' || $fecha_boleta === '' || $pago === '') {
             alert('Por favor, llene todos los campos.');
             return;
         }
@@ -98,7 +98,7 @@ $(document).ready(function(){
                 url: 'insert/',
                 data: {
                     pedido: $pedido,
-                    nombre: $nombre,
+                    rut: $rut,
                     SKU: $SKU,
                     precio_unitario: $precio_unitario,
                     cantidad: $cantidad,
@@ -113,7 +113,7 @@ $(document).ready(function(){
                 success: function(){
                     actualizarInventario($SKU, $cantidad); 
                     $('#pedido').val('');
-                    $('#nombre').val('');
+                    $('#rut').val('');
                     $('#SKU').val('');
                     $('#precio_unitario').val('');
                     $('#cantidad').val('');

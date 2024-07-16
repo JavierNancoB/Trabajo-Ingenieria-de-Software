@@ -70,7 +70,7 @@
                         <div class="mb-3">
                             <label>Comprador</label>
                             <div class="d-flex align-items-center">
-                                <select class="form-control" id="nombre" style="flex-grow: 1;">
+                                <select class="form-control" id="rut" style="flex-grow: 1;">
                                     <!-- Las opciones se llenarán con JavaScript -->
                                 </select>
                                 <a href="/cliente?openModal=true" id="link-svg">
@@ -152,7 +152,7 @@
                 <tr class="listado">
                     <td>{{ venta.pedido }}</td>
                     
-                    <td>{{ venta.nombre }}</td>
+                    <td>{{ venta.rut }}</td>
                     <td>{{ venta.SKU }}</td>
                     <td class="editable" data-pedido="{{ venta.pedido }}" data-type="precio_unitario">{{ venta.precio_unitario }}</td>
                     <td class="editable" data-pedido="{{ venta.pedido }}" data-type="cantidad">{{ venta.cantidad }}</td>

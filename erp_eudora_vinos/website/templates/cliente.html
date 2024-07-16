@@ -51,10 +51,7 @@
                         <label>Nombre</label>
                         <input type="text" id="nombre" class="form-control" placeholder="Nombre Usuario"/>
                     </div>
-                    <div class="mb-3">
-                        <label>Apellido</label>
-                        <input type="text" id="apellido" class="form-control" placeholder="Apellido Usuario"/>
-                    </div>
+
                     <div class="mb-3">
                         <label>Email</label>
                         <input type="email" id="email" class="form-control" placeholder="usuario@email.com"/>
@@ -126,7 +123,7 @@
             <!-- Encabezados. -->
             <th> RUT </th>
             <th> NOMBRE </th>     
-            <th> APELLIDO</th>
+
             <th> EMAIL</th>
             <th> COMUNA </th>
             <th> CALLE </th>  
@@ -141,7 +138,7 @@
             <tr class="listado">
                 <td>{{ cliente.rut }}</td>
                 <td class="editable" data-rut="{{ cliente.rut }}" data-type="nombre">{{ cliente.nombre }}</td>
-                <td class="editable" data-rut="{{ cliente.rut }}" data-type="apellido">{{ cliente.apellido }}</td>
+                
                 <td class="editable" data-rut="{{ cliente.rut }}" data-type="email">{{ cliente.email }}</td>
                 <td class="editable" data-rut="{{ cliente.rut }}" data-type="comuna">{{ cliente.comuna }}</td>
                 <td class="editable" data-rut="{{ cliente.rut }}" data-type="calle">{{ cliente.calle }}</td>

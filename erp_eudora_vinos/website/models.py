@@ -5,9 +5,8 @@ from django.db import models
 # Modelo de la clase Cliente
 
 class Cliente(models.Model):
-    rut = models.CharField(max_length=12, unique=True, null=True)
-    nombre = models.CharField(primary_key=True, max_length=50, unique=True)
-    apellido = models.CharField(max_length=50, null=True)
+    rut = models.CharField(primary_key=True, max_length=20)
+    nombre = models.CharField( max_length=50, null=True)
     email = models.EmailField(null=True)
     comuna = models.CharField(max_length=50, null=True)
     calle = models.CharField(max_length=50, null=True)
@@ -15,7 +14,7 @@ class Cliente(models.Model):
     telefono = models.IntegerField(null=True)
 
     def __str__(self):
-        return self.nombre
+        return self.rut
 
 # Modelo de la clase Producto
 
@@ -34,7 +33,7 @@ class Producto(models.Model):
 class Ventas(models.Model):
     pedido = models.CharField(primary_key=True ,unique=True, max_length=50, default='0')
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) # foreign key
-    nombre = models.ForeignKey(Cliente, on_delete=models.CASCADE) # foreign key
+    rut = models.ForeignKey(Cliente, on_delete=models.CASCADE) # foreign key
     precio_unitario = models.IntegerField(null=True)
     cantidad = models.IntegerField(null=True)
     venta_total = models.IntegerField(null=True)
@@ -44,6 +43,7 @@ class Ventas(models.Model):
     pago = models.IntegerField(null=True)
     def __str__(self):
         return self.pedido
+    
     
 # Modelo de la clase Proveedores     
 

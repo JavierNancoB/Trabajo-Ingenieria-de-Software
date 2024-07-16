@@ -50,7 +50,7 @@ urlpatterns = [
     # API
     path('api/skus/', apiViews.get_product_skus, name='api_skus'), #muestra
     path('api/proveedores/', apiViews.get_proveedor_nombre, name='api_proveedores'), #muestra
-    path('api/cliente/', apiViews.get_cliente_nombre, name='api_ventas'), #muestra
+    path('api/cliente/', apiViews.get_cliente_rut, name='api_ventas'), #muestra
 
     # CLIENTE  
     path('cliente/', views.cliente, name='cliente'), #muestra

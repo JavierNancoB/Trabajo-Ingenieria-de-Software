@@ -21,9 +21,9 @@ def get_proveedor_nombre(request):
     nombres = list(Proveedores.objects.values_list('nombre_prov', flat=True))
     return JsonResponse({'nombres': nombres})
 
-def get_cliente_nombre(request):
-    nombres = list(Cliente.objects.values_list('nombre', flat=True))
-    return JsonResponse({'nombres': nombres})
+def get_cliente_rut(request):
+    ruts = list(Cliente.objects.values_list('rut', flat=True))
+    return JsonResponse({'ruts': ruts})
 
 #api que guarda un producto en la base de datos 
 @csrf_exempt
@@ -209,8 +209,7 @@ def guardar_cliente(request):
         cliente = Cliente.objects.get(rut=rut)
         if type == 'nombre':
             cliente.nombre = value
-        elif type == 'apellido':
-            cliente.apellido = value
+
         elif type == 'email':
             cliente.email = value
         elif type == 'comuna':
