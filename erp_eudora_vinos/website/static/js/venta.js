@@ -121,7 +121,7 @@ $(document).ready(function(){
                     $('#factura_o_boleta').val('');
                     $('#fecha_boleta').val('');
                     $('#pago').val('');
-                    
+                    alert('Se guardó correctamente la venta');
                     window.location='/venta';
                 }
             });
