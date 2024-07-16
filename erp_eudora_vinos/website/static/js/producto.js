@@ -25,9 +25,9 @@ $(document).ready(function(){
         
         */ 
         
-        if ($SKU == '' || $tipo_producto == '' || $viña == '' || $cepa == '' || $nombre_producto == '' || $cosecha == '' ){
+        if ($SKU == '' ){
             validador = 1;
-            alert('Por favor no deje campos vacios');
+            alert('Por favor no deje SKU vacio');
         }
 
         else{

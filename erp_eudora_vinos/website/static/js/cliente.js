@@ -19,27 +19,43 @@ $(document).ready(function(){
         const namePattern = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
         const numberPattern = /^[0-9]+$/;
         const houseNumberPattern = /^[0-9]{1,6}[A-Za-z]?$/; // Números de 1 a 6 dígitos opcionalmente seguidos de una letra
-        const rutPattern = /^[0-9]{8}-[0-9Kk]$/;
+        const rutPattern = /^[0-9]{3,8}[0-9Kk]$/;
         const emailPattern =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     
 
         // Validaciones
-        if ($rut === '' || $nombre === '' ||  $email === '' || $comuna === '' || $calle === '' || $numero_de_casa === '' || $telefono === '') {
+        if ($rut === '' || $nombre === '') {
             validador = 1;
-            alert('Por favor no deje campos vacíos');
-        
-        } else if (!namePattern.test($nombre) || !namePattern.test($comuna)) {
+            alert('Por favor no deje campos "rut" ni "nombre" vacio');
+        } else if (!rutPattern.test($rut)) {
+            validador = 1;
+            alert('Por favor ingrese un RUT válido (sin puntos ni guión)');
+        } else if (!namePattern.test($nombre)) {
             validador = 1;
             alert('El nombre y comuna solo deben contener letras y espacios');
-        } else if (!emailPattern.test($email)) {
-            validador = 1;
-            alert('Por favor ingrese un email válido: usuario@example.com');
-        } else if (!numberPattern.test($telefono) || $telefono.length !== 9) {
-            validador = 1;
-            alert('El teléfono debe tener exactamente 9 dígitos numéricos (Ya contemplamos el +56)');
-        } else if ($nombre.length > 50 || $email.length > 30 || $comuna.length > 20 || $calle.length > 100) {
+        } else if ($email !== '') {
+            if (!emailPattern.test($email)) {
+                validador = 1;
+                alert('Por favor ingrese un email válido');
+            }
+        } else if ($telefono !== '') {
+            if (!numberPattern.test($telefono) || $telefono.length !== 9) {
+                validador = 1;
+                alert('Por favor ingrese un teléfono válido');
+            }
+        } else if ($nombre.length > 50 || $email.length > 30 || $calle.length > 100) {
             validador = 1;
             alert('El número de caracteres de un campo no cumple con la cantidad de caracteres permitidos');
+        } else if ($comuna !== '' ) {
+            console.log($comuna);
+            if (!namePattern.test($comuna)) {
+                validador = 1;
+                alert('Por favor ingrese una comuna válida');
+            }
+            if ($comuna.length > 20) {
+                validador = 1;
+                alert('La comuna no debe tener más de 20 caracteres');
+            }
         }
         else{
             /* Recorremos la tabla para comparar cada RUT */
