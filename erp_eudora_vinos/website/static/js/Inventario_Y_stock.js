@@ -82,7 +82,7 @@ $(document).ready(function() {
             alert("El valor de 'precio total' debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
-        if (isNaN($salidas) || $salidas <= 0) {
+        if (isNaN($salidas) || $salidas < 0) {
             alert("El valor de 'salidas' debe ser numérico y mayor a cero.");
             return; // No enviar los datos al servidor
         }
@@ -113,7 +113,7 @@ $(document).ready(function() {
                 csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
             },
             success: function() {
-                alert('Se guardó correctamente el producto');
+                alert('Se guardó correctamente el inventario');
                 
                 // Limpiar campos después de la inserción
                 $('#SKU').val('');
@@ -401,7 +401,7 @@ $(document).ready(function() {
     
     $('#eliminar-seleccion').on('click', function(e){ // Al hacer clic en el botón de eliminar
 
-        var confirmation = confirm('¿Está seguro de que desea eliminar los productos seleccionados?');
+        var confirmation = confirm('¿Está seguro de que desea eliminar los inventarios seleccionados?');
         if (confirmation) {
             $('input[name="seleccionar"]:checked').each(function() {
                 var id_inventario = $(this).data('id_inventario');

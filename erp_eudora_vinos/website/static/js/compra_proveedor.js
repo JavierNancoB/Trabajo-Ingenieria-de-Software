@@ -324,11 +324,11 @@ $(document).ready(function(){
     $('#eliminar-seleccion').on('click', function(e){ // Al hacer clic en el botón de eliminar
         if(!isEditingEnabled()) { // Comprueba si la edición está habilitada
             e.preventDefault();
-            alert('Debe habilitar la edición para eliminar productos.');
+            alert('Debe habilitar la edición para eliminar la compra.');
         }
         else  
         {
-            var confirmation = confirm('¿Estáaa seguro de que desea eliminar los productos seleccionados?');
+            var confirmation = confirm('¿Está seguro de que desea eliminar las compras seleccionadas?');
             if (confirmation) {
                 $('input[name="seleccionar"]:checked').each(function() {
                     var oc = $(this).data('oc');
@@ -338,10 +338,10 @@ $(document).ready(function(){
                         type: 'POST',
                         headers: {'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()},
                         success: function(response) {
-                            console.log('Producto con OC ' + oc + ' eliminado');
+                            console.log('Compra con OC ' + oc + ' eliminado');
                         },
                         error: function(xhr) {
-                            console.log('Error al eliminar el producto con OC ' + oc);
+                            console.log('Error al eliminar la compra con OC ' + oc);
                         },
                         complete: function() {
                             location.reload(); // Considera recargar después de todas las solicitudes, no en cada una
