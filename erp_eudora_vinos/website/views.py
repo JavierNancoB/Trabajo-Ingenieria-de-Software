@@ -9,6 +9,7 @@ import random
 from.models import *
 from .sync import SyncWoocomerce 
 
+
 # HOME
 
 @login_required
@@ -73,7 +74,7 @@ def delete_proveedor(request, nombre_prov):
 #muestra las ventas
 @login_required
 def ventas(request):
-    SyncWoocomerce()
+    #SyncWoocomerce()
     ventas = Ventas.objects.all()
     return render(request, 'ventas.html', {'ventas': ventas})
 
@@ -370,3 +371,10 @@ def delete_cliente(request, rut):
 def navbar_view(request):
     notificaciones_activas = Alerta_stock.objects.all()
     return render(request, 'navbar.html', {'notificaciones_activas': notificaciones_activas})
+
+
+def sync_woocommerce_view(request):
+    if request.method == 'POST':
+        SyncWoocomerce()
+        return JsonResponse({'status': 'success'})
+    return JsonResponse({'status': 'error', 'message': 'Invalid request method'})

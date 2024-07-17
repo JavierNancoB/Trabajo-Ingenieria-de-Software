@@ -57,5 +57,8 @@ urlpatterns = [
     path('cliente/update/', apiViews.guardar_cliente, name='update_cliente'), #actualiza
     path('cliente/delete/<str:rut>', views.delete_cliente, name='delete_cliente'),  #borra
 
+        # Otras rutas
+    path('sync-woocommerce/', views.sync_woocommerce_view, name='sync_woocommerce'),
+
 ]
 
