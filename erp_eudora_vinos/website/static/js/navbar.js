@@ -1,24 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Redireccionamiento de búsqueda
-    function redirectToPage(event) {
-        event.preventDefault(); // Evita que el formulario se envíe de la forma tradicional
-        const query = document.getElementById('search-input').value.toLowerCase();
-        let url;
 
-        if (query === "home") {
-            url = "/home";
-        } else if (query === "producto") {
-            url = "/producto";
-        } else if (query === "home") {
-            url = "/";
-        } else {
-            alert("Página no encontrada");
-            return;
-        }
-        window.location.href = url;
-    }
 
-    document.getElementById('search-form').addEventListener('submit', redirectToPage); // Redirecciona al hacer clic en el botón de búsqueda
+
 
    // Manejo del botón de notificaciones
    const notificationsButton = document.getElementById('notifications-button'); 

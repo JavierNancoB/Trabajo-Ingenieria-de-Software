@@ -44,4 +44,18 @@ body {
     font-weight: 400;
   }
   
+  /*---------------------------------------------*/
+#boton-adicional {
+  background-color: transparent; /* Sin color de fondo */
+  border: none; /* Sin borde */
+  padding: 10px; /* Espaciado interno */
+  display: flex; /* Flex para centrar contenido */
+  align-items: center; /* Alineación centrada */
+}
+
+#boton-adicional img {
+  width: 40px; /* Ancho de la imagen */
+  height: 40px; /* Alto de la imagen */
+  margin-right: 10px; /* Espaciado a la derecha de la imagen */
   
+}

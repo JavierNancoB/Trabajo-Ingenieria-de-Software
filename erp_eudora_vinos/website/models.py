@@ -1,6 +1,7 @@
 from django.db import models
 # aqui se crean los modelos de la base de datos
 # a través de clases que heredan de models.Model
+from datetime import datetime
 
 # Modelo de la clase Cliente
 
@@ -132,3 +133,6 @@ class Alerta_vencimiento(models.Model):
         return str(self.OC.id) + ' ' + str(self.fecha_alerta) + ' ' + str(self.fecha_vencimiento) + ' ' + self.status
 
 
+class Configuracion(models.Model):
+    clave = models.CharField(max_length=255, unique=True)
+    valor = models.DateTimeField(default=datetime(2000, 1, 1, 0, 0, 0))

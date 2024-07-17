@@ -11,13 +11,23 @@
             </a>
             <!--Barra de busquedad.-->
 
-            {% comment "XD" %}
+
             <li id="search-container">
                 <form id="search-form" onsubmit="redirectToPage(event)">
-                    <input type="text" placeholder="Buscar Módulo" id="search-input">
+                    <select class="form-control" id="search-input" placeholder="Buscar Módulo" onchange="redirectToPage()">
+                        <option value="">Seleccionar Módulo</option>
+                        <option value="proveedor">Proveedores</option>
+                        <option value="producto">Productos</option>
+                        <option value="venta">Ventas</option>
+                        <option value="Inventario_Y_Stock">Stock</option>
+                        <option value="cliente">Clientes</option>
+                        <option value="compra_proveedor">Compras</option>
+                    </select>
                 </form>
             </li>
-            {% endcomment %}
+            
+
+            
             {% comment "Este es un comentario en Django Template" %}
                 <p>Este contenido está comentado y no será mostrado en el navegador.</p>
             {% endcomment %}
@@ -55,5 +65,15 @@
             </li>
         </ul>
         <script type='text/javascript' src='{% static "js/navbar.js" %}'></script>
+
+        <script>
+            function redirectToPage() {
+                var selectedValue = document.getElementById('search-input').value;
+                if (selectedValue) {
+                    window.location.href = '/' + selectedValue;
+                }
+            }
+        </script>
+
     </body>
 </html>

@@ -3,6 +3,7 @@ import sys
 import requests
 from requests.auth import HTTPBasicAuth
 from datetime import datetime
+from django.utils import timezone
 
 # Configura el entorno Django
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -10,7 +11,20 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'erp_eudora_vinos.settings')
 import django
 django.setup()
 
-from website.models import Ventas, Producto, Cliente
+from website.models import Ventas, Producto, Cliente, Configuracion
+
+def obtener_fecha_ultima_sincronizacion():
+    #print("Obteniendo fecha de última sincronización")
+    config, created = Configuracion.objects.get_or_create(clave='ultima_sincronizacion')
+    if created or not config.valor:
+        return timezone.make_aware(datetime(2000, 1, 1, 0, 0, 0))
+    return config.valor
+
+def actualizar_fecha_ultima_sincronizacion(fecha):
+    config, created = Configuracion.objects.get_or_create(clave='ultima_sincronizacion')
+    config.valor = timezone.make_aware(fecha) if timezone.is_naive(fecha) else fecha
+    config.save()
+
 
 def SyncWoocomerce():
     # URL de la API de WooCommerce
@@ -20,12 +34,23 @@ def SyncWoocomerce():
     consumer_key = "ck_c6f3618108c67d62e512c3cd080284d448ce8ede"
     consumer_secret = "cs_b812402f4fe07c64a061cc6d2489aebc436fdc3d"
 
-    # Realiza una solicitud GET
-    response = requests.get(url, auth=HTTPBasicAuth(consumer_key, consumer_secret))
-    #print(f"Solicitud realizada a la API: estado {response.status_code}")
 
+    
+     # Obtener la fecha de la última sincronización
+    ultima_sincronizacion = obtener_fecha_ultima_sincronizacion()
+   
+
+    # Convertir la fecha a string para la API
+    fecha_ultima_sincronizacion_str = ultima_sincronizacion.isoformat()
+
+    # Realiza una solicitud GET con parámetros para obtener pedidos después de la última sincronización
+    params = {'after': fecha_ultima_sincronizacion_str}
+    response = requests.get(url, auth=HTTPBasicAuth(consumer_key, consumer_secret), params=params)
+    
     if response.status_code == 200:
+        
         data = response.json()
+        
 
         for venta in data:
             pedido = venta['id']
@@ -33,6 +58,7 @@ def SyncWoocomerce():
             
             # Verifica si el estado del pedido es "completed" para poder seguir
             if estado != 'completed':
+                #print(f"El pedido ID: {pedido} no está completado. Saltando este pedido.")
                 continue
             
             # Obtener rut de billing o meta_data
@@ -85,9 +111,10 @@ def SyncWoocomerce():
             if Ventas.objects.filter(pedido=pedido).exists():
                 #print(f"El pedido ID: {pedido} ya existe en la base de datos. Saltando este pedido.")
                 continue
-
+            
             # Agregar depuración para los ítems de cada pedido
             for idx, item in enumerate(venta['line_items']):
+               
                 #print(f"Ítem {idx + 1}: {item}")
 
                 precio_unitario = item['price']
@@ -121,7 +148,9 @@ def SyncWoocomerce():
                 pago = precio_unitario * cantidad + flete
                 Ventas.objects.create(pedido=pedido, precio_unitario=precio_unitario, cantidad=cantidad, SKU=producto, rut=cliente, venta_total=venta_total, fecha_boleta=fecha_boleta, flete=flete, pago=pago, factura_o_boleta=factura)
                 #print(f"Añadido: Pedido ID {pedido}, Precio Unitario: {precio_unitario}, SKU: {sku}, Cantidad: {cantidad}, Venta Total: {venta_total}, Fecha Boleta: {fecha_boleta}")
-
+        # Actualiza la fecha de última sincronización
+        actualizar_fecha_ultima_sincronizacion(timezone.now())
+        
     else:
         print(f"Error al realizar la solicitud: {response.status_code}")
 

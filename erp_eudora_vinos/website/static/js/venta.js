@@ -1,6 +1,26 @@
 $(document).ready(function(){
     $('#table').DataTable();
-    
+        // Manejar la acción de hacer clic en el botón de sincronización
+        $('#boton-adicional').click(function() {
+            $.ajax({
+                url: "/sync-woocommerce/",
+                type: 'POST',
+                headers: {
+                    'X-CSRFToken': $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        alert('Sincronización exitosa');
+                        location.reload();  // Recargar la página para mostrar los datos actualizados
+                    } else {
+                        alert('Error al sincronizar: ' + response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('Error al sincronizar: ' + error);
+                }
+            });
+        });
     /* AÑADIR */
 
     function calcularValores() {
