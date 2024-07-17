@@ -10,7 +10,7 @@ class Cliente(models.Model):
     email = models.EmailField(null=True)
     comuna = models.CharField(max_length=50, null=True)
     calle = models.CharField(max_length=50, null=True)
-    numero_de_casa = models.CharField(null=True, blank=True)
+    numero_de_casa = models.CharField(max_length=50, null=True)
     telefono = models.IntegerField(null=True)
 
     def __str__(self):
