@@ -8,7 +8,9 @@ from django.utils import timezone
 import random
 from.models import *
 from .sync import SyncWoocomerce 
-
+import pandas as pd
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 # HOME
 
@@ -378,3 +380,46 @@ def sync_woocommerce_view(request):
         SyncWoocomerce()
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+
+def upload_excel(request):
+    if request.method == "POST":
+        excel_file = request.FILES.get('file')
+        
+        if excel_file:
+            print("Archivo subido:", excel_file.name)
+        else:
+            print("No se subió ningún archivo")
+            messages.error(request, 'No se ha seleccionado ningún archivo.')
+            return redirect('producto')
+
+        try:
+            # Leer el archivo Excel usando pandas
+            df = pd.read_excel(excel_file)
+
+            # Renombrar las columnas del Excel para que coincidan con los campos del modelo
+            df = df.rename(columns={
+                'Producto': 'nombre_producto',
+                'tipo': 'tipo_producto',
+                'cepaje': 'cepa',
+            })
+
+            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Producto
+            for index, row in df.iterrows():
+                Producto.objects.update_or_create(
+                    SKU=row['SKU'],  # Busca por SKU
+                    defaults={
+                        'tipo_producto': row['tipo_producto'],
+                        'cepa': row['cepa'],
+                        'cosecha': row['cosecha'],
+                        'nombre_producto': row['nombre_producto'],
+                        'viña': row['viña']
+                    }
+                )
+            
+            # Agregar mensaje de éxito
+            messages.success(request, 'El archivo se subió correctamente y los productos se han actualizado.')
+        except Exception as e:
+            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            print(f"Error al procesar el archivo: {str(e)}")
+
+    return redirect('producto')

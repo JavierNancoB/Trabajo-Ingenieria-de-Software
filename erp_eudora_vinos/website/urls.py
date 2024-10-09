@@ -59,6 +59,6 @@ urlpatterns = [
 
         # Otras rutas
     path('sync-woocommerce/', views.sync_woocommerce_view, name='sync_woocommerce'),
-
+    path('upload_excel/', views.upload_excel, name='upload_excel'),
 ]
 

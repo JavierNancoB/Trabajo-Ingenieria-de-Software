@@ -2,18 +2,41 @@
 {% include "base.html" %}
 <!-- En este archivo HTML se crea la tabla de productos, la cual será heredada en la página de productos. En ella se encontrarán los productos que se encuentran en la base de datos.-->
 {% block content %}
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} m-3">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div id="productos">
         <link type="text/css" href='{% static "css/producto.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
             <h1>PRODUCTOS</h1>
         </div>
+        <!-- Formulario para subir el archivo Excel -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'upload_excel' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Subir archivo Excel:</label>
+                        <input type="file" name="file" class="form-control" accept=".xlsx, .xls" required>
+                    </div>
+                    <div class="d-flex " style="gap: 5px;">
+                        <button type="submit" class="btn btn-primary">Subir archivo</button>
+                        <a href="{% static 'xlsx/Producto.xlsx' %}" class="btn btn-outline-success">Descargar Formato de Excel</a>
+                    </div>
+                </form>
+            </div>          
+        </div>
         <!-- Botón para eliminar. -->
-        <div class="col d-grid gap-2 d-md-flex">
+        <div class="col d-grid mb-3 gap-2 d-md-flex">
             <button id="eliminar-seleccion" type="button" class="btn btn-danger">Eliminar Selección</button>
         </div>
         <!-- Contenedor principal con opciones de edición y añadir producto. -->
-        <div class="a">
-            <div class="row align-items-end">
+        <div class="a ">
+            <div class="column align-items-end">
                 <div class="col">
                     <div id="ediciones">
                         <div class="form-check form-switch">
@@ -29,7 +52,6 @@
                 </div>
             </div>
         </div>
-        
         <!-- Modal -->
         <div class="modal fade" id="addnewproducto" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
