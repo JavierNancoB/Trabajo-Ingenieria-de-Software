@@ -17,7 +17,7 @@
         <!-- Formulario para subir el archivo Excel -->
         <div class="row mb-3">
             <div class="col-md-4">
-                <form method="POST" enctype="multipart/form-data" action="{% url 'upload_excel' %}">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'upload_excel_productos' %}">
                     {% csrf_token %}
                     <div class="mb-3">
                         <label for="file" class="form-label">Subir archivo Excel:</label>

@@ -2,10 +2,33 @@
 {% include "base.html" %}
 <!-- En este archivo HTML se crea la tabla de proveedores, la cual será heredada en la página de proveedores. En ella se encontrarán los proveedores que se encuentran en la base de datos.-->
 {% block content %}
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} m-3">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div id="proveedores">
         <link type="text/css" href='{% static "css/proveedor.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
             <h1>PROVEEDORES</h1>
+        </div>
+        <!-- Formulario para subir el archivo Excel -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'upload_excel_productos' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Subir archivo Excel:</label>
+                        <input type="file" name="file" class="form-control" accept=".xlsx, .xls" required>
+                    </div>
+                    <div class="d-flex " style="gap: 5px;">
+                        <button type="submit" class="btn btn-primary">Subir archivo</button>
+                        <a href="{% static 'xlsx/Producto.xlsx' %}" class="btn btn-outline-success">Descargar Formato de Excel</a>
+                    </div>
+                </form>
+            </div>          
         </div>
         <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">

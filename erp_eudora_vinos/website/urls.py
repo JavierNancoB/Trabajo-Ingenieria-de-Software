@@ -57,8 +57,15 @@ urlpatterns = [
     path('cliente/update/', apiViews.guardar_cliente, name='update_cliente'), #actualiza
     path('cliente/delete/<str:rut>', views.delete_cliente, name='delete_cliente'),  #borra
 
-        # Otras rutas
+    # Otras rutas
     path('sync-woocommerce/', views.sync_woocommerce_view, name='sync_woocommerce'),
-    path('upload_excel/', views.upload_excel, name='upload_excel'),
+
+    # Subir archivo excel
+    path('producto/upload_excel/', views.upload_excel_productos, name='upload_excel_productos'),
+    path('proveedor/upload_excel/', views.upload_excel_proveedores, name='upload_excel_proveedores'),
+    path('cliente/upload_excel/', views.upload_excel_clientes, name='upload_excel_clientes'),
+    path('venta/upload_excel/', views.upload_excel_ventas, name='upload_excel_ventas'),
+    path('compra_proveedor/upload_excel/', views.upload_excel_compra_proveedores, name='upload_excel_compra_proveedores'),
+    path('Inventario_Y_Stock/upload_excel/', views.upload_excel_inventario, name='upload_excel_inventario'),
 ]
 

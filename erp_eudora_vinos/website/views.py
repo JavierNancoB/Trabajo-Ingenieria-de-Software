@@ -381,10 +381,10 @@ def sync_woocommerce_view(request):
         return JsonResponse({'status': 'success'})
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
 
-def upload_excel(request):
+def upload_excel_productos(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
-        
+
         if excel_file:
             print("Archivo subido:", excel_file.name)
         else:
@@ -415,11 +415,263 @@ def upload_excel(request):
                         'viña': row['viña']
                     }
                 )
-            
+
             # Agregar mensaje de éxito
-            messages.success(request, 'El archivo se subió correctamente y los productos se han actualizado.')
+            messages.success(request, 'Los productos se han subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")
 
     return redirect('producto')
+
+def upload_excel_proveedores(request):
+    if request.method == "POST":
+        excel_file = request.FILES.get('file')
+
+        if excel_file:
+            print("Archivo subido:", excel_file.name)
+        else:
+            print("No se subió ningún archivo")
+            messages.error(request, 'No se ha seleccionado ningún archivo.')
+            return redirect('proveedor')
+
+        try:
+            # Leer el archivo Excel usando pandas
+            df = pd.read_excel(excel_file)
+
+            # Renombrar las columnas del Excel para que coincidan con los campos del modelo
+            df = df.rename(columns={
+                'Proveedor': 'nombre_prov',
+                'Email': 'email_empresa',
+                'Telefono': 'telefono_empresa',
+            })
+
+            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Proveedores
+            for index, row in df.iterrows():
+                Proveedores.objects.update_or_create(
+                    nombre_prov=row['nombre_prov'],  # Busca por nombre_prov
+                    defaults={
+                        'email_empresa': row['email_empresa'],
+                        'telefono_empresa': row['telefono_empresa'],
+                    }
+                )
+
+            # Agregar mensaje de éxito
+            messages.success(request, 'Los proveedores se han subido correctamente.')
+        except Exception as e:
+            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            print(f"Error al procesar el archivo: {str(e)}")
+
+    return redirect('proveedor')
+
+def upload_excel_clientes(request):
+    if request.method == "POST":
+        excel_file = request.FILES.get('file')
+
+        if excel_file:
+            print("Archivo subido:", excel_file.name)
+        else:
+            print("No se subió ningún archivo")
+            messages.error(request, 'No se ha seleccionado ningún archivo.')
+            return redirect('cliente')
+
+        try:
+            # Leer el archivo Excel usando pandas
+            df = pd.read_excel(excel_file)
+
+            # Renombrar las columnas del Excel para que coincidan con los campos del modelo
+            df = df.rename(columns={
+                'Rut': 'rut',
+                'Nombre': 'nombre',
+                'Email': 'email',
+                'Comuna': 'comuna',
+                'Calle': 'calle',
+                'Numero': 'numero_de_casa',
+                'Telefono': 'telefono',
+            })
+
+            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Cliente
+            for index, row in df.iterrows():
+                Cliente.objects.update_or_create(
+                    rut=row['rut'],  # Busca por rut
+                    defaults={
+                        'nombre': row['nombre'],
+                        'email': row['email'],
+                        'comuna': row['comuna'],
+                        'calle': row['calle'],
+                        'numero_de_casa': row['numero_de_casa'],
+                        'telefono': row['telefono'],
+                    }
+                )
+
+            # Agregar mensaje de éxito
+            messages.success(request, 'Los clientes se han subido correctamente.')
+        except Exception as e:
+            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            print(f"Error al procesar el archivo: {str(e)}")
+
+    return redirect('cliente')
+
+def upload_excel_ventas(request):
+    if request.method == "POST":
+        excel_file = request.FILES.get('file')
+
+        if excel_file:
+            print("Archivo subido:", excel_file.name)
+        else:
+            print("No se subió ningún archivo")
+            messages.error(request, 'No se ha seleccionado ningún archivo.')
+            return redirect('venta')
+
+        try:
+            # Leer el archivo Excel usando pandas
+            df = pd.read_excel(excel_file)
+
+            # Renombrar las columnas del Excel para que coincidan con los campos del modelo
+            df = df.rename(columns={
+                'Pedido': 'pedido',
+                'Rut': 'rut',
+                'SKU': 'SKU',
+                'Precio unitario': 'precio_unitario',
+                'Cantidad': 'cantidad',
+                'Venta total': 'venta_total',
+                'Flete': 'flete',
+                'Factura o boleta': 'factura_o_boleta',
+                'Fecha boleta': 'fecha_boleta',
+                'Pago': 'pago',
+            })
+
+            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Ventas
+            for index, row in df.iterrows():
+                Ventas.objects.update_or_create(
+                    pedido=row['pedido'],  # Busca por pedido
+                    defaults={
+                        'rut': row['rut'],
+                        'SKU': row['SKU'],
+                        'precio_unitario': row['precio_unitario'],
+                        'cantidad': row['cantidad'],
+                        'venta_total': row['venta_total'],
+                        'flete': row['flete'],
+                        'factura_o_boleta': row['factura_o_boleta'],
+                        'fecha_boleta': row['fecha_boleta'],
+                        'pago': row['pago'],
+                    }
+                )
+
+            # Agregar mensaje de éxito
+            messages.success(request, 'Las ventas se han subido correctamente.')
+        except Exception as e:
+            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            print(f"Error al procesar el archivo: {str(e)}")
+
+    return redirect('venta')
+
+def upload_excel_compra_proveedores(request):
+    if request.method == "POST":
+        excel_file = request.FILES.get('file')
+
+        if excel_file:
+            print("Archivo subido:", excel_file.name)
+        else:
+            print("No se subió ningún archivo")
+            messages.error(request, 'No se ha seleccionado ningún archivo.')
+            return redirect('Compra_proveedores')
+
+        try:
+            # Leer el archivo Excel usando pandas
+            df = pd.read_excel(excel_file)
+
+            # Renombrar las columnas del Excel para que coincidan con los campos del modelo
+            df = df.rename(columns={
+                'OC': 'OC',
+                'Fecha OC': 'fecha_oc',
+                'SKU': 'SKU',
+                'Proveedor': 'nombre_prov',
+                'Cantidad': 'cantidad',
+                'Numero factura': 'numero_factura',
+                'Fecha factura': 'fecha_factura',
+                'Status': 'status',
+                'Fecha vencimiento': 'fecha_vencimiento',
+                'Fecha pago': 'fecha_pago',
+                'Costo unitario': 'costo_unitario',
+            })
+
+            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Compra_proveedores
+            for index, row in df.iterrows():
+                Compra_proveedores.objects.update_or_create(
+                    OC=row['OC'],  # Busca por OC
+                    defaults={
+                        'fecha_oc': row['fecha_oc'],
+                        'SKU': row['SKU'],
+                        'nombre_prov': row['nombre_prov'],
+                        'cantidad': row['cantidad'],
+                        'numero_factura': row['numero_factura'],
+                        'fecha_factura': row['fecha_factura'],
+                        'status': row['status'],
+                        'fecha_vencimiento': row['fecha_vencimiento'],
+                        'fecha_pago': row['fecha_pago'],
+                        'costo_unitario': row['costo_unitario'],
+                    }
+                )
+
+            # Agregar mensaje de éxito
+            messages.success(request, 'Las compras a proveedores se han subido correctamente.')
+        except Exception as e:
+            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            print(f"Error al procesar el archivo: {str(e)}")
+
+    return redirect('Compra_proveedores')
+
+def upload_excel_inventario(request):
+    if request.method == "POST":
+        excel_file = request.FILES.get('file')
+
+        if excel_file:
+            print("Archivo subido:", excel_file.name)
+        else:
+            print("No se subió ningún archivo")
+            messages.error(request, 'No se ha seleccionado ningún archivo.')
+            return redirect('Inventario_Y_Stock')
+
+        try:
+            # Leer el archivo Excel usando pandas
+            df = pd.read_excel(excel_file)
+
+            # Renombrar las columnas del Excel para que coincidan con los campos del modelo
+            df = df.rename(columns={
+                'SKU': 'SKU',
+                'Proveedor': 'nombre_prov',
+                'Bodega': 'bodega',
+                'Fecha de ingreso': 'fecha_de_ingreso',
+                'Cantidad': 'cantidad',
+                'Salidas': 'salidas',
+                'Mov bodegas': 'mov_bodegas',
+                'Stock': 'stock',
+                'Precio unitario': 'precio_unitario',
+                'Precio total': 'precio_total',
+            })
+
+            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Inventario_Y_Stock
+            for index, row in df.iterrows():
+                Inventario_Y_Stock.objects.update_or_create(
+                    SKU=row['SKU'],  # Busca por SKU
+                    defaults={
+                        'nombre_prov': row['nombre_prov'],
+                        'bodega': row['bodega'],
+                        'fecha_de_ingreso': row['fecha_de_ingreso'],
+                        'cantidad': row['cantidad'],
+                        'salidas': row['salidas'],
+                        'mov_bodegas': row['mov_bodegas'],
+                        'stock': row['stock'],
+                        'precio_unitario': row['precio_unitario'],
+                        'precio_total': row['precio_total'],
+                    }
+                )
+
+            # Agregar mensaje de éxito
+            messages.success(request, 'El inventario se ha subido correctamente.')
+        except Exception as e:
+            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            print(f"Error al procesar el archivo: {str(e)}")
+
+    return redirect('Inventario_Y_Stock')

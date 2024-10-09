@@ -2,7 +2,14 @@
 {% include "base.html" %}
 <!-- En este archivo HTML se crea la tabla de compras a proveedores, la cual será heredada en la página de compras a proveedores. En ella se encontrarán las compras a proveedores que se encuentran en la base de datos.-->
 {% block content %}
-
+    <!-- Mensajes de error o éxito. -->
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} m-3">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
     <div id="tablas-css" >
         <link type="text/css" href='{% static "css/tablas2.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
@@ -26,6 +33,22 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
+        <!-- Formulario para subir el archivo Excel -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <form method="POST" enctype="multipart/form-data" action="{% url 'upload_excel_compra_proveedores' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Subir archivo Excel:</label>
+                        <input type="file" name="file" class="form-control" accept=".xlsx, .xls" required>
+                    </div>
+                    <div class="d-flex " style="gap: 5px;">
+                        <button type="submit" class="btn btn-primary">Subir archivo</button>
+                        <a href="{% static 'xlsx/Compra_Proveedor.xlsx' %}" class="btn btn-outline-success">Descargar Formato de Excel</a>
+                    </div>
+                </form>
+            </div>
         </div>
         <!-- Botón para eliminar. -->
         <div class="col d-grid gap-2 d-md-flex">
