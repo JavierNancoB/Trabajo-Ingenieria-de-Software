@@ -31,8 +31,8 @@ def SyncWoocomerce():
     url = "https://erp.eudoravinos.cl/wp-json/wc/v3/orders"
 
     # Claves proporcionadas por WooCommerce
-    consumer_key = "ck_c6f3618108c67d62e512c3cd080284d448ce8ede"
-    consumer_secret = "cs_b812402f4fe07c64a061cc6d2489aebc436fdc3d"
+    consumer_key = "ck_bbebdac04ed22251d06d1d39cf8dbc14ae3eac0d"
+    consumer_secret = "cs_eda3391a18f4f044f9f8f698736c8ed6c1538502"
 
 
     

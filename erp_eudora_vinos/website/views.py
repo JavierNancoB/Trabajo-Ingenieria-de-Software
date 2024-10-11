@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.views.decorators.http import require_POST
 from django.http import JsonResponse
-import datetime
+from datetime import datetime
 from django.utils import timezone
 import random
 from.models import *
@@ -512,6 +512,35 @@ def upload_excel_clientes(request):
 
     return redirect('cliente')
 
+def procesar_fecha(fecha):
+    meses = {
+        'ene': 1, 'feb': 2, 'mar': 3, 'abr': 4, 'may': 5, 'jun': 6,
+        'jul': 7, 'ago': 8, 'sep': 9, 'oct': 10, 'nov': 11, 'dic': 12
+    }
+    
+    if pd.isna(fecha):
+        return None
+    
+    # Caso 1: Si el formato ya es fecha, retornamos la fecha
+    try:
+        return pd.to_datetime(fecha, format='%d-%m-%Y', errors='raise').date()
+    except:
+        pass
+
+    # Caso 2: Manejar días o meses en formato corto (ejemplo: 1-2-24)
+    try:
+        return pd.to_datetime(fecha, format='%d-%m-%y', errors='raise').date()
+    except:
+        pass
+
+    # Caso 3: Manejar meses escritos como texto (Ej: Ene, Feb)
+    fecha_str = str(fecha).strip().lower()
+    if fecha_str in meses:
+        year = datetime.now().year
+        return datetime(year, meses[fecha_str], 1).date()
+
+    raise ValueError(f"Formato de fecha inválido: {fecha}")
+
 def upload_excel_ventas(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
@@ -543,17 +572,55 @@ def upload_excel_ventas(request):
 
             # Iterar sobre las filas del DataFrame y actualizar o crear objetos Ventas
             for index, row in df.iterrows():
+                # Validar si los campos clave están presentes (como el RUT del cliente y SKU)
+                if pd.isna(row['rut']) or pd.isna(row['SKU']):
+                    messages.error(request, f'Cliente (RUT) o SKU vacíos en la fila {index + 1}. Verifica el archivo.')
+                    continue
+
+                # Intentar obtener o crear el cliente
+                cliente, created_cliente = Cliente.objects.get_or_create(
+                    rut=row['rut'],  # Busca por RUT
+                    defaults={'nombre': None, 'email': None, 'comuna': None, 'calle': None, 'numero_de_casa': None, 'telefono': None}
+                )
+
+                # Intentar obtener o crear el producto
+                producto, created_prod = Producto.objects.get_or_create(
+                    SKU=row['SKU'],  # Busca por SKU
+                    defaults={
+                        'tipo_producto': None,
+                        'cepa': None,
+                        'cosecha': None,
+                        'nombre_producto': None,
+                        'viña': None
+                    }
+                )
+
+                # Si se creó un nuevo cliente o producto, indicarlo en los logs o mensajes
+                if created_cliente:
+                    print(f"Cliente '{row['rut']}' creado con datos nulos.")
+                if created_prod:
+                    print(f"Producto (SKU) '{row['SKU']}' creado con datos nulos.")
+
+                # Procesar la fecha
+                fecha_boleta = None
+                try:
+                    fecha_boleta = procesar_fecha(row['fecha_boleta'])
+                except ValueError as e:
+                    messages.error(request, f"Error con la fecha en la fila {index + 1}: {str(e)}")
+                    continue
+
+                # Crear o actualizar la venta
                 Ventas.objects.update_or_create(
                     pedido=row['pedido'],  # Busca por pedido
                     defaults={
-                        'rut': row['rut'],
-                        'SKU': row['SKU'],
+                        'rut': cliente,  # Relacionar con el cliente creado u obtenido
+                        'SKU': producto,  # Relacionar con el producto creado u obtenido
                         'precio_unitario': row['precio_unitario'],
                         'cantidad': row['cantidad'],
                         'venta_total': row['venta_total'],
                         'flete': row['flete'],
                         'factura_o_boleta': row['factura_o_boleta'],
-                        'fecha_boleta': row['fecha_boleta'],
+                        'fecha_boleta': fecha_boleta,  # Usamos la fecha procesada
                         'pago': row['pago'],
                     }
                 )
@@ -596,20 +663,66 @@ def upload_excel_compra_proveedores(request):
                 'Costo unitario': 'costo_unitario',
             })
 
-            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Compra_proveedores
+            # Iterar sobre las filas del DataFrame y crear o actualizar objetos Compra_proveedores
             for index, row in df.iterrows():
+                # Validar si los campos clave están presentes (como el proveedor y SKU)
+                if pd.isna(row['nombre_prov']) or pd.isna(row['SKU']):
+                    messages.error(request, f'Proveedor o SKU vacíos en la fila {index + 1}. Verifica el archivo.')
+                    continue
+                
+                # Validar y normalizar el campo status
+                status = str(row['status']).lower()  # Convertir a minúsculas
+                if status not in ['pendiente', 'pagada']:
+                    messages.error(request, f"Estatus inválido en la fila {index + 1}. Debe ser 'pendiente' o 'pagada'.")
+                    continue
+
+                # Procesar las fechas al formato correcto
+                fecha_oc_procesada = procesar_fecha(row['fecha_oc'])
+                fecha_factura_procesada = procesar_fecha(row['fecha_factura'])
+                fecha_vencimiento_procesada = procesar_fecha(row['fecha_vencimiento'])
+
+                # Validar que las fechas sean correctas
+                if not fecha_oc_procesada or not fecha_factura_procesada or not fecha_vencimiento_procesada:
+                    messages.error(request, f'Fecha inválida en la fila {index + 1}. Verifica el archivo.')
+                    continue
+
+                # Intentar obtener o crear el proveedor
+                proveedor, created_prov = Proveedores.objects.get_or_create(
+                    nombre_prov=row['nombre_prov'],  # Busca por nombre_prov
+                    defaults={'email_empresa': None, 'telefono_empresa': None}  # Datos por defecto si no existe
+                )
+
+                # Intentar obtener o crear el producto
+                producto, created_prod = Producto.objects.get_or_create(
+                    SKU=row['SKU'],  # Busca por SKU
+                    defaults={
+                        'tipo_producto': None,
+                        'cepa': None,
+                        'cosecha': None,
+                        'nombre_producto': None,
+                        'viña': None
+                    }
+                )
+
+                # Si se creó un nuevo proveedor o producto, indicarlo en los logs o mensajes
+                if created_prov:
+                    print(f"Proveedor '{row['nombre_prov']}' creado con datos nulos.")
+                if created_prod:
+                    print(f"Producto (SKU) '{row['SKU']}' creado con datos nulos.")
+
+                # Crear o actualizar la compra
                 Compra_proveedores.objects.update_or_create(
                     OC=row['OC'],  # Busca por OC
                     defaults={
-                        'fecha_oc': row['fecha_oc'],
-                        'SKU': row['SKU'],
-                        'nombre_prov': row['nombre_prov'],
+                        'fecha_oc': fecha_oc_procesada,
+                        'SKU': producto,
+                        'nombre_prov': proveedor,
                         'cantidad': row['cantidad'],
                         'numero_factura': row['numero_factura'],
-                        'fecha_factura': row['fecha_factura'],
-                        'status': row['status'],
-                        'fecha_vencimiento': row['fecha_vencimiento'],
-                        'fecha_pago': row['fecha_pago'],
+                        'fecha_factura': fecha_factura_procesada,
+                        'status': status,
+                        'fecha_vencimiento': fecha_vencimiento_procesada,
+                        'fecha_pago': procesar_fecha(row['fecha_pago']),  # Puede ser nulo
                         'costo_unitario': row['costo_unitario'],
                     }
                 )
@@ -653,12 +766,49 @@ def upload_excel_inventario(request):
 
             # Iterar sobre las filas del DataFrame y actualizar o crear objetos Inventario_Y_Stock
             for index, row in df.iterrows():
-                Inventario_Y_Stock.objects.update_or_create(
+                # Validar si los campos clave están presentes (como el proveedor y SKU)
+                if pd.isna(row['nombre_prov']) or pd.isna(row['SKU']):
+                    messages.error(request, f'Proveedor o SKU vacíos en la fila {index + 1}. Verifica el archivo.')
+                    continue
+
+                # Intentar obtener o crear el proveedor
+                proveedor, created_prov = Proveedores.objects.get_or_create(
+                    nombre_prov=row['nombre_prov'],  # Busca por nombre_prov
+                    defaults={'email_empresa': None, 'telefono_empresa': None}  # Datos por defecto si no existe
+                )
+
+                # Intentar obtener o crear el producto
+                producto, created_prod = Producto.objects.get_or_create(
                     SKU=row['SKU'],  # Busca por SKU
                     defaults={
-                        'nombre_prov': row['nombre_prov'],
+                        'tipo_producto': None,
+                        'cepa': None,
+                        'cosecha': None,
+                        'nombre_producto': None,
+                        'viña': None
+                    }
+                )
+
+                # Si se creó un nuevo proveedor o producto, indicarlo en los logs o mensajes
+                if created_prov:
+                    print(f"Proveedor '{row['nombre_prov']}' creado con datos nulos.")
+                if created_prod:
+                    print(f"Producto (SKU) '{row['SKU']}' creado con datos nulos.")
+
+                # Procesar la fecha de ingreso
+                fecha_ingreso_procesada = procesar_fecha(row['fecha_de_ingreso'])
+
+                if not fecha_ingreso_procesada:
+                    messages.error(request, f'Fecha inválida en la fila {index + 1}. Verifica el archivo.')
+                    continue
+
+                # Crear o actualizar el inventario
+                Inventario_Y_Stock.objects.update_or_create(
+                    SKU=producto,  # Relacionar con el producto creado u obtenido
+                    nombre_prov=proveedor,  # Relacionar con el proveedor creado u obtenido
+                    defaults={
                         'bodega': row['bodega'],
-                        'fecha_de_ingreso': row['fecha_de_ingreso'],
+                        'fecha_de_ingreso': fecha_ingreso_procesada,
                         'cantidad': row['cantidad'],
                         'salidas': row['salidas'],
                         'mov_bodegas': row['mov_bodegas'],
