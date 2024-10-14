@@ -116,13 +116,7 @@ def notificaciones(request):
     alertas_stock = Alerta_stock.objects.all()  # Obtén todas las alertas
     #alertas_informe= Alerta_informes.objects.all() # Obtén todas las alertas
     return render(request, 'notificaciones.html', {'alertas_stock': alertas_stock}) 
-'''
-@login_required
-def delete_alerta_stock(request, id_inventario):
-    alerta_stock = get_object_or_404(Alerta_stock, id_inventario=id_inventario)
-    alerta_stock.delete()
-    return redirect('notificaciones')
-'''
+
 #borra una alerta de stock
 @login_required
 @require_POST
@@ -160,16 +154,6 @@ def notificaciones_fecha_vencimiento(request):
     #alertas_informe= Alerta_informes.objects.all() # Obtén todas las alertas
     return render(request, 'home.html', {'alertas_de_fecha_vencimiento': alertas_de_fecha_vencimiento}) 
 
-
-#extra 
-'''
-@login_required
-def delete_alerta_informes(request, numero_boleta):
-    alerta_informes = get_object_or_404(Alerta_informes, numero_boleta=numero_boleta)
-    alerta_informes.delete()
-    return redirect('notificaciones')
-'''
-
 # INVENTARIO Y STOCK
 #muestra el inventario y stock
 @login_required
@@ -177,70 +161,6 @@ def inventario_Y_Stock(request):
     inventario_Y_stocks = Inventario_Y_Stock.objects.all()
     return render(request, 'Inventario_Y_Stock.html', {'inventario_Y_stocks': inventario_Y_stocks})
 
-'''
-@login_required
-def insert_ventas(request):
-    member = Ventas(
-        pedido=request.POST.get('pedido'),
-        nombre_id=request.POST.get('nombre'),
-        SKU_id=request.POST.get('SKU'),
-        precio_unitario=request.POST.get('precio_unitario'),
-        cantidad=request.POST.get('cantidad'),
-        venta_total=request.POST.get('venta_total'),
-        flete=request.POST.get('flete'),
-        factura_o_boleta=request.POST.get('factura_o_boleta'),
-        fecha_boleta=request.POST.get('fecha_boleta'),
-        pago=request.POST.get('pago')
-    )
-    member.save()
-    return redirect('/')
-'''
-'''
-@login_required
-def insert_Inventario_Y_Stock(request):
-    if request.method == 'POST':
-        SKU_id = request.POST.get('SKU')
-        nombre_prov_id = request.POST.get('nombre_prov')
-        bodega = request.POST.get('bodega')
-        fecha_de_ingreso = request.POST.get('fecha_de_ingreso')
-        cantidad = request.POST.get('cantidad')
-        salidas = request.POST.get('salidas')
-        mov_bodegas = request.POST.get('mov_bodegas')
-        stock = request.POST.get('stock')
-        precio_unitario = request.POST.get('precio_unitario')
-        precio_total = request.POST.get('precio_total')
-
-        # Validar que todos los campos necesarios estén presentes
-        if not all([SKU_id, nombre_prov_id, bodega, fecha_de_ingreso, cantidad, salidas, mov_bodegas, stock, precio_unitario, precio_total]):
-            return render(request, 'Inventario_Y_Stock.html', {'error': 'Por favor, complete todos los campos'})
-
-        try:
-            # Obtener los objetos relacionados
-            SKU = get_object_or_404(Producto, SKU=SKU_id)
-            nombre_prov = get_object_or_404(Proveedores, nombre_prov=nombre_prov_id)
-
-            # Crear el registro de inventario
-            inventario = Inventario_Y_Stock.objects.create(
-                SKU=SKU,
-                nombre_prov=nombre_prov,
-                bodega=bodega,
-                fecha_de_ingreso=fecha_de_ingreso,
-                cantidad=cantidad,
-                salidas=salidas,
-                mov_bodegas=mov_bodegas,
-                stock=stock,
-                precio_unitario=precio_unitario,
-                precio_total=precio_total
-            )
-
-            return redirect('/Inventario_Y_Stock')
-        except Producto.DoesNotExist:
-            return render(request, 'Inventario_Y_Stock.html', {'error': 'Producto no encontrado'})
-        except Proveedores.DoesNotExist:
-            return render(request, 'Inventario_Y_Stock.html', {'error': 'Proveedor no encontrado'})
-    else:
-        return render(request, 'Inventario_Y_Stock.html')   
-'''
 #inserta un inventario y stock
 @login_required
 def insert_Inventario_Y_Stock(request):
@@ -374,7 +294,6 @@ def navbar_view(request):
     notificaciones_activas = Alerta_stock.objects.all()
     return render(request, 'navbar.html', {'notificaciones_activas': notificaciones_activas})
 
-
 def sync_woocommerce_view(request):
     if request.method == 'POST':
         SyncWoocomerce()
@@ -428,10 +347,7 @@ def upload_excel_proveedores(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
 
-        if excel_file:
-            print("Archivo subido:", excel_file.name)
-        else:
-            print("No se subió ningún archivo")
+        if not excel_file:
             messages.error(request, 'No se ha seleccionado ningún archivo.')
             return redirect('proveedor')
 
@@ -446,18 +362,38 @@ def upload_excel_proveedores(request):
                 'Telefono': 'telefono_empresa',
             })
 
+            # Variable para rastrear si hubo errores
+            has_errors = False
+
             # Iterar sobre las filas del DataFrame y actualizar o crear objetos Proveedores
             for index, row in df.iterrows():
-                Proveedores.objects.update_or_create(
-                    nombre_prov=row['nombre_prov'],  # Busca por nombre_prov
-                    defaults={
-                        'email_empresa': row['email_empresa'],
-                        'telefono_empresa': row['telefono_empresa'],
-                    }
-                )
+                # Validar si el proveedor está presente
+                if pd.isna(row['nombre_prov']):
+                    messages.error(request, f'Proveedor vacío en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
+                    continue
 
-            # Agregar mensaje de éxito
-            messages.success(request, 'Los proveedores se han subido correctamente.')
+                # Validar si los otros campos clave están presentes (por ejemplo, email)
+                if pd.isna(row['email_empresa']) or pd.isna(row['telefono_empresa']):
+                    messages.warning(request, f'Email o teléfono vacíos en la fila {index + 1}. Se asignarán valores nulos.')
+
+                # Intentar actualizar o crear el proveedor
+                try:
+                    Proveedores.objects.update_or_create(
+                        nombre_prov=row['nombre_prov'],  # Busca por nombre_prov
+                        defaults={
+                            'email_empresa': row.get('email_empresa'),
+                            'telefono_empresa': row.get('telefono_empresa'),
+                        }
+                    )
+                except Exception as e:
+                    messages.error(request, f'Error en la fila {index + 1}: {str(e)}')
+                    has_errors = True
+                    continue
+
+            # Si no hubo errores, mostrar mensaje de éxito
+            if not has_errors:
+                messages.success(request, 'Los proveedores se han subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")
@@ -468,10 +404,7 @@ def upload_excel_clientes(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
 
-        if excel_file:
-            print("Archivo subido:", excel_file.name)
-        else:
-            print("No se subió ningún archivo")
+        if not excel_file:
             messages.error(request, 'No se ha seleccionado ningún archivo.')
             return redirect('cliente')
 
@@ -490,22 +423,42 @@ def upload_excel_clientes(request):
                 'Telefono': 'telefono',
             })
 
+            # Variable para rastrear si hubo errores
+            has_errors = False
+
             # Iterar sobre las filas del DataFrame y actualizar o crear objetos Cliente
             for index, row in df.iterrows():
-                Cliente.objects.update_or_create(
-                    rut=row['rut'],  # Busca por rut
-                    defaults={
-                        'nombre': row['nombre'],
-                        'email': row['email'],
-                        'comuna': row['comuna'],
-                        'calle': row['calle'],
-                        'numero_de_casa': row['numero_de_casa'],
-                        'telefono': row['telefono'],
-                    }
-                )
+                # Validar si el RUT está presente
+                if pd.isna(row['rut']):
+                    messages.error(request, f'RUT vacío en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
+                    continue
 
-            # Agregar mensaje de éxito
-            messages.success(request, 'Los clientes se han subido correctamente.')
+                # Validar si los otros campos clave están presentes (por ejemplo, email)
+                if pd.isna(row['email']) or pd.isna(row['telefono']):
+                    messages.warning(request, f'Email o teléfono vacíos en la fila {index + 1}. Se asignarán valores nulos.')
+
+                # Intentar actualizar o crear el cliente
+                try:
+                    Cliente.objects.update_or_create(
+                        rut=row['rut'],  # Busca por RUT
+                        defaults={
+                            'nombre': row.get('nombre'),
+                            'email': row.get('email'),
+                            'comuna': row.get('comuna'),
+                            'calle': row.get('calle'),
+                            'numero_de_casa': row.get('numero_de_casa'),
+                            'telefono': row.get('telefono'),
+                        }
+                    )
+                except Exception as e:
+                    messages.error(request, f'Error en la fila {index + 1}: {str(e)}')
+                    has_errors = True
+                    continue
+
+            # Si no hubo errores, mostrar mensaje de éxito
+            if not has_errors:
+                messages.success(request, 'Los clientes se han subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")
@@ -545,10 +498,7 @@ def upload_excel_ventas(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
 
-        if excel_file:
-            print("Archivo subido:", excel_file.name)
-        else:
-            print("No se subió ningún archivo")
+        if not excel_file:
             messages.error(request, 'No se ha seleccionado ningún archivo.')
             return redirect('venta')
 
@@ -570,11 +520,15 @@ def upload_excel_ventas(request):
                 'Pago': 'pago',
             })
 
+            # Variable para rastrear si hubo errores
+            has_errors = False
+
             # Iterar sobre las filas del DataFrame y actualizar o crear objetos Ventas
             for index, row in df.iterrows():
                 # Validar si los campos clave están presentes (como el RUT del cliente y SKU)
                 if pd.isna(row['rut']) or pd.isna(row['SKU']):
                     messages.error(request, f'Cliente (RUT) o SKU vacíos en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
                     continue
 
                 # Intentar obtener o crear el cliente
@@ -601,12 +555,13 @@ def upload_excel_ventas(request):
                 if created_prod:
                     print(f"Producto (SKU) '{row['SKU']}' creado con datos nulos.")
 
-                # Procesar la fecha
+                # Procesar la fecha de boleta
                 fecha_boleta = None
                 try:
                     fecha_boleta = procesar_fecha(row['fecha_boleta'])
                 except ValueError as e:
                     messages.error(request, f"Error con la fecha en la fila {index + 1}: {str(e)}")
+                    has_errors = True
                     continue
 
                 # Crear o actualizar la venta
@@ -625,8 +580,9 @@ def upload_excel_ventas(request):
                     }
                 )
 
-            # Agregar mensaje de éxito
-            messages.success(request, 'Las ventas se han subido correctamente.')
+            # Si no hubo errores, mostrar mensaje de éxito
+            if not has_errors:
+                messages.success(request, 'Las ventas se han subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")
@@ -637,10 +593,7 @@ def upload_excel_compra_proveedores(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
 
-        if excel_file:
-            print("Archivo subido:", excel_file.name)
-        else:
-            print("No se subió ningún archivo")
+        if not excel_file:
             messages.error(request, 'No se ha seleccionado ningún archivo.')
             return redirect('Compra_proveedores')
 
@@ -663,17 +616,22 @@ def upload_excel_compra_proveedores(request):
                 'Costo unitario': 'costo_unitario',
             })
 
+            # Variable para rastrear si hubo errores
+            has_errors = False
+
             # Iterar sobre las filas del DataFrame y crear o actualizar objetos Compra_proveedores
             for index, row in df.iterrows():
                 # Validar si los campos clave están presentes (como el proveedor y SKU)
                 if pd.isna(row['nombre_prov']) or pd.isna(row['SKU']):
                     messages.error(request, f'Proveedor o SKU vacíos en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
                     continue
-                
+
                 # Validar y normalizar el campo status
                 status = str(row['status']).lower()  # Convertir a minúsculas
                 if status not in ['pendiente', 'pagada']:
                     messages.error(request, f"Estatus inválido en la fila {index + 1}. Debe ser 'pendiente' o 'pagada'.")
+                    has_errors = True
                     continue
 
                 # Procesar las fechas al formato correcto
@@ -684,17 +642,18 @@ def upload_excel_compra_proveedores(request):
                 # Validar que las fechas sean correctas
                 if not fecha_oc_procesada or not fecha_factura_procesada or not fecha_vencimiento_procesada:
                     messages.error(request, f'Fecha inválida en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
                     continue
 
                 # Intentar obtener o crear el proveedor
                 proveedor, created_prov = Proveedores.objects.get_or_create(
-                    nombre_prov=row['nombre_prov'],  # Busca por nombre_prov
-                    defaults={'email_empresa': None, 'telefono_empresa': None}  # Datos por defecto si no existe
+                    nombre_prov=row['nombre_prov'],
+                    defaults={'email_empresa': None, 'telefono_empresa': None}
                 )
 
                 # Intentar obtener o crear el producto
                 producto, created_prod = Producto.objects.get_or_create(
-                    SKU=row['SKU'],  # Busca por SKU
+                    SKU=row['SKU'],
                     defaults={
                         'tipo_producto': None,
                         'cepa': None,
@@ -704,15 +663,9 @@ def upload_excel_compra_proveedores(request):
                     }
                 )
 
-                # Si se creó un nuevo proveedor o producto, indicarlo en los logs o mensajes
-                if created_prov:
-                    print(f"Proveedor '{row['nombre_prov']}' creado con datos nulos.")
-                if created_prod:
-                    print(f"Producto (SKU) '{row['SKU']}' creado con datos nulos.")
-
                 # Crear o actualizar la compra
                 Compra_proveedores.objects.update_or_create(
-                    OC=row['OC'],  # Busca por OC
+                    OC=row['OC'],
                     defaults={
                         'fecha_oc': fecha_oc_procesada,
                         'SKU': producto,
@@ -722,13 +675,14 @@ def upload_excel_compra_proveedores(request):
                         'fecha_factura': fecha_factura_procesada,
                         'status': status,
                         'fecha_vencimiento': fecha_vencimiento_procesada,
-                        'fecha_pago': procesar_fecha(row['fecha_pago']),  # Puede ser nulo
+                        'fecha_pago': procesar_fecha(row['fecha_pago']),
                         'costo_unitario': row['costo_unitario'],
                     }
                 )
 
-            # Agregar mensaje de éxito
-            messages.success(request, 'Las compras a proveedores se han subido correctamente.')
+            # Si no hubo errores, mostrar mensaje de éxito
+            if not has_errors:
+                messages.success(request, 'Las compras a proveedores se han subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")
@@ -739,10 +693,7 @@ def upload_excel_inventario(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
 
-        if excel_file:
-            print("Archivo subido:", excel_file.name)
-        else:
-            print("No se subió ningún archivo")
+        if not excel_file:
             messages.error(request, 'No se ha seleccionado ningún archivo.')
             return redirect('Inventario_Y_Stock')
 
@@ -764,11 +715,15 @@ def upload_excel_inventario(request):
                 'Precio total': 'precio_total',
             })
 
+            # Variable para rastrear si hubo errores
+            has_errors = False
+
             # Iterar sobre las filas del DataFrame y actualizar o crear objetos Inventario_Y_Stock
             for index, row in df.iterrows():
                 # Validar si los campos clave están presentes (como el proveedor y SKU)
                 if pd.isna(row['nombre_prov']) or pd.isna(row['SKU']):
                     messages.error(request, f'Proveedor o SKU vacíos en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
                     continue
 
                 # Intentar obtener o crear el proveedor
@@ -800,6 +755,7 @@ def upload_excel_inventario(request):
 
                 if not fecha_ingreso_procesada:
                     messages.error(request, f'Fecha inválida en la fila {index + 1}. Verifica el archivo.')
+                    has_errors = True
                     continue
 
                 # Crear o actualizar el inventario
@@ -818,8 +774,9 @@ def upload_excel_inventario(request):
                     }
                 )
 
-            # Agregar mensaje de éxito
-            messages.success(request, 'El inventario se ha subido correctamente.')
+            # Si no hubo errores, mostrar mensaje de éxito
+            if not has_errors:
+                messages.success(request, 'El inventario se ha subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")

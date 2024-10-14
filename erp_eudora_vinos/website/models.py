@@ -7,7 +7,7 @@ from datetime import datetime
 
 class Cliente(models.Model):
     rut = models.CharField(primary_key=True, max_length=20)
-    nombre = models.CharField( max_length=50, null=True)
+    nombre = models.CharField(max_length=50, null=True)
     email = models.EmailField(null=True)
     comuna = models.CharField(max_length=50, null=True)
     calle = models.CharField(max_length=50, null=True)
@@ -21,7 +21,7 @@ class Cliente(models.Model):
 
 class Producto(models.Model):
     SKU = models.CharField(primary_key=True, max_length=50, unique=True)
-    tipo_producto = models.CharField(max_length=50)
+    tipo_producto = models.CharField(max_length=50, null=True)
     cepa= models.CharField(max_length=50, null=True)
     cosecha = models.CharField(max_length=50, null=True)
     nombre_producto = models.CharField(max_length=50, null=True)
