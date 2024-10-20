@@ -778,7 +778,7 @@ def upload_excel_inventario(request):
             if not has_errors:
                 messages.success(request, 'El inventario se ha subido correctamente.')
         except Exception as e:
-            messages.error(request, f'Error al procesar el archivo: {str(e)}')
+            messages.warning(request, f'Error al procesar el archivo: {str(e)}')
             print(f"Error al procesar el archivo: {str(e)}")
 
     return redirect('Inventario_Y_Stock')
