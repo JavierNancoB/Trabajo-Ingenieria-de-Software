@@ -25,7 +25,7 @@ urlpatterns = [
     path('venta/', views.ventas, name='venta'), #muestra
     path('venta/insert/', views.insert_ventas, name='insert_venta'), #inserta
     path('venta/update/', apiViews.guardarventa, name='update_venta'), #actualiza
-    path('venta/delete/<str:pedido>', views.delete_ventas, name='delete_ventas'), #borra
+    path('venta/delete/<str:id>', views.delete_ventas, name='delete_ventas'), #borra
 
     # Alerta inventario
     path('notificaciones/', views.notificaciones, name='notificaciones'), #muestra

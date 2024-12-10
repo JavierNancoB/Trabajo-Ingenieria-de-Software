@@ -97,12 +97,14 @@ def insert_ventas(request):
     )
     member.save()
     return redirect('/')
-#borra una venta
+
+# Borrar una venta
+
 @login_required
 @require_POST
-def delete_ventas(request, pedido):
+def delete_ventas(request, id):
     try:
-        venta = Ventas.objects.get(pedido=pedido)
+        venta = Ventas.objects.get(id=id)
         venta.delete()
         return JsonResponse({'status': 'success'})
     except Ventas.DoesNotExist:
@@ -494,6 +496,13 @@ def procesar_fecha(fecha):
 
     raise ValueError(f"Formato de fecha inválido: {fecha}")
 
+import pandas as pd
+from django.shortcuts import redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .models import Ventas, Cliente, Producto
+
+@login_required
 def upload_excel_ventas(request):
     if request.method == "POST":
         excel_file = request.FILES.get('file')
@@ -523,7 +532,7 @@ def upload_excel_ventas(request):
             # Variable para rastrear si hubo errores
             has_errors = False
 
-            # Iterar sobre las filas del DataFrame y actualizar o crear objetos Ventas
+            # Iterar sobre las filas del DataFrame y crear objetos Ventas
             for index, row in df.iterrows():
                 # Validar si los campos clave están presentes (como el RUT del cliente y SKU)
                 if pd.isna(row['rut']) or pd.isna(row['SKU']):
@@ -531,53 +540,36 @@ def upload_excel_ventas(request):
                     has_errors = True
                     continue
 
-                # Intentar obtener o crear el cliente
+                # Intentar obtener o crear el cliente y el producto
                 cliente, created_cliente = Cliente.objects.get_or_create(
                     rut=row['rut'],  # Busca por RUT
-                    defaults={'nombre': None, 'email': None, 'comuna': None, 'calle': None, 'numero_de_casa': None, 'telefono': None}
+                    defaults={'nombre': 'Nombre no proporcionado'}  # Proporcionar un nombre por defecto o adecuar según el modelo
                 )
 
-                # Intentar obtener o crear el producto
                 producto, created_prod = Producto.objects.get_or_create(
                     SKU=row['SKU'],  # Busca por SKU
-                    defaults={
-                        'tipo_producto': None,
-                        'cepa': None,
-                        'cosecha': None,
-                        'nombre_producto': None,
-                        'viña': None
-                    }
+                    defaults={'nombre_producto': 'Producto no especificado'}  # Proporcionar un nombre por defecto o adecuar según el modelo
                 )
 
-                # Si se creó un nuevo cliente o producto, indicarlo en los logs o mensajes
-                if created_cliente:
-                    print(f"Cliente '{row['rut']}' creado con datos nulos.")
-                if created_prod:
-                    print(f"Producto (SKU) '{row['SKU']}' creado con datos nulos.")
-
-                # Procesar la fecha de boleta
-                fecha_boleta = None
-                try:
-                    fecha_boleta = procesar_fecha(row['fecha_boleta'])
-                except ValueError as e:
-                    messages.error(request, f"Error con la fecha en la fila {index + 1}: {str(e)}")
+                # Procesar la fecha de boleta si está presente
+                fecha_boleta = pd.to_datetime(row['fecha_boleta'], errors='coerce')
+                if pd.isnull(fecha_boleta):
+                    messages.error(request, f"Error con la fecha en la fila {index + 1}.")
                     has_errors = True
                     continue
 
-                # Crear o actualizar la venta
-                Ventas.objects.update_or_create(
-                    pedido=row['pedido'],  # Busca por pedido
-                    defaults={
-                        'rut': cliente,  # Relacionar con el cliente creado u obtenido
-                        'SKU': producto,  # Relacionar con el producto creado u obtenido
-                        'precio_unitario': row['precio_unitario'],
-                        'cantidad': row['cantidad'],
-                        'venta_total': row['venta_total'],
-                        'flete': row['flete'],
-                        'factura_o_boleta': row['factura_o_boleta'],
-                        'fecha_boleta': fecha_boleta,  # Usamos la fecha procesada
-                        'pago': row['pago'],
-                    }
+                # Crear la venta
+                venta = Ventas.objects.create(
+                    pedido=row['pedido'],
+                    rut=cliente,
+                    SKU=producto,
+                    precio_unitario=row['precio_unitario'],
+                    cantidad=row['cantidad'],
+                    venta_total=row['venta_total'],
+                    flete=row['flete'],
+                    factura_o_boleta=row['factura_o_boleta'],
+                    fecha_boleta=fecha_boleta,
+                    pago=row['pago'],
                 )
 
             # Si no hubo errores, mostrar mensaje de éxito
@@ -585,9 +577,9 @@ def upload_excel_ventas(request):
                 messages.success(request, 'Las ventas se han subido correctamente.')
         except Exception as e:
             messages.error(request, f'Error al procesar el archivo: {str(e)}')
-            print(f"Error al procesar el archivo: {str(e)}")
 
     return redirect('venta')
+
 
 def upload_excel_compra_proveedores(request):
     if request.method == "POST":

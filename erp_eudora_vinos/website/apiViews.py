@@ -9,6 +9,7 @@ from .models import Cliente
 from .models import Ventas
 from .models import Inventario_Y_Stock
 from django.shortcuts import get_object_or_404
+import pandas as pd
 
 # api para obtener todos los productos
 
@@ -98,12 +99,14 @@ def guardar_alerta_stock(request):
 #api que guarda una venta en la base de datos
 @csrf_exempt
 def guardarventa(request):
-    pedido = request.POST.get('pedido', '')
+    # Se recibe el ID del registro específico en lugar de 'pedido'
+    id = request.POST.get('id', '')  # Asumiendo que se envía el 'id' desde el cliente
     type = request.POST.get('type', '')
     value = request.POST.get('value', '')
 
     try:
-        venta = Ventas.objects.get(pedido=pedido)
+        # Encuentra la venta por ID en lugar de por 'pedido'
+        venta = Ventas.objects.get(id=id)
         if type == 'precio_unitario':
             venta.precio_unitario = value
         elif type == 'cantidad':
@@ -113,18 +116,22 @@ def guardarventa(request):
         elif type == 'flete':
             venta.flete = value
         elif type == 'fecha_boleta':
-            venta.fecha_boleta = value
+            # Asegúrate de convertir correctamente la fecha
+            try:
+                venta.fecha_boleta = pd.to_datetime(value, errors='coerce')
+                if pd.isnull(venta.fecha_boleta):
+                    raise ValueError("Invalid date format")
+            except ValueError as e:
+                return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         elif type == 'factura_o_boleta':
             venta.factura_o_boleta = value
         elif type == 'pago':
             venta.pago = value
-        
 
         venta.save()
         return JsonResponse({'status': 'Updated'})
-    except venta.DoesNotExist:
-        return JsonResponse({'status': 'Sells not found'}, status=404)
-    
+    except Ventas.DoesNotExist:
+        return JsonResponse({'status': 'Venta not found'}, status=404)
 
     
 # Inventario_Y_Stock

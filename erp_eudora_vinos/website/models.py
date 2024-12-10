@@ -31,6 +31,7 @@ class Producto(models.Model):
 
 # Modelo de la clase Ventas
 
+'''
 class Ventas(models.Model):
     pedido = models.CharField(primary_key=True ,unique=True, max_length=50, default='0')
     SKU = models.ForeignKey(Producto, on_delete=models.CASCADE) # foreign key
@@ -44,7 +45,23 @@ class Ventas(models.Model):
     pago = models.IntegerField(null=True)
     def __str__(self):
         return self.pedido
-    
+'''
+
+class Ventas(models.Model):
+    id = models.AutoField(primary_key=True)
+    pedido = models.CharField(max_length=50)
+    SKU = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    rut = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    precio_unitario = models.IntegerField(null=True)
+    cantidad = models.IntegerField(null=True)
+    venta_total = models.IntegerField(null=True)
+    flete = models.IntegerField(null=True)
+    factura_o_boleta = models.CharField(max_length=50, null=True)
+    fecha_boleta = models.DateField(null=True)
+    pago = models.IntegerField(null=True)
+
+    def __str__(self):
+        return self.pedido
     
 # Modelo de la clase Proveedores     
 

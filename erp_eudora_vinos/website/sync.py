@@ -25,20 +25,20 @@ def actualizar_fecha_ultima_sincronizacion(fecha):
     config.valor = timezone.make_aware(fecha) if timezone.is_naive(fecha) else fecha
     config.save()
 
+'''
+Función para sincronizar los pedidos de WooCommerce con la base de datos local
+'''
 
 def SyncWoocomerce():
     # URL de la API de WooCommerce
-    url = "https://erp.eudoravinos.cl/wp-json/wc/v3/orders"
+    url = "https://eudoravinos.cl/wp-json/wc/v3/orders"
 
     # Claves proporcionadas por WooCommerce
     consumer_key = "ck_bbebdac04ed22251d06d1d39cf8dbc14ae3eac0d"
     consumer_secret = "cs_eda3391a18f4f044f9f8f698736c8ed6c1538502"
 
-
-    
-     # Obtener la fecha de la última sincronización
+    # Obtener la fecha de la última sincronización
     ultima_sincronizacion = obtener_fecha_ultima_sincronizacion()
-   
 
     # Convertir la fecha a string para la API
     fecha_ultima_sincronizacion_str = ultima_sincronizacion.isoformat()
@@ -48,9 +48,7 @@ def SyncWoocomerce():
     response = requests.get(url, auth=HTTPBasicAuth(consumer_key, consumer_secret), params=params)
     
     if response.status_code == 200:
-        
         data = response.json()
-        
 
         for venta in data:
             pedido = venta['id']
@@ -58,7 +56,6 @@ def SyncWoocomerce():
             
             # Verifica si el estado del pedido es "completed" para poder seguir
             if estado != 'completed':
-                #print(f"El pedido ID: {pedido} no está completado. Saltando este pedido.")
                 continue
             
             # Obtener rut de billing o meta_data
@@ -77,9 +74,6 @@ def SyncWoocomerce():
             
             flete = int(venta['shipping_total'])
             factura = venta['payment_method_title']
-            
-            #print(f" Rut: {rut}, Pago Total: {flete}, Factura: {factura}")
-            
             if factura != "Webpay Plus":
                 factura = " "
 
@@ -104,50 +98,26 @@ def SyncWoocomerce():
 
             # Verifica que el cliente se haya creado correctamente
             if not cliente:
-                #print(f"No se pudo encontrar o crear un cliente para el RUT: {rut}. Saltando este pedido.")
                 continue
 
-            # Verifica si el pedido ya existe en Ventas
-            if Ventas.objects.filter(pedido=pedido).exists():
-                #print(f"El pedido ID: {pedido} ya existe en la base de datos. Saltando este pedido.")
-                continue
-            
             # Agregar depuración para los ítems de cada pedido
             for idx, item in enumerate(venta['line_items']):
-               
-                #print(f"Ítem {idx + 1}: {item}")
-
                 precio_unitario = item['price']
                 sku = item['sku']
                 cantidad = item['quantity']
 
-                # Depuración: Verificar los valores
-                #print(f"Procesando ítem - Precio Unitario: {precio_unitario}, SKU: {sku}, Cantidad: {cantidad}")
-
-                # Verifica si el SKU está presente
-                if not sku:
-                    #print(f"SKU faltante para el pedido ID: {pedido}. Saltando este ítem.")
-                    continue
-
-                # Verifica si la cantidad es un número válido
-                if not isinstance(cantidad, int) or cantidad <= 0:
-                    #print(f"Cantidad inválida para el pedido ID: {pedido}. Saltando este ítem.")
+                # Filtra los productos cuyo SKU comienza con "pck"
+                if sku.startswith('PCK'):
                     continue
 
                 # Busca o crea el producto basado en el SKU
                 producto, created = Producto.objects.get_or_create(SKU=sku)
-                """if created:
-                    print(f"Producto creado: {producto}")
-                else:
-                    print(f"Producto encontrado: {producto}")
 
-                print(f"Procesando Pedido ID: {pedido}, Precio Unitario: {precio_unitario}, Cantidad: {cantidad}, SKU: {sku}, Fecha Boleta: {fecha_boleta}")
-                """
                 # Crea un nuevo registro de venta
                 venta_total = precio_unitario * cantidad
                 pago = precio_unitario * cantidad + flete
-                Ventas.objects.create(pedido=pedido, precio_unitario=precio_unitario, cantidad=cantidad, SKU=producto, rut=cliente, venta_total=venta_total, fecha_boleta=fecha_boleta, flete=flete, pago=pago, factura_o_boleta=factura)
-                #print(f"Añadido: Pedido ID {pedido}, Precio Unitario: {precio_unitario}, SKU: {sku}, Cantidad: {cantidad}, Venta Total: {venta_total}, Fecha Boleta: {fecha_boleta}")
+                nueva_venta = Ventas.objects.create(precio_unitario=precio_unitario, cantidad=cantidad, SKU=producto, rut=cliente, venta_total=venta_total, fecha_boleta=fecha_boleta, flete=flete, pago=pago, factura_o_boleta=factura, pedido=pedido)
+
         # Actualiza la fecha de última sincronización
         actualizar_fecha_ultima_sincronizacion(timezone.now())
         

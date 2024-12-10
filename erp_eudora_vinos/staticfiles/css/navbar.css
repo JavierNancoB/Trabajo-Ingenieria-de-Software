@@ -1,0 +1,164 @@
+#puntos_navbar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #A8739C;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    font-family: 'Inter', sans-serif;
+}
+
+#puntos_navbar li {
+    padding: 0 10px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    margin-left: 70px;
+    height: 100%;
+    width: 100%;
+}
+
+.site-logo {
+    display: block; 
+}
+
+#search-container {
+    display: flex;
+    align-items: center; /* Alinea verticalmente el formulario de búsqueda */
+    margin-left: auto; /* Mueve la barra de búsqueda al lado izquierdo */
+}
+
+#search-form {
+    display: flex;
+}
+
+#search-input {
+    padding: 8px;
+    width: 300px;
+    font-size: 16px;
+    border: none;
+    border-radius: 50px;
+    background-color: #D9D9D9;
+    color: gray;
+    padding-left: 20px;
+}
+
+#search-input:focus {
+    outline: none; /* Quita el borde de enfoque predeterminado */
+}
+
+#search-input::placeholder {
+    color: #ffffffd0;
+    border: 1px solid #D9D9D9;
+}
+
+#search-form button {
+    padding: 8px 16px;
+    background-color: #E0E1DD;
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 4px;
+    cursor: pointer;
+}
+
+#search-form button:hover {
+    background-color: #ddd;
+}
+
+.logout-button {
+    background-color: #A8739C;
+    /*margin-left: 10px; /* Añade un margen izquierdo para separar del campo de búsqueda */
+}
+
+
+.logout-button img {
+    margin-top: -5px;
+    width: 70px; /* Ajusta este valor según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+    transition: filter 0.3s;
+}
+
+
+.logout-button:hover img {
+    filter: brightness(150%); /* Oscurece la imagen cuando se presiona el botón */
+}
+
+
+
+/* boton notificaciones */
+
+.notifications-button {
+    background-color: #A8739C;
+}
+
+.notifications-button img {
+    margin-top: -2px;
+    width: 70px; /* Ajusta este valor según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+    transition: filter 0.3s;
+}
+
+.notifications-button:hover img {
+    filter: brightness(150%); /* Aclara la imagen cuando se presiona el botón */
+}
+
+/* Estilos para el dropdown de notificaciones */
+.notifications-dropdown {
+    background-color: #ffffff; /* Fondo blanco para el dropdown */
+    border: 1px solid #D7A1D2; /* Borde sutil */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Sombra suave para el dropdown */
+    width: 350px; /* Ancho del dropdown */
+    position: absolute; /* Posicionamiento absoluto */
+    right: 0; /* Alineado a la derecha */
+    z-index: 1000; /* Asegurarse de que se muestre sobre otros elementos */
+    font-size: medium;
+    border-radius: 20px;
+    
+}
+
+.notifications-dropdown ul {
+    list-style-type: none; /* Remover estilos de lista */
+    margin: 0;
+    padding: 10px; /* Padding para el interior del dropdown */
+}
+
+.notifications-dropdown li {
+    padding: 10px; /* Espaciado interno para cada elemento de la lista */
+    border-bottom: 1px solid #eee; /* Borde sutil entre elementos */
+
+}
+
+.notifications-dropdown li:last-child {
+    border-bottom: none; /* Remover borde del último elemento */
+}
+
+.view-all-notifications a {
+    display: block; /* Hacer que el enlace ocupe todo el espacio horizontal */
+    color: #0056b3; /* Color del enlace */
+    text-decoration: none; /* Sin subrayado */
+    font-weight: bold; /* Texto en negrita */
+    text-align: center; /* Centrar texto */
+}
+
+.view-all-notifications a:hover {
+    text-decoration: underline; /* Subrayado al pasar el mouse */
+}
+
+.notificacion-con-burbuja{
+    position: relative;
+}
+
+#burbuja {
+    position: absolute; 
+    width: 12%; /* Esto asegura que las imágenes cubran todo el contenedor */
+    height: 20px; /* Esto mantiene la proporción de las imágenes */
+    margin-left: 45px; /* Ajusta este valor según sea necesario */
+  }
+
+  #titulo-notificacion {
+    font-weight: 600;
+  }

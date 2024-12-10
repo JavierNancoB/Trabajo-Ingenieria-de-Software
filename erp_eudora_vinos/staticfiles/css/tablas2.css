@@ -1,0 +1,79 @@
+body { 
+    font-size: 140%; 
+
+  }
+  
+  
+  table caption {
+      padding: .5em 0;
+  }
+  
+  table.dataTable th,
+  table.dataTable td {
+    white-space: nowrap;
+  }
+  table {
+    color: red;
+  }
+  
+  .p {
+    text-align: center;
+    padding-top: 140px;
+    font-size: 14px;
+  }
+
+  #tablas-css {
+    padding: 50px;
+    font-size: medium;
+    font-weight: 100;
+  }
+
+  #titulo-modelo {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 50px;
+  }
+
+
+
+  .dt-length>label {
+    margin-left: 10px;
+  }
+
+  tbody>tr>th {
+    font-weight: 400;
+  }
+  
+  
+
+/*---------------------------------------------*/
+/* Estilos para la tabla totals-table */
+#totals-table {
+    
+    /*width: 80%; /* Establece el ancho al 50% del contenedor */
+    max-width: 80%; /* Establece un ancho máximo */
+    margin: 0 auto; /* Centra la tabla horizontalmente */
+    margin-bottom: 50px;
+    border-collapse: collapse; /* Elimina los espacios entre las celdas */
+    text-align: center; /* Centra el texto en las celdas */
+}
+
+#totals-table td {
+    border: 1px solid #ddd; /* Añade bordes a las celdas */
+    padding: 10px; /* Añade padding a las celdas */
+}
+
+
+#totals-table th {
+    background-color: #f2f2f2; /* Color de fondo para las celdas de encabezado */
+    font-weight: bold; /* Negrita para el texto del encabezado */
+}
+
+#totals-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9; /* Color de fondo para filas pares */
+}
+
+
+
+
+

@@ -1,6 +1,6 @@
-{% load static%}    
+{% load static %}    
 {% include "base.html" %}
-<!-- En este archivo HTML se crea la tabla de ventas, la cual será heredada en la página de ventas. En ella se encontrarán las ventas que se encuentran en la base de datos.-->
+<!-- En este archivo HTML se crea la tabla de ventas, la cual será heredada en la página de ventas. En ella se encontrarán las ventas que se encuentran en la base de datos. -->
 {% block content %}
     <!-- Mensajes de error o éxito. -->
     {% if messages %}
@@ -14,17 +14,15 @@
         <link type="text/css" href='{% static "css/tablas.css" %}' rel="stylesheet"/>
         <div id="titulo-modelo">
             <h1>VENTAS</h1>
-            <!-- Botón añadido al lado de VENTAS con imagen 
             <button type="button" id="boton-adicional">
                 <img src="{% static 'images/refresh.svg' %}" alt="Acción"/>
-            -->
         </div>
         <!-- Aqui se crea la nueva tabla con el resumen -->
         <div>
             <table id="totals-table" class="table table-bordered table-hover ">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col" >CANTIDAD TOTAL</th>
+                        <th scope="col">CANTIDAD TOTAL</th>
                         <th scope="col">VENTAS TOTALES</th>
                         <th scope="col">COSTO ENVIOS TOTALES</th>
                         <th scope="col">PAGO TOTAL</th>
@@ -49,7 +47,7 @@
                         <label for="file" class="form-label">Subir archivo Excel:</label>
                         <input type="file" name="file" class="form-control" accept=".xlsx, .xls" required>
                     </div>
-                    <div class="d-flex " style="gap: 5px;">
+                    <div class="d-flex" style="gap: 5px;">
                         <button type="submit" class="btn btn-primary">Subir archivo</button>
                         <a href="{% static 'xlsx/ventas.xlsx' %}" class="btn btn-outline-success">Descargar Formato de Excel</a>
                     </div>
@@ -73,101 +71,99 @@
                 </div>
                 <div class="col d-grid gap-2 d-md-flex justify-content-md-end">
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addnewventa">
-                        Añade un venta
+                        Añadir una venta
                     </button>
                 </div>
             </div>
         </div>
-        
-        <!-- Modal -->
+        <!-- Modal para añadir nueva venta -->
         <div class="modal fade" id="addnewventa" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir venta</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST">
-                        <!-- Formulario para anadir una venta. -->
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label>Pedido</label>
-                            <input type="text" id="pedido" class="form-control"/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Comprador</label>
-                            <div class="d-flex align-items-center">
-                                <select class="form-control" id="rut" style="flex-grow: 1;">
-                                    <!-- Las opciones se llenarán con JavaScript -->
-                                </select>
-                                <a href="/cliente?openModal=true" id="link-svg">
-                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
-                                </a>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Añadir venta</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label>Pedido</label>
+                                <input type="text" id="pedido" class="form-control"/>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="SKU">SKU</label>
-                            <div class="d-flex align-items-center">
-                                <select class="form-control" id="SKU" style="flex-grow: 1;">
-                                    <!-- Las opciones se llenarán con JavaScript -->
-                                </select>
-                                <a href="/producto?openModal=true" id="link-svg">
-                                    <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;" >
-                                </a>
+                            <div class="mb-3">
+                                <label>Comprador</label>
+                                <div class="d-flex align-items-center">
+                                    <select class="form-control" id="rut" style="flex-grow: 1;">
+                                        <!-- Las opciones se llenarán con JavaScript -->
+                                    </select>
+                                    <a href="/cliente?openModal=true" id="link-svg">
+                                        <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;">
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <div class="mb-3">
-                            <label>Precio unitario</label>
-                            <input type="number" id="precio_unitario" class="form-control"/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Cantidad</label>
-                            <input type="number" id="cantidad" class="form-control"/>
-                        </div>
-
-                        <div class="mb-3">
-                            <label>Venta total</label>
-                            <input type="number" id="venta_total" class="form-control" disabled/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Flete</label>
-                            <input type="number" id="flete" class="form-control"/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Factura o Boleta</label>
-                            <input type="text" id="factura_o_boleta" class="form-control"/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Fecha de la boleta</label>
-                            <input type="date" id="fecha_boleta" class="form-control"/>
-                        </div>
-                        <div class="mb-3">
-                            <label>Pago</label>
-                            <input type="text" id="pago" class="form-control" disabled/>
-                        </div> 
-                    </form>
+                            <div class="mb-3">
+                                <label for="SKU">SKU</label>
+                                <div class="d-flex align-items-center">
+                                    <select class="form-control" id="SKU" style="flex-grow: 1;">
+                                        <!-- Las opciones se llenarán con JavaScript -->
+                                    </select>
+                                    <a href="/producto?openModal=true" id="link-svg">
+                                        <img src="{% static 'images/plus.svg' %}" id="boton-producto" alt="Agregar" style="width: 24px; height: 24px; margin-left: 10px;">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label>Precio unitario</label>
+                                <input type="number" id="precio_unitario" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label>Cantidad</label>
+                                <input type="number" id="cantidad" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label>Venta total</label>
+                                <input type="number" id="venta_total" class="form-control" disabled/>
+                            </div>
+                            <div class="mb-3">
+                                <label>Flete</label>
+                                <input type="number" id="flete" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label>Factura o Boleta</label>
+                                <input type="text" id="factura_o_boleta" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label>Fecha de la boleta</label>
+                                <input type="date" id="fecha_boleta" class="form-control"/>
+                            </div>
+                            <div class="mb-3">
+                                <label>Pago</label>
+                                <input type="text" id="pago" class="form-control" disabled/>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- Botones para guardar o cancelar. -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
+                    </div>
                 </div>
-                <!-- Botones para guardar o cancelar. -->
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                  <button type="button" class="btn btn-primary" id="submit">Guardar cambios</button>
-                </div>
-              </div>
             </div>
         </div>
-        <!-- Inicio de la tabla. -->  
+        <!-- Inicio de la tabla. -->
         <table id="table" summary="tabla venta" class="table table-bordered table-hover dt-responsive">
             <thead>
-            <!-- Encabezados. -->    
-            <tr class="listado">   
-                <th> PEDIDO </th>     
+            <!-- Encabezados. -->
+            <tr class="listado">
+                <th> ID </th>
+                <th> PEDIDO </th>
                 <th> COMPRADOR </th>
                 <th> SKU </th>
                 <th> PRECIO UNITARIO </th>
                 <th> CANTIDAD </th>
                 <th> VENTA TOTAL </th>
-                <th> FLETE </th>  
+                <th> FLETE </th>
                 <th> FECHA BOLETA </th>
                 <th> FACTURA/BOLETA </th>
                 <th> PAGO </th>
@@ -175,25 +171,25 @@
             </tr>
             </thead>
             <tbody>
-                <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->        
+                <!-- Ciclo para llenar la tabla con los datos de la base de datos. -->
                 {% for venta in ventas %}
                 <tr class="listado">
+                    <td>{{ venta.id }}</td>
                     <td>{{ venta.pedido }}</td>
-                    
                     <td>{{ venta.rut }}</td>
                     <td>{{ venta.SKU }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="precio_unitario">{{ venta.precio_unitario }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="cantidad">{{ venta.cantidad }}</td>
+                    <td class="editable" data-id="{{ venta.id }}" data-type="precio_unitario">{{ venta.precio_unitario }}</td>
+                    <td class="editable" data-id="{{ venta.id }}" data-type="cantidad">{{ venta.cantidad }}</td>
                     <td>{{ venta.venta_total }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="flete">{{ venta.flete }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="fecha_boleta">{{ venta.fecha_boleta }}</td>
-                    <td class="editable" data-pedido="{{ venta.pedido }}" data-type="factura_o_boleta">{{ venta.factura_o_boleta }}</td>
+                    <td class="editable" data-id="{{ venta.id }}" data-type="flete">{{ venta.flete }}</td>
+                    <td class="editable" data-id="{{ venta.id }}" data-type="fecha_boleta">{{ venta.fecha_boleta }}</td>
+                    <td class="editable" data-id="{{ venta.id }}" data-type="factura_o_boleta">{{ venta.factura_o_boleta }}</td>
                     <td>{{ venta.pago }}</td>
                     <td>
-                        <input type="checkbox" data-pedido="{{ venta.pedido }}" name="seleccionar">
+                        <input type="checkbox" data-id="{{ venta.id }}" name="seleccionar">
                     </td>
-                </tr> 
-                {% endfor %}    
+                </tr>
+                {% endfor %}
             </tbody>
         </table>
         <script type='text/javascript' src='{% static "js/venta.js" %}'></script>

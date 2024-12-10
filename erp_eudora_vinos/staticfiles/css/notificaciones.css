@@ -1,0 +1,47 @@
+body { 
+    font-size: 100%; 
+
+  }
+  
+  
+  table caption {
+      padding: .5em 0;
+  }
+  
+  table.dataTable th,
+  table.dataTable td {
+    white-space: nowrap;
+  }
+  table {
+    color: red;
+  }
+  
+  .p {
+    text-align: center;
+    padding-top: 140px;
+    font-size: 14px;
+  }
+
+  #productos {
+    padding: 50px;
+    font-size: medium;
+    font-weight: 100;
+  }
+
+  #titulo-modelo {
+    display: flex;
+    flex-direction: row;
+    padding-bottom: 50px;
+  }
+
+
+
+  .dt-length>label {
+    margin-left: 10px;
+  }
+
+  tbody>tr>th {
+    font-weight: 400;
+  }
+  
+  
