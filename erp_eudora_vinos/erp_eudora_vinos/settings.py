@@ -13,16 +13,28 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+from environ import Env
+
+env = Env()
+Env.read_env()
+
+ENVIRONMENT = env('ENVIRONMENT', default='development')
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-e=u8068e5kbb#0$e+$7ha9^3ua64^_5^=ih=clx-87qj^sl34j')
+
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if ENVIRONMENT == 'development':
+    DEBUG = True
+else:
+    DEBUG = False
 
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1, gestion.eudoravinos.cl').split(',')
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 INSTALLED_APPS = [
@@ -33,6 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website.apps.WebsiteConfig',
+    'django.contrib.sites',
+    'admin_honeypot',
     'authuser',  # Incluimos la app authuser que sera la encargada de manejar la autenticacion de usuarios
 ]
 
@@ -40,6 +54,7 @@ AUTH_USER_MODEL = 'authuser.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -113,7 +128,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATIC_ROOT = 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),  # Esta carpeta debe estar en el mismo nivel que tus apps
@@ -128,3 +143,5 @@ EMAIL_HOST_USER = os.getenv('DJANGO_EMAIL_USER', 'erp.eudoravinos@gmail.com')
 EMAIL_HOST_PASSWORD = os.getenv('DJANGO_EMAIL_PASSWORD', 'wqcr nggk cqbm igjd')
 DEFAULT_FROM_EMAIL = 'erp.eudoravinos@gmail.com'
 LOGIN_REDIRECT_URL = '/'
+
+ACCOUNT_USERNAME_BLACKLIST = ['admin', 'superuser', 'root', 'user', 'usuario', 'administrador', 'superusuario', 'erpadmin']

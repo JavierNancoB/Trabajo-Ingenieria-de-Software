@@ -21,8 +21,8 @@ from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('', include('website.urls')),
-    path('admin/', admin.site.urls),
-    path('admin/', include('django.contrib.auth.urls')),
+    path('admin/', include('admin_honeypot.urls', namespace='admin_honeypot')),
+    path('erpadmin/', admin.site.urls),
     
     path('accounts/', include('django.contrib.auth.urls')),
 
