@@ -98,14 +98,8 @@ DATABASES = {
     }
 }
 
-if ENVIRONMENT == 'development':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
-else:
+POSTGRES_LOCALLY = False
+if ENVIRONMENT == 'production' or POSTGRES_LOCALLY:
     DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
@@ -137,7 +131,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
-#STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 # URL para acceder a los archivos estáticos
 
