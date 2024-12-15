@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
-from pathlib import Path
+import dj_database_url
 
+from pathlib import Path
 from environ import Env
 
 env = Env()
@@ -49,6 +50,10 @@ INSTALLED_APPS = [
     'admin_honeypot',
     'authuser',  # Incluimos la app authuser que sera la encargada de manejar la autenticacion de usuarios
 ]
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+SITE_ID = 1
 
 AUTH_USER_MODEL = 'authuser.User'
 
@@ -92,6 +97,16 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+if ENVIRONMENT == 'development':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
